@@ -5,19 +5,19 @@ from typing import List, Optional
 
 import pytest
 
-from chia.consensus.blockchain import ReceiveBlockResult
-from chia.consensus.multiprocess_validation import PreValidationResult
-from chia.consensus.pot_iterations import is_overflow_block
-from chia.full_node.full_node_store import FullNodeStore
-from chia.full_node.signage_point import SignagePoint
-from chia.protocols import timelord_protocol
-from chia.protocols.timelord_protocol import NewInfusionPointVDF
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.unfinished_block import UnfinishedBlock
-from chia.util.block_cache import BlockCache
-from chia.util.block_tools import get_signage_point
-from chia.util.hash import std_hash
-from chia.util.ints import uint8, uint32, uint64, uint128
+from flax.consensus.blockchain import ReceiveBlockResult
+from flax.consensus.multiprocess_validation import PreValidationResult
+from flax.consensus.pot_iterations import is_overflow_block
+from flax.full_node.full_node_store import FullNodeStore
+from flax.full_node.signage_point import SignagePoint
+from flax.protocols import timelord_protocol
+from flax.protocols.timelord_protocol import NewInfusionPointVDF
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.unfinished_block import UnfinishedBlock
+from flax.util.block_cache import BlockCache
+from flax.util.block_tools import get_signage_point
+from flax.util.hash import std_hash
+from flax.util.ints import uint8, uint32, uint64, uint128
 from tests.core.fixtures import default_1000_blocks, empty_blockchain  # noqa: F401
 from tests.setup_nodes import bt, test_constants
 
