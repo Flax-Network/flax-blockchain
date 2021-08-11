@@ -3,4 +3,4 @@
 	url = https://github.com/Chia-Network/mozilla-ca.git
 [submodule "flax-blockchain-gui"]
 	path = flax-blockchain-gui
-	url = git@github.com:Flax-Network/flax-blockchain-gui.git
+	url = https://github.com/Flax-Network/flax-blockchain-gui.git
