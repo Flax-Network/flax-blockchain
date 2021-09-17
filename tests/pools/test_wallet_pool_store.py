@@ -7,14 +7,14 @@ import aiosqlite
 import pytest
 from clvm_tools import binutils
 
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program, SerializedProgram
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.util.db_wrapper import DBWrapper
-from chia.util.ints import uint64
+from flax.types.blockchain_format.coin import Coin
+from flax.types.blockchain_format.program import Program, SerializedProgram
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.coin_spend import CoinSpend
+from flax.util.db_wrapper import DBWrapper
+from flax.util.ints import uint64
 
-from chia.wallet.wallet_pool_store import WalletPoolStore
+from flax.wallet.wallet_pool_store import WalletPoolStore
 
 
 @pytest.fixture(scope="module")

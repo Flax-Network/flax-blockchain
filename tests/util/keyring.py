@@ -2,9 +2,9 @@ import os
 import shutil
 import tempfile
 
-from chia.util.file_keyring import FileKeyring
-from chia.util.keychain import Keychain
-from chia.util.keyring_wrapper import KeyringWrapper
+from flax.util.file_keyring import FileKeyring
+from flax.util.keychain import Keychain
+from flax.util.keyring_wrapper import KeyringWrapper
 from functools import wraps
 from keyring.util import platform_
 from keyrings.cryptfile.cryptfile import CryptFileKeyring  # pyright: reportMissingImports=false
@@ -106,7 +106,7 @@ class TempKeyring:
         existing_keyring_dir = Path(existing_keyring_path).parent if existing_keyring_path else None
         temp_dir = existing_keyring_dir or tempfile.mkdtemp(prefix="test_keyring_wrapper")
 
-        mock_supports_keyring_passphrase_patch = patch("chia.util.keychain.supports_keyring_passphrase")
+        mock_supports_keyring_passphrase_patch = patch("flax.util.keychain.supports_keyring_passphrase")
         mock_supports_keyring_passphrase = mock_supports_keyring_passphrase_patch.start()
 
         # Patch supports_keyring_passphrase() to return True
