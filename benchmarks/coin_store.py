@@ -2,18 +2,18 @@ import asyncio
 import random
 from time import time
 from pathlib import Path
-from chia.full_node.coin_store import CoinStore
+from flax.full_node.coin_store import CoinStore
 from typing import List
 import os
 import sys
 
 import aiosqlite
-from chia.util.db_wrapper import DBWrapper
-from chia.consensus.coinbase import create_farmer_coin, create_pool_coin
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.blockchain_format.coin import Coin
-from chia.util.ints import uint64
+from flax.util.db_wrapper import DBWrapper
+from flax.consensus.coinbase import create_farmer_coin, create_pool_coin
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.blockchain_format.coin import Coin
+from flax.util.ints import uint64
 
 
 NUM_ITERS = 200
@@ -27,7 +27,7 @@ async def setup_db() -> DBWrapper:
         pass
     connection = await aiosqlite.connect(db_filename)
     await connection.execute("pragma journal_mode=wal")
-    await connection.execute("pragma synchronous=OFF")
+    pass  # await connection.execute("pragma synchronous=OFF")  # Prevent DB corruption by avoiding ill-advised synchronous optimization.
     return DBWrapper(connection)
 
 

@@ -1,0 +1,101 @@
+--- ./flax-blockchain/flax/util/initial-config.yaml	2021-09-17 00:18:29.199823836 -0700
++++ ./flax-blockchain/flax/util/initial-config.yaml	2021-09-17 00:27:22.079073968 -0700
+@@ -11,82 +11,23 @@
+   constants:
+     mainnet:
+       NETWORK_TYPE: 0
+-      GENESIS_CHALLENGE: ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb
+-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc"
+-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af"
++      GENESIS_CHALLENGE: 9b9ffca948750d8b41ac755da213461e9d2253ec7bfce80695d78f7fe7d55112
++      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "e8e245e2e6536e17fd7cbc2e3bd90de06f55362ee3c84cea5a68391e5bad7ef6"
++      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "e8e245e2e6536e17fd7cbc2e3bd90de06f55362ee3c84cea5a68391e5bad7ef6"
+     testnet0:
+-      MIN_PLOT_SIZE: 18
+-      GENESIS_CHALLENGE: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
++      GENESIS_CHALLENGE: 28a206a22e7e2060230c88ad149d81cc8e74bcf5e8e74aafcce8b8efe6181dbb
+       NETWORK_TYPE: 1
+-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc"
+-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af"
+-    testnet2:
+-      MIN_PLOT_SIZE: 18
+-      GENESIS_CHALLENGE: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+-      NETWORK_TYPE: 1
+-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc"
+-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af"
+-    testnet3:
+-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+-      GENESIS_CHALLENGE: ca7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+-      MIN_PLOT_SIZE: 18
+-      NETWORK_TYPE: 1
+-      MEMPOOL_BLOCK_BUFFER: 10
+-    testnet4:
+-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+-      GENESIS_CHALLENGE: dd7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+-      MIN_PLOT_SIZE: 18
+-      NETWORK_TYPE: 1
+-      MEMPOOL_BLOCK_BUFFER: 10
+-      EPOCH_BLOCKS: 768
+-      DIFFICULTY_STARTING: 30
+-    testnet5:
+-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+-      GENESIS_CHALLENGE: ee7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+-      MIN_PLOT_SIZE: 18
+-      NETWORK_TYPE: 1
+-      MEMPOOL_BLOCK_BUFFER: 10
+-      EPOCH_BLOCKS: 768
+-      DIFFICULTY_STARTING: 30
+-    testnet7:
+-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+-      GENESIS_CHALLENGE: 117816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+-      MIN_PLOT_SIZE: 18
+-      NETWORK_TYPE: 1
+-      MEMPOOL_BLOCK_BUFFER: 10
+-      EPOCH_BLOCKS: 768
+-      DIFFICULTY_STARTING: 30
+-      RUST_CONDITION_CHECKER: 0
++      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "e8e245e2e6536e17fd7cbc2e3bd90de06f55362ee3c84cea5a68391e5bad7ef6"
++      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "e8e245e2e6536e17fd7cbc2e3bd90de06f55362ee3c84cea5a68391e5bad7ef6"
+   config:
+     mainnet:
+       address_prefix: "xfx"
+-      default_full_node_port: 8444
+     testnet0:
+       address_prefix: "txfx"
+-    testnet1:
+-      address_prefix: "txfx"
+-    testnet2:
+-      address_prefix: "txfx"
+-    testnet3:
+-      address_prefix: "txfx"
+-    testnet4:
+-      address_prefix: "txfx"
+-    testnet7:
+-      address_prefix: "txfx"
+-      default_full_node_port: 58444
+ 
+ selected_network: &selected_network "mainnet"
+ ALERTS_URL: https://download.flaxnetwork.org/notify/mainnet_alert.txt
+-FLAX_ALERTS_PUBKEY: 89b7fd87cb56e926ecefb879a29aae308be01f31980569f6a75a69d2a9a69daefd71fb778d865f7c50d6c967e3025937
++FLAX_ALERTS_PUBKEY: a88dc9b53e21088dcd53347eda53b533aec7cd5ff267c3968b1dfc0dc132e39575cf401f0d6bc9952404dbbfc30731c5
+ 
+ # public ssl ca is included in source code
+ # Private ssl ca is used for trusted connections between machines user owns
+@@ -197,7 +138,7 @@
+ # Don't run this unless you want to run VDF clients on the local machine.
+ timelord_launcher:
+   # The server where the VDF clients will connect to.
+-  port: 8000
++  port: 6600
+   # Number of VDF client processes to keep alive in the local machine.
+   process_count: 3
+   logging: *logging
