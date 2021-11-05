@@ -4,14 +4,14 @@ import logging
 import pytest
 from clvm.casts import int_to_bytes
 
-from chia.consensus.blockchain import ReceiveBlockResult
-from chia.protocols import full_node_protocol, wallet_protocol
-from chia.types.announcement import Announcement
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.spend_bundle import SpendBundle
-from chia.util.errors import ConsensusError, Err
-from chia.util.ints import uint64
+from flax.consensus.blockchain import ReceiveBlockResult
+from flax.protocols import full_node_protocol, wallet_protocol
+from flax.types.announcement import Announcement
+from flax.types.condition_opcodes import ConditionOpcode
+from flax.types.condition_with_args import ConditionWithArgs
+from flax.types.spend_bundle import SpendBundle
+from flax.util.errors import ConsensusError, Err
+from flax.util.ints import uint64
 from tests.wallet_tools import WalletTool
 from tests.setup_nodes import bt, setup_two_nodes, test_constants
 from tests.util.generator_tools_testing import run_and_get_removals_and_additions
