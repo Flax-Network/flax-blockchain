@@ -1,33 +1,33 @@
 # flake8: noqa
 
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.ints import uint8, uint16, uint32, uint64, uint128
-from chia.types.blockchain_format.proof_of_space import ProofOfSpace
-from chia.types.blockchain_format.pool_target import PoolTarget
-from chia.types.coin_spend import CoinSpend
-from chia.types.blockchain_format.coin import Coin
-from chia.types.spend_bundle import SpendBundle
-from chia.types.blockchain_format.program import Program, SerializedProgram
-from chia.types.blockchain_format.sub_epoch_summary import SubEpochSummary
-from chia.types.weight_proof import WeightProof, SubEpochData, SubEpochChallengeSegment, SubSlotData, RecentChainData
-from chia.types.blockchain_format.vdf import VDFInfo, VDFProof
-from chia.types.blockchain_format.classgroup import ClassgroupElement
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.util.ints import uint8, uint16, uint32, uint64, uint128
+from flax.types.blockchain_format.proof_of_space import ProofOfSpace
+from flax.types.blockchain_format.pool_target import PoolTarget
+from flax.types.coin_spend import CoinSpend
+from flax.types.blockchain_format.coin import Coin
+from flax.types.spend_bundle import SpendBundle
+from flax.types.blockchain_format.program import Program, SerializedProgram
+from flax.types.blockchain_format.sub_epoch_summary import SubEpochSummary
+from flax.types.weight_proof import WeightProof, SubEpochData, SubEpochChallengeSegment, SubSlotData, RecentChainData
+from flax.types.blockchain_format.vdf import VDFInfo, VDFProof
+from flax.types.blockchain_format.classgroup import ClassgroupElement
 from blspy import G1Element, G2Element
-from chia.types.header_block import HeaderBlock
-from chia.types.full_block import FullBlock
-from chia.types.unfinished_block import UnfinishedBlock
-from chia.types.blockchain_format.slots import (
+from flax.types.header_block import HeaderBlock
+from flax.types.full_block import FullBlock
+from flax.types.unfinished_block import UnfinishedBlock
+from flax.types.blockchain_format.slots import (
     ChallengeChainSubSlot,
     InfusedChallengeChainSubSlot,
     RewardChainSubSlot,
     SubSlotProofs,
 )
-from chia.types.end_of_slot_bundle import EndOfSubSlotBundle
-from chia.types.peer_info import TimestampedPeerInfo
-from chia.types.blockchain_format.reward_chain_block import RewardChainBlock
-from chia.types.blockchain_format.foliage import Foliage, FoliageTransactionBlock, FoliageBlockData, TransactionsInfo
+from flax.types.end_of_slot_bundle import EndOfSubSlotBundle
+from flax.types.peer_info import TimestampedPeerInfo
+from flax.types.blockchain_format.reward_chain_block import RewardChainBlock
+from flax.types.blockchain_format.foliage import Foliage, FoliageTransactionBlock, FoliageBlockData, TransactionsInfo
 
-from chia.protocols import (
+from flax.protocols import (
     farmer_protocol,
     full_node_protocol,
     harvester_protocol,

@@ -1,9 +1,9 @@
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.util.ints import uint64, uint32
-from chia.consensus.coinbase import create_farmer_coin, create_pool_coin
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.db_wrapper import DBWrapper
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.util.ints import uint64, uint32
+from flax.consensus.coinbase import create_farmer_coin, create_pool_coin
+from flax.types.blockchain_format.coin import Coin
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.util.db_wrapper import DBWrapper
 from typing import Tuple
 from pathlib import Path
 from datetime import datetime
