@@ -8,13 +8,13 @@ from typing import List, Tuple
 from tests.blockchain.blockchain_test_utils import _validate_and_add_block
 from tests.setup_nodes import bt, test_constants
 
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.cmds.db_upgrade_func import convert_v1_to_v2
-from chia.util.db_wrapper import DBWrapper
-from chia.full_node.block_store import BlockStore
-from chia.full_node.coin_store import CoinStore
-from chia.full_node.hint_store import HintStore
-from chia.consensus.blockchain import Blockchain
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.cmds.db_upgrade_func import convert_v1_to_v2
+from flax.util.db_wrapper import DBWrapper
+from flax.full_node.block_store import BlockStore
+from flax.full_node.coin_store import CoinStore
+from flax.full_node.hint_store import HintStore
+from flax.consensus.blockchain import Blockchain
 
 
 class TempFile:

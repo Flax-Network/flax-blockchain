@@ -8,12 +8,12 @@ from pathlib import Path
 from time import time
 import tempfile
 
-from chia.types.full_block import FullBlock
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.util.config import load_config
-from chia.full_node.full_node import FullNode
+from flax.types.full_block import FullBlock
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.util.config import load_config
+from flax.full_node.full_node import FullNode
 
-from chia.cmds.init_funcs import chia_init
+from flax.cmds.init_funcs import flax_init
 
 
 async def run_sync_test(file: Path, db_version=2) -> None:
@@ -21,7 +21,7 @@ async def run_sync_test(file: Path, db_version=2) -> None:
     with tempfile.TemporaryDirectory() as root_dir:
 
         root_path = Path(root_dir)
-        chia_init(root_path, should_check_keys=False)
+        flax_init(root_path, should_check_keys=False)
         config = load_config(root_path, "config.yaml")
 
         overrides = config["network_overrides"]["constants"][config["selected_network"]]
