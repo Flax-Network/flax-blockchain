@@ -239,6 +239,8 @@ class Farmer:
                     self.cache_clear_task = asyncio.create_task(self._periodically_clear_cache_and_refresh_task())
                     if not self.is_pooling_enabled():
                         self.log.info(f"Not OG pooling as 'disable_og_pooling' is set to true in your config")
+                        log.debug("start_task: initialized")
+                        self.started = True
                         return
                     self.pool_api_client = PoolApiClient(self.pool_url)
                     await self.initialize_pooling()
