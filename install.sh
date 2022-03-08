@@ -46,9 +46,9 @@ fi
 if [ "$(uname -m)" = "armv7l" ]; then
   echo ""
   echo "WARNING:"
-  echo "The Chia Blockchain requires a 64 bit OS and this is 32 bit armv7l"
+  echo "The Flax Blockchain requires a 64 bit OS and this is 32 bit armv7l"
   echo "For more information, see"
-  echo "https://github.com/Chia-Network/chia-blockchain/wiki/Raspberry-Pi"
+  echo "https://github.com/Flax-Network/flax-blockchain/wiki/Raspberry-Pi"
   echo "Exiting."
   exit 1
 fi
@@ -80,7 +80,7 @@ install_python3_and_sqlite3_from_source_with_yum() {
   echo "cd $TMP_PATH"
   cd "$TMP_PATH"
   # Install sqlite>=3.37
-  # yum install sqlite-devel brings sqlite3.7 which is not compatible with chia
+  # yum install sqlite-devel brings sqlite3.7 which is not compatible with flax
   echo "wget https://www.sqlite.org/2022/sqlite-autoconf-3370200.tar.gz"
   wget https://www.sqlite.org/2022/sqlite-autoconf-3370200.tar.gz
   tar xf sqlite-autoconf-3370200.tar.gz
@@ -93,7 +93,7 @@ install_python3_and_sqlite3_from_source_with_yum() {
   make -j"$(nproc)" | stdbuf -o0 cut -b1-"$(tput cols)" | sed -u 'i\\o033[2K' | stdbuf -o0 tr '\n' '\r'; echo
   echo "sudo make install"
   sudo make install | stdbuf -o0 cut -b1-"$(tput cols)" | sed -u 'i\\o033[2K' | stdbuf -o0 tr '\n' '\r'; echo
-  # yum install python3 brings Python3.6 which is not supported by chia
+  # yum install python3 brings Python3.6 which is not supported by flax
   cd ..
   echo "wget https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tgz"
   wget https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tgz
@@ -191,7 +191,7 @@ find_python() {
         if [ "$BEST_VERSION" = "3" ]; then
           PY3_VERSION=$(python$BEST_VERSION --version | cut -d ' ' -f2)
           if [[ "$PY3_VERSION" =~ 3.10.* ]]; then
-            echo "Chia requires Python version <= 3.9.9"
+            echo "Flax requires Python version <= 3.9.9"
             echo "Current Python version = $PY3_VERSION"
             exit 1
           fi
@@ -263,13 +263,13 @@ python -m pip install --extra-index-url https://pypi.chia.net/simple/ miniupnpc=
 python -m pip install -e ."${EXTRAS}" --extra-index-url https://pypi.chia.net/simple/
 
 echo ""
-echo "Chia blockchain install.sh complete."
-echo "For assistance join us on Keybase in the #support chat channel:"
-echo "https://keybase.io/team/chia_network.public"
+echo "Flax blockchain install.sh complete."
+echo "For assistance join us on Discord in the #support chat channel:"
+echo "https://discord.gg/yEWaF6CQcA"
 echo ""
-echo "Try the Quick Start Guide to running chia-blockchain:"
-echo "https://github.com/Chia-Network/chia-blockchain/wiki/Quick-Start-Guide"
+echo "Try the Quick Start Guide to running flax-blockchain:"
+echo "https://github.com/Flax-Network/flax-blockchain/wiki/Quick-Start-Guide"
 echo ""
 echo "To install the GUI type 'sh install-gui.sh' after '. ./activate'."
 echo ""
-echo "Type '. ./activate' and then 'chia init' to begin."
+echo "Type '. ./activate' and then 'flax init' to begin."

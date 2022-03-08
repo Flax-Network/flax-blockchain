@@ -1,10 +1,10 @@
-from chia.daemon.server import WebSocketServer
-from chia.server.outbound_message import NodeType
-from chia.types.peer_info import PeerInfo
+from flax.daemon.server import WebSocketServer
+from flax.server.outbound_message import NodeType
+from flax.types.peer_info import PeerInfo
 from tests.block_tools import BlockTools, create_block_tools_async
-from chia.util.ints import uint16
-from chia.util.keyring_wrapper import DEFAULT_PASSPHRASE_IF_NO_MASTER_PASSPHRASE
-from chia.util.ws_message import create_payload
+from flax.util.ints import uint16
+from flax.util.keyring_wrapper import DEFAULT_PASSPHRASE_IF_NO_MASTER_PASSPHRASE
+from flax.util.ws_message import create_payload
 from tests.core.node_height import node_height_at_least
 from tests.setup_nodes import setup_daemon, self_hostname, setup_full_system
 from tests.simulation.test_simulation import test_constants_modified
@@ -106,7 +106,7 @@ class TestDaemon:
 
         read_handler = asyncio.create_task(reader(ws, message_queue))
         data = {}
-        payload = create_payload("get_blockchain_state", data, service_name, "chia_full_node")
+        payload = create_payload("get_blockchain_state", data, service_name, "flax_full_node")
         await ws.send_str(payload)
 
         await asyncio.sleep(5)

@@ -12,43 +12,43 @@ from clvm.casts import int_to_bytes
 import pytest
 import pytest_asyncio
 
-from chia.consensus.blockchain import ReceiveBlockResult
-from chia.consensus.pot_iterations import is_overflow_block
-from chia.full_node.bundle_tools import detect_potential_template_generator
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.full_node.signage_point import SignagePoint
-from chia.protocols import full_node_protocol as fnp, full_node_protocol, wallet_protocol
-from chia.protocols import timelord_protocol
-from chia.protocols.full_node_protocol import RespondTransaction
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.server.address_manager import AddressManager
-from chia.server.outbound_message import Message
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.types.blockchain_format.classgroup import ClassgroupElement
-from chia.types.blockchain_format.program import Program, SerializedProgram
-from chia.types.blockchain_format.vdf import CompressibleVDFField, VDFProof
-from chia.types.coin_spend import CoinSpend
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.full_block import FullBlock
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.peer_info import PeerInfo, TimestampedPeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.types.unfinished_block import UnfinishedBlock
+from flax.consensus.blockchain import ReceiveBlockResult
+from flax.consensus.pot_iterations import is_overflow_block
+from flax.full_node.bundle_tools import detect_potential_template_generator
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.full_node.signage_point import SignagePoint
+from flax.protocols import full_node_protocol as fnp, full_node_protocol, wallet_protocol
+from flax.protocols import timelord_protocol
+from flax.protocols.full_node_protocol import RespondTransaction
+from flax.protocols.protocol_message_types import ProtocolMessageTypes
+from flax.server.address_manager import AddressManager
+from flax.server.outbound_message import Message
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.types.blockchain_format.classgroup import ClassgroupElement
+from flax.types.blockchain_format.program import Program, SerializedProgram
+from flax.types.blockchain_format.vdf import CompressibleVDFField, VDFProof
+from flax.types.coin_spend import CoinSpend
+from flax.types.condition_opcodes import ConditionOpcode
+from flax.types.condition_with_args import ConditionWithArgs
+from flax.types.full_block import FullBlock
+from flax.types.mempool_inclusion_status import MempoolInclusionStatus
+from flax.types.peer_info import PeerInfo, TimestampedPeerInfo
+from flax.types.spend_bundle import SpendBundle
+from flax.types.unfinished_block import UnfinishedBlock
 from tests.block_tools import get_signage_point
-from chia.util.errors import Err
-from chia.util.hash import std_hash
-from chia.util.ints import uint8, uint16, uint32, uint64
-from chia.util.recursive_replace import recursive_replace
-from chia.util.vdf_prover import get_vdf_info_and_proof
+from flax.util.errors import Err
+from flax.util.hash import std_hash
+from flax.util.ints import uint8, uint16, uint32, uint64
+from flax.util.recursive_replace import recursive_replace
+from flax.util.vdf_prover import get_vdf_info_and_proof
 from tests.blockchain.blockchain_test_utils import (
     _validate_and_add_block,
     _validate_and_add_block_no_error,
 )
 from tests.pools.test_pool_rpc import wallet_is_synced
 from tests.wallet_tools import WalletTool
-from chia.wallet.cat_wallet.cat_wallet import CATWallet
-from chia.wallet.transaction_record import TransactionRecord
+from flax.wallet.cat_wallet.cat_wallet import CATWallet
+from flax.wallet.transaction_record import TransactionRecord
 
 from tests.connection_utils import add_dummy_connection, connect_and_get_peer
 from tests.core.full_node.stores.test_coin_store import get_future_reward_coins

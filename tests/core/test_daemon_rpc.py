@@ -2,11 +2,11 @@ import pytest
 import pytest_asyncio
 
 from tests.setup_nodes import setup_daemon
-from chia.daemon.client import connect_to_daemon
+from flax.daemon.client import connect_to_daemon
 from tests.setup_nodes import bt
-from chia import __version__
+from flax import __version__
 from tests.util.socket import find_available_listen_port
-from chia.util.config import save_config
+from flax.util.config import save_config
 
 
 class TestDaemonRpc:

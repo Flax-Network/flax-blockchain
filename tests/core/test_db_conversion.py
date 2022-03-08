@@ -9,15 +9,15 @@ from typing import List, Tuple
 from tests.setup_nodes import test_constants
 from tests.util.temp_file import TempFile
 
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.ints import uint32, uint64
-from chia.cmds.db_upgrade_func import convert_v1_to_v2
-from chia.util.db_wrapper import DBWrapper
-from chia.full_node.block_store import BlockStore
-from chia.full_node.coin_store import CoinStore
-from chia.full_node.hint_store import HintStore
-from chia.consensus.blockchain import Blockchain
-from chia.consensus.multiprocess_validation import PreValidationResult
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.util.ints import uint32, uint64
+from flax.cmds.db_upgrade_func import convert_v1_to_v2
+from flax.util.db_wrapper import DBWrapper
+from flax.full_node.block_store import BlockStore
+from flax.full_node.coin_store import CoinStore
+from flax.full_node.hint_store import HintStore
+from flax.consensus.blockchain import Blockchain
+from flax.consensus.multiprocess_validation import PreValidationResult
 
 
 def rand_bytes(num) -> bytes:

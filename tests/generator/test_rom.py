@@ -2,23 +2,23 @@ from clvm.casts import int_to_bytes
 from clvm_tools import binutils
 from clvm_tools.clvmc import compile_clvm_text
 
-from chia.full_node.generator import run_generator_unsafe
-from chia.full_node.mempool_check_conditions import get_name_puzzle_conditions
-from chia.types.blockchain_format.program import Program, SerializedProgram
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.name_puzzle_condition import NPC
-from chia.types.generator_types import BlockGenerator
-from chia.util.ints import uint32
-from chia.wallet.puzzles.load_clvm import load_clvm
-from chia.consensus.condition_costs import ConditionCost
+from flax.full_node.generator import run_generator_unsafe
+from flax.full_node.mempool_check_conditions import get_name_puzzle_conditions
+from flax.types.blockchain_format.program import Program, SerializedProgram
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.condition_opcodes import ConditionOpcode
+from flax.types.condition_with_args import ConditionWithArgs
+from flax.types.name_puzzle_condition import NPC
+from flax.types.generator_types import BlockGenerator
+from flax.util.ints import uint32
+from flax.wallet.puzzles.load_clvm import load_clvm
+from flax.consensus.condition_costs import ConditionCost
 
 MAX_COST = int(1e15)
 COST_PER_BYTE = int(12000)
 
 
-DESERIALIZE_MOD = load_clvm("chialisp_deserialisation.clvm", package_or_requirement="chia.wallet.puzzles")
+DESERIALIZE_MOD = load_clvm("flaxlisp_deserialisation.clvm", package_or_requirement="flax.wallet.puzzles")
 
 
 GENERATOR_CODE = """

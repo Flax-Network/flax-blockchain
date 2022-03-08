@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 """
-run_block: Convert an encoded FullBlock from the Chia blockchain into a list of transactions
+run_block: Convert an encoded FullBlock from the Flax blockchain into a list of transactions
 
-As input, takes a file containing a [FullBlock](../chia/types/full_block.py) in json format
+As input, takes a file containing a [FullBlock](../flax/types/full_block.py) in json format
 
 ```
 curl --insecure --cert $config_root/config/ssl/full_node/private_full_node.crt \
@@ -11,8 +11,8 @@ curl --insecure --cert $config_root/config/ssl/full_node/private_full_node.crt \
      -d '{ "header_hash": "'$hash'" }' -H "Content-Type: application/json" \
      -X POST https://localhost:$port/get_block
 
-$ca_root is the directory containing your current Chia config files
-$hash is the header_hash of the [BlockRecord](../chia/consensus/block_record.py)
+$ca_root is the directory containing your current Flax config files
+$hash is the header_hash of the [BlockRecord](../flax/consensus/block_record.py)
 $port is the Full Node RPC API port
 ```
 
@@ -27,7 +27,7 @@ then be verified by the consensus rules, or used to view some aspects of transac
 
 The information for each spend is an "NPC" (Name, Puzzle, Condition):
         "coin_name": a unique 32 byte identifier
-        "conditions": a list of condition expressions, as in [condition_opcodes.py](../chia/types/condition_opcodes.py)
+        "conditions": a list of condition expressions, as in [condition_opcodes.py](../flax/types/condition_opcodes.py)
         "puzzle_hash": the sha256 of the CLVM bytecode that controls spending this coin
 
 Condition Opcodes, such as AGG_SIG_ME, or CREATE_COIN are created by running the "puzzle", i.e. the CLVM bytecode
@@ -44,19 +44,19 @@ import click
 
 from clvm_rs import COND_CANON_INTS, NO_NEG_DIV
 
-from chia.consensus.constants import ConsensusConstants
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.generator import create_generator_args
-from chia.types.blockchain_format.program import SerializedProgram
-from chia.types.blockchain_format.coin import Coin
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.generator_types import BlockGenerator
-from chia.types.name_puzzle_condition import NPC
-from chia.util.config import load_config
-from chia.util.default_root import DEFAULT_ROOT_PATH
-from chia.util.ints import uint32, uint64
-from chia.wallet.cat_wallet.cat_utils import match_cat_puzzle
+from flax.consensus.constants import ConsensusConstants
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.full_node.generator import create_generator_args
+from flax.types.blockchain_format.program import SerializedProgram
+from flax.types.blockchain_format.coin import Coin
+from flax.types.condition_opcodes import ConditionOpcode
+from flax.types.condition_with_args import ConditionWithArgs
+from flax.types.generator_types import BlockGenerator
+from flax.types.name_puzzle_condition import NPC
+from flax.util.config import load_config
+from flax.util.default_root import DEFAULT_ROOT_PATH
+from flax.util.ints import uint32, uint64
+from flax.wallet.cat_wallet.cat_utils import match_cat_puzzle
 from clvm.casts import int_from_bytes
 
 
@@ -94,13 +94,7 @@ def run_generator(
     block_generator: BlockGenerator, constants: ConsensusConstants, max_cost: int, height: uint32
 ) -> List[CAT]:
 
-    if height >= DEFAULT_CONSTANTS.SOFT_FORK_HEIGHT:
-        # conditions must use integers in canonical encoding (i.e. no redundant
-        # leading zeros)
-        # the division operator may not be used with negative operands
-        flags = COND_CANON_INTS | NO_NEG_DIV
-    else:
-        flags = 0
+    flags = 0
 
     args = create_generator_args(block_generator.generator_refs).first()
     _, block_result = block_generator.program.run_with_cost(max_cost, flags, args)

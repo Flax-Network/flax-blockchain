@@ -9,27 +9,27 @@ import pytest
 import pytest_asyncio
 from blspy import G1Element
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.pools.pool_puzzles import SINGLETON_LAUNCHER_HASH
-from chia.pools.pool_wallet_info import PoolWalletInfo, PoolSingletonState
-from chia.protocols import full_node_protocol
-from chia.protocols.full_node_protocol import RespondBlock
-from chia.rpc.rpc_server import start_rpc_server
-from chia.rpc.wallet_rpc_api import WalletRpcApi
-from chia.rpc.wallet_rpc_client import WalletRpcClient
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
-from chia.types.blockchain_format.sized_bytes import bytes32
+from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from flax.pools.pool_puzzles import SINGLETON_LAUNCHER_HASH
+from flax.pools.pool_wallet_info import PoolWalletInfo, PoolSingletonState
+from flax.protocols import full_node_protocol
+from flax.protocols.full_node_protocol import RespondBlock
+from flax.rpc.rpc_server import start_rpc_server
+from flax.rpc.wallet_rpc_api import WalletRpcApi
+from flax.rpc.wallet_rpc_client import WalletRpcClient
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
+from flax.types.blockchain_format.sized_bytes import bytes32
 
-from chia.types.peer_info import PeerInfo
-from chia.util.bech32m import encode_puzzle_hash
-from chia.util.byte_types import hexstr_to_bytes
-from chia.wallet.derive_keys import find_authentication_sk, find_owner_sk
-from chia.wallet.wallet_node import WalletNode
+from flax.types.peer_info import PeerInfo
+from flax.util.bech32m import encode_puzzle_hash
+from flax.util.byte_types import hexstr_to_bytes
+from flax.wallet.derive_keys import find_authentication_sk, find_owner_sk
+from flax.wallet.wallet_node import WalletNode
 from tests.block_tools import get_plot_dir
-from chia.util.config import load_config
-from chia.util.ints import uint16, uint32
-from chia.wallet.transaction_record import TransactionRecord
-from chia.wallet.util.wallet_types import WalletType
+from flax.util.config import load_config
+from flax.util.ints import uint16, uint32
+from flax.wallet.transaction_record import TransactionRecord
+from flax.wallet.util.wallet_types import WalletType
 from tests.setup_nodes import self_hostname, setup_simulators_and_wallets, bt
 from tests.time_out_assert import time_out_assert
 from tests.util.socket import find_available_listen_port
@@ -550,7 +550,7 @@ class TestPoolWalletRpc:
             assert len(await wallet_node_0.wallet_state_manager.tx_store.get_unconfirmed_for_wallet(2)) == 0
 
             tr: TransactionRecord = await client.send_transaction(
-                1, 100, encode_puzzle_hash(status.p2_singleton_puzzle_hash, "txch")
+                1, 100, encode_puzzle_hash(status.p2_singleton_puzzle_hash, "txfx")
             )
 
             await time_out_assert(
@@ -597,7 +597,7 @@ class TestPoolWalletRpc:
         for summary in summaries_response:
             if WalletType(int(summary["type"])) == WalletType.POOLING_WALLET:
                 assert False
-        # Balance stars at 6 XCH
+        # Balance stars at 6 XFX
         assert (await wallet_0.get_confirmed_balance()) == 6000000000000
         creation_tx: TransactionRecord = await client.create_new_pool_wallet(
             our_ph, "http://123.45.67.89", 10, f"{self_hostname}:5000", "new", "FARMING_TO_POOL", fee
@@ -674,7 +674,7 @@ class TestPoolWalletRpc:
                 wallet_node_0.wallet_state_manager.blockchain.get_peak_height()
                 == full_node_api.full_node.blockchain.get_peak().height
             )
-            # Balance stars at 6 XCH and 5 more blocks are farmed, total 22 XCH
+            # Balance stars at 6 XFX and 5 more blocks are farmed, total 22 XFX
             assert (await wallet_0.get_confirmed_balance()) == 21999999999999
 
             num_trials = 3
@@ -885,11 +885,11 @@ class TestPoolWalletRpc:
                 if WalletType(int(summary["type"])) == WalletType.POOLING_WALLET:
                     assert False
 
-            async def have_chia():
+            async def have_flax():
                 await self.farm_blocks(full_node_api, our_ph, 1)
                 return (await wallets[0].get_confirmed_balance()) > 0
 
-            await time_out_assert(timeout=WAIT_SECS, function=have_chia)
+            await time_out_assert(timeout=WAIT_SECS, function=have_flax)
             await time_out_assert(10, wallet_is_synced, True, wallet_nodes[0], full_node_api)
 
             creation_tx: TransactionRecord = await client.create_new_pool_wallet(
@@ -1008,11 +1008,11 @@ class TestPoolWalletRpc:
                 if WalletType(int(summary["type"])) == WalletType.POOLING_WALLET:
                     assert False
 
-            async def have_chia():
+            async def have_flax():
                 await self.farm_blocks(full_node_api, our_ph, 1)
                 return (await wallets[0].get_confirmed_balance()) > 0
 
-            await time_out_assert(timeout=WAIT_SECS, function=have_chia)
+            await time_out_assert(timeout=WAIT_SECS, function=have_flax)
             await time_out_assert(10, wallet_is_synced, True, wallet_nodes[0], full_node_api)
 
             creation_tx: TransactionRecord = await client.create_new_pool_wallet(
@@ -1111,11 +1111,11 @@ class TestPoolWalletRpc:
                 if WalletType(int(summary["type"])) == WalletType.POOLING_WALLET:
                     assert False
 
-            async def have_chia():
+            async def have_flax():
                 await self.farm_blocks(full_node_api, our_ph, 1)
                 return (await wallets[0].get_confirmed_balance()) > 0
 
-            await time_out_assert(timeout=WAIT_SECS, function=have_chia)
+            await time_out_assert(timeout=WAIT_SECS, function=have_flax)
             await time_out_assert(10, wallet_is_synced, True, wallet_nodes[0], full_node_api)
 
             creation_tx: TransactionRecord = await client.create_new_pool_wallet(

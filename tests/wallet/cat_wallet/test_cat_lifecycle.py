@@ -5,23 +5,23 @@ from typing import List, Tuple, Optional, Dict
 from blspy import PrivateKey, AugSchemeMPL, G2Element
 from clvm.casts import int_to_bytes
 
-from chia.clvm.spend_sim import SpendSim, SimClient
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.spend_bundle import SpendBundle
-from chia.types.coin_spend import CoinSpend
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.util.errors import Err
-from chia.util.ints import uint64
-from chia.wallet.lineage_proof import LineageProof
-from chia.wallet.cat_wallet.cat_utils import (
+from flax.clvm.spend_sim import SpendSim, SimClient
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.coin import Coin
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.spend_bundle import SpendBundle
+from flax.types.coin_spend import CoinSpend
+from flax.types.mempool_inclusion_status import MempoolInclusionStatus
+from flax.util.errors import Err
+from flax.util.ints import uint64
+from flax.wallet.lineage_proof import LineageProof
+from flax.wallet.cat_wallet.cat_utils import (
     CAT_MOD,
     SpendableCAT,
     construct_cat_puzzle,
     unsigned_spend_bundle_for_spendable_cats,
 )
-from chia.wallet.puzzles.tails import (
+from flax.wallet.puzzles.tails import (
     GenesisById,
     GenesisByPuzhash,
     EverythingWithSig,

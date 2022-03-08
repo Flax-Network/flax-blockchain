@@ -4,20 +4,20 @@ import time
 import pytest
 import pytest_asyncio
 
-from chia.consensus.coinbase import create_puzzlehash_for_pk
-from chia.protocols import farmer_protocol
-from chia.rpc.farmer_rpc_api import FarmerRpcApi
-from chia.rpc.farmer_rpc_client import FarmerRpcClient
-from chia.rpc.harvester_rpc_api import HarvesterRpcApi
-from chia.rpc.harvester_rpc_client import HarvesterRpcClient
-from chia.rpc.rpc_server import start_rpc_server
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
-from chia.util.byte_types import hexstr_to_bytes
-from chia.util.config import load_config, save_config
-from chia.util.hash import std_hash
-from chia.util.ints import uint8, uint16, uint32, uint64
-from chia.wallet.derive_keys import master_sk_to_wallet_sk
+from flax.consensus.coinbase import create_puzzlehash_for_pk
+from flax.protocols import farmer_protocol
+from flax.rpc.farmer_rpc_api import FarmerRpcApi
+from flax.rpc.farmer_rpc_client import FarmerRpcClient
+from flax.rpc.harvester_rpc_api import HarvesterRpcApi
+from flax.rpc.harvester_rpc_client import HarvesterRpcClient
+from flax.rpc.rpc_server import start_rpc_server
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
+from flax.util.byte_types import hexstr_to_bytes
+from flax.util.config import load_config, save_config
+from flax.util.hash import std_hash
+from flax.util.ints import uint8, uint16, uint32, uint64
+from flax.wallet.derive_keys import master_sk_to_wallet_sk
 from tests.setup_nodes import bt, self_hostname, setup_farmer_harvester, test_constants
 from tests.time_out_assert import time_out_assert, time_out_assert_custom_interval
 from tests.util.rpc import validate_get_routes
@@ -191,14 +191,14 @@ async def test_farmer_reward_target_endpoints(environment):
     new_ph: bytes32 = create_puzzlehash_for_pk(master_sk_to_wallet_sk(bt.farmer_master_sk, uint32(10)).get_g1())
     new_ph_2: bytes32 = create_puzzlehash_for_pk(master_sk_to_wallet_sk(bt.pool_master_sk, uint32(472)).get_g1())
 
-    await farmer_rpc_client.set_reward_targets(encode_puzzle_hash(new_ph, "xch"), encode_puzzle_hash(new_ph_2, "xch"))
+    await farmer_rpc_client.set_reward_targets(encode_puzzle_hash(new_ph, "xfx"), encode_puzzle_hash(new_ph_2, "xfx"))
     targets_3 = await farmer_rpc_client.get_reward_targets(True)
     assert decode_puzzle_hash(targets_3["farmer_target"]) == new_ph
     assert decode_puzzle_hash(targets_3["pool_target"]) == new_ph_2
     assert targets_3["have_pool_sk"] and targets_3["have_farmer_sk"]
 
     new_ph_3: bytes32 = create_puzzlehash_for_pk(master_sk_to_wallet_sk(bt.pool_master_sk, uint32(1888)).get_g1())
-    await farmer_rpc_client.set_reward_targets(None, encode_puzzle_hash(new_ph_3, "xch"))
+    await farmer_rpc_client.set_reward_targets(None, encode_puzzle_hash(new_ph_3, "xfx"))
     targets_4 = await farmer_rpc_client.get_reward_targets(True)
     assert decode_puzzle_hash(targets_4["farmer_target"]) == new_ph
     assert decode_puzzle_hash(targets_4["pool_target"]) == new_ph_3
@@ -206,10 +206,10 @@ async def test_farmer_reward_target_endpoints(environment):
 
     root_path = farmer_api.farmer._root_path
     config = load_config(root_path, "config.yaml")
-    assert config["farmer"]["xch_target_address"] == encode_puzzle_hash(new_ph, "xch")
-    assert config["pool"]["xch_target_address"] == encode_puzzle_hash(new_ph_3, "xch")
+    assert config["farmer"]["xfx_target_address"] == encode_puzzle_hash(new_ph, "xfx")
+    assert config["pool"]["xfx_target_address"] == encode_puzzle_hash(new_ph_3, "xfx")
 
-    new_ph_3_encoded = encode_puzzle_hash(new_ph_3, "xch")
+    new_ph_3_encoded = encode_puzzle_hash(new_ph_3, "xfx")
     added_char = new_ph_3_encoded + "a"
     with pytest.raises(ValueError):
         await farmer_rpc_client.set_reward_targets(None, added_char)

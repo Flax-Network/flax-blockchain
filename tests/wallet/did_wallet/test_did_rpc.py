@@ -3,16 +3,16 @@ import logging
 import pytest
 import pytest_asyncio
 
-from chia.rpc.rpc_server import start_rpc_server
-from chia.rpc.wallet_rpc_api import WalletRpcApi
-from chia.rpc.wallet_rpc_client import WalletRpcClient
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16, uint64
-from chia.wallet.util.wallet_types import WalletType
+from flax.rpc.rpc_server import start_rpc_server
+from flax.rpc.wallet_rpc_api import WalletRpcApi
+from flax.rpc.wallet_rpc_client import WalletRpcClient
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.types.peer_info import PeerInfo
+from flax.util.ints import uint16, uint64
+from flax.wallet.util.wallet_types import WalletType
 from tests.setup_nodes import self_hostname, setup_simulators_and_wallets, bt
 from tests.time_out_assert import time_out_assert
-from chia.wallet.did_wallet.did_wallet import DIDWallet
+from flax.wallet.did_wallet.did_wallet import DIDWallet
 from tests.util.socket import find_available_listen_port
 
 

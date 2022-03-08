@@ -4,7 +4,7 @@ import logging
 import os
 import pytest
 from tests.util.build_network_protocol_files import get_network_protocol_filename
-from chia.protocols import (
+from flax.protocols import (
     farmer_protocol,
     full_node_protocol,
     harvester_protocol,

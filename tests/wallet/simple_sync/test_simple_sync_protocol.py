@@ -7,22 +7,22 @@ import pytest_asyncio
 from clvm.casts import int_to_bytes
 from colorlog import getLogger
 
-from chia.consensus.block_rewards import calculate_pool_reward, calculate_base_farmer_reward
-from chia.protocols import wallet_protocol, full_node_protocol
-from chia.protocols.full_node_protocol import RespondTransaction
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.protocols.wallet_protocol import RespondToCoinUpdates, CoinStateUpdate, RespondToPhUpdates, CoinState
-from chia.server.outbound_message import NodeType
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
-from chia.types.blockchain_format.coin import Coin
-from chia.types.coin_record import CoinRecord
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.peer_info import PeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.wallet import Wallet
-from chia.wallet.wallet_state_manager import WalletStateManager
+from flax.consensus.block_rewards import calculate_pool_reward, calculate_base_farmer_reward
+from flax.protocols import wallet_protocol, full_node_protocol
+from flax.protocols.full_node_protocol import RespondTransaction
+from flax.protocols.protocol_message_types import ProtocolMessageTypes
+from flax.protocols.wallet_protocol import RespondToCoinUpdates, CoinStateUpdate, RespondToPhUpdates, CoinState
+from flax.server.outbound_message import NodeType
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
+from flax.types.blockchain_format.coin import Coin
+from flax.types.coin_record import CoinRecord
+from flax.types.condition_opcodes import ConditionOpcode
+from flax.types.condition_with_args import ConditionWithArgs
+from flax.types.peer_info import PeerInfo
+from flax.types.spend_bundle import SpendBundle
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.wallet import Wallet
+from flax.wallet.wallet_state_manager import WalletStateManager
 from tests.connection_utils import add_dummy_connection
 from tests.pools.test_pool_rpc import wallet_is_synced
 from tests.setup_nodes import self_hostname, setup_simulators_and_wallets, bt
@@ -213,7 +213,7 @@ class TestSimpleSyncProtocol:
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(puzzle_hash))
 
         # Let's make sure the wallet can handle a non ephemeral launcher
-        from chia.wallet.puzzles.singleton_top_layer import SINGLETON_LAUNCHER_HASH
+        from flax.wallet.puzzles.singleton_top_layer import SINGLETON_LAUNCHER_HASH
 
         await time_out_assert(10, wallet_is_synced, True, wallet_node, full_node_api)
         tx_record = await wallet.generate_signed_transaction(uint64(10), SINGLETON_LAUNCHER_HASH, uint64(0))

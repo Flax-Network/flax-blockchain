@@ -4,17 +4,17 @@ from typing import List, Tuple, Optional
 
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
 
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.blockchain_format.coin import Coin
-from chia.types.coin_spend import CoinSpend
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.spend_bundle import SpendBundle
-from chia.util.errors import Err
-from chia.util.ints import uint64
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.wallet.lineage_proof import LineageProof
-from chia.wallet.puzzles import (
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.blockchain_format.coin import Coin
+from flax.types.coin_spend import CoinSpend
+from flax.types.condition_opcodes import ConditionOpcode
+from flax.types.spend_bundle import SpendBundle
+from flax.util.errors import Err
+from flax.util.ints import uint64
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.wallet.lineage_proof import LineageProof
+from flax.wallet.puzzles import (
     p2_conditions,
     p2_delegated_puzzle_or_hidden_puzzle,
     singleton_top_layer,
@@ -25,14 +25,14 @@ from tests.clvm.test_puzzles import (
     secret_exponent_for_index,
 )
 
-from chia.clvm.spend_sim import SpendSim, SimClient
+from flax.clvm.spend_sim import SpendSim, SimClient
 
 """
 This test suite aims to test:
-    - chia.wallet.puzzles.singleton_top_layer.py
-    - chia.wallet.puzzles.singleton_top_layer.clvm
-    - chia.wallet.puzzles.p2_singleton.clvm
-    - chia.wallet.puzzles.p2_singleton_or_delayed_puzhash.clvm
+    - flax.wallet.puzzles.singleton_top_layer.py
+    - flax.wallet.puzzles.singleton_top_layer.clvm
+    - flax.wallet.puzzles.p2_singleton.clvm
+    - flax.wallet.puzzles.p2_singleton_or_delayed_puzhash.clvm
 """
 
 

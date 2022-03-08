@@ -2,8 +2,8 @@ import atexit
 
 import pytest
 
-from chia.rpc.crawler_rpc_api import CrawlerRpcApi
-from chia.seeder.crawler import Crawler
+from flax.rpc.crawler_rpc_api import CrawlerRpcApi
+from flax.seeder.crawler import Crawler
 from tests.block_tools import create_block_tools, test_constants
 from tests.util.keyring import TempKeyring
 

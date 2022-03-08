@@ -2,7 +2,7 @@ from decimal import Decimal
 import pytest
 import io
 
-from chia.util.ints import int8, uint8, int16, uint16, int32, uint32, int64, uint64, uint128, int512
+from flax.util.ints import int8, uint8, int16, uint16, int32, uint32, int64, uint64, uint128, int512
 
 
 class TestStructStream:
