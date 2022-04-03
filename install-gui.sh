@@ -11,17 +11,17 @@ if [ "${SCRIPT_DIR}" != "$(pwd)" ]; then
 fi
 
 if [ -z "$VIRTUAL_ENV" ]; then
-  echo "This requires the chia python virtual environment."
+  echo "This requires the flax python virtual environment."
   echo "Execute '. ./activate' before running."
   exit 1
 fi
 
 if [ "$(id -u)" = 0 ]; then
-  echo "The Chia Blockchain GUI can not be installed or run by the root user."
+  echo "The Flax Blockchain GUI can not be installed or run by the root user."
   exit 1
 fi
 
-# Allows overriding the branch or commit to build in chia-blockchain-gui
+# Allows overriding the branch or commit to build in flax-blockchain-gui
 SUBMODULE_BRANCH=$1
 
 nodejs_is_installed(){
@@ -55,12 +55,12 @@ do_install_npm_locally(){
     cd "${NPM_GLOBAL}"
     if [ "$NPM_VERSION" -lt "6" ]; then
       # Ubuntu image of Amazon ec2 instance surprisingly uses nodejs@3.5.2
-      # which doesn't support `npm ci` as of 27th Jan, 2022
+      # which doesn't support `npm install` as of 27th Jan, 2022
       echo "npm install"
       npm install
     else
-      echo "npm ci"
-      npm ci
+      echo "npm install"
+      npm install
     fi
     export N_PREFIX=${SCRIPT_DIR}/.n
     PATH="${N_PREFIX}/bin:$(npm bin):${PATH}"
@@ -86,7 +86,7 @@ do_install_npm_locally(){
 }
 
 # Work around for inconsistent `npm` exec path issue
-# https://github.com/Chia-Network/chia-blockchain/pull/10460#issuecomment-1054492495
+# https://github.com/Flax-Network/flax-blockchain/pull/10460#issuecomment-1054492495
 patch_inconsistent_npm_issue(){
   node_module_dir=$1
   if [ ! -d "$node_module_dir" ]; then
@@ -180,7 +180,7 @@ if [ ! "$CI" ]; then
   echo "Running git submodule update."
   echo ""
   git submodule update
-  cd chia-blockchain-gui
+  cd flax-blockchain-gui
 
   if [ "$SUBMODULE_BRANCH" ];
   then
@@ -192,20 +192,20 @@ if [ ! "$CI" ]; then
   fi
 
   # Work around for inconsistent `npm` exec path issue
-  # https://github.com/Chia-Network/chia-blockchain/pull/10460#issuecomment-1054492495
+  # https://github.com/Flax-Network/flax-blockchain/pull/10460#issuecomment-1054492495
   patch_inconsistent_npm_issue "../node_modules"
 
-  npm ci
+  npm install
   npm audit fix || true
   npm run build
 
-  # Set modified output of `chia version` to version property of GUI's package.json
+  # Set modified output of `flax version` to version property of GUI's package.json
   python ../installhelper.py
 else
   echo "Skipping node.js in install.sh on MacOS ci."
 fi
 
 echo ""
-echo "Chia blockchain install-gui.sh completed."
+echo "Flax blockchain install-gui.sh completed."
 echo ""
 echo "Type 'bash start-gui.sh &' to start the GUI."

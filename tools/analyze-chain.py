@@ -12,11 +12,11 @@ from time import time
 
 from clvm_rs import run_generator2, MEMPOOL_MODE
 
-from chia.types.full_block import FullBlock
-from chia.types.blockchain_format.program import Program
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.wallet.puzzles.rom_bootstrap_generator import get_generator
-from chia.util.ints import uint32
+from flax.types.full_block import FullBlock
+from flax.types.blockchain_format.program import Program
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.wallet.puzzles.rom_bootstrap_generator import get_generator
+from flax.util.ints import uint32
 
 GENERATOR_ROM = bytes(get_generator())
 

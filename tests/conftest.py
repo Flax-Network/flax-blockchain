@@ -11,7 +11,7 @@ from tests.setup_nodes import setup_node_and_wallet, setup_n_nodes, setup_two_no
 multiprocessing.set_start_method("spawn")
 
 from pathlib import Path
-from chia.util.keyring_wrapper import KeyringWrapper
+from flax.util.keyring_wrapper import KeyringWrapper
 from tests.block_tools import BlockTools, test_constants, create_block_tools
 from tests.util.keyring import TempKeyring
 
@@ -38,7 +38,7 @@ def self_hostname():
 
 
 # NOTE:
-#       Instantiating the bt fixture results in an attempt to create the chia root directory
+#       Instantiating the bt fixture results in an attempt to create the flax root directory
 #       which the build scripts symlink to a sometimes-not-there directory.
 #       When not there, Python complains since, well, the symlink is not a directory nor points to a directory.
 #

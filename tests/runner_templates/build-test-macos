@@ -1,5 +1,5 @@
 #
-# THIS FILE IS GENERATED. SEE https://github.com/Chia-Network/chia-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Flax-Network/flax-blockchain/tree/main/tests#readme
 #
 name: MacOS TEST_NAME Tests
 
@@ -43,10 +43,10 @@ jobs:
 
     - name: Create keychain for CI use
       run: |
-        security create-keychain -p foo chiachain
-        security default-keychain -s chiachain
-        security unlock-keychain -p foo chiachain
-        security set-keychain-settings -t 7200 -u chiachain
+        security create-keychain -p foo flaxfxain
+        security default-keychain -s flaxfxain
+        security unlock-keychain -p foo flaxfxain
+        security set-keychain-settings -t 7200 -u flaxfxain
 
     - name: Get pip cache dir
       id: pip-cache
@@ -79,5 +79,5 @@ INSTALL_TIMELORD
         . ./activate
         ./venv/bin/py.test TEST_DIR -s -v --durations 0PYTEST_PARALLEL_ARGS
 #
-# THIS FILE IS GENERATED. SEE https://github.com/Chia-Network/chia-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Flax-Network/flax-blockchain/tree/main/tests#readme
 #

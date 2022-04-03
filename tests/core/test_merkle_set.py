@@ -2,7 +2,7 @@ import itertools
 
 import pytest
 
-from chia.util.merkle_set import MerkleSet, confirm_included_already_hashed
+from flax.util.merkle_set import MerkleSet, confirm_included_already_hashed
 
 
 class TestMerkleSet:
