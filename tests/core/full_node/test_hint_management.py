@@ -2,15 +2,15 @@ from typing import List, Optional
 
 import pytest
 
-from chia.consensus.block_record import BlockRecord
-from chia.consensus.blockchain import Blockchain, StateChangeSummary
-from chia.consensus.cost_calculator import NPCResult
-from chia.full_node.hint_management import get_hints_and_subscription_coin_ids
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.spend_bundle_conditions import Spend, SpendBundleConditions
-from chia.util.hash import std_hash
-from chia.util.ints import uint32, uint64
+from flax.consensus.block_record import BlockRecord
+from flax.consensus.blockchain import Blockchain, StateChangeSummary
+from flax.consensus.cost_calculator import NPCResult
+from flax.full_node.hint_management import get_hints_and_subscription_coin_ids
+from flax.types.blockchain_format.coin import Coin
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.spend_bundle_conditions import Spend, SpendBundleConditions
+from flax.util.hash import std_hash
+from flax.util.ints import uint32, uint64
 from tests.block_tools import BlockTools
 from tests.blockchain.blockchain_test_utils import _validate_and_add_block
 

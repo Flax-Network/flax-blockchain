@@ -1,5 +1,5 @@
 #
-# THIS FILE IS GENERATED. SEE https://github.com/Chia-Network/chia-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Flax-Network/flax-blockchain/tree/main/tests#readme
 #
 name: Ubuntu TEST_NAME Test
 
@@ -32,7 +32,7 @@ jobs:
         python-version: ['3.7', '3.8', '3.9', '3.10']
         os: [ubuntu-latest]
     env:
-      CHIA_ROOT: ${{ github.workspace }}/.chia/mainnet
+      FLAX_ROOT: ${{ github.workspace }}/.flax/mainnet
       JOB_FILE_NAME: tests_${{ matrix.os }}_python-${{ matrix.python-version }}_TEST_NAME
 
     steps:
@@ -101,5 +101,5 @@ INSTALL_TIMELORD
 CHECK_RESOURCE_USAGE
 
 #
-# THIS FILE IS GENERATED. SEE https://github.com/Chia-Network/chia-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Flax-Network/flax-blockchain/tree/main/tests#readme
 #

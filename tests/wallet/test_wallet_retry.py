@@ -3,13 +3,13 @@ from typing import Any, List, Optional, Tuple
 
 import pytest
 
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.types.peer_info import PeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.util.ints import uint16, uint64
-from chia.wallet.transaction_record import TransactionRecord
-from chia.wallet.wallet_node import WalletNode
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.types.peer_info import PeerInfo
+from flax.types.spend_bundle import SpendBundle
+from flax.util.ints import uint16, uint64
+from flax.wallet.transaction_record import TransactionRecord
+from flax.wallet.wallet_node import WalletNode
 from tests.block_tools import BlockTools
 from tests.pools.test_pool_rpc import farm_blocks, wallet_is_synced
 from tests.time_out_assert import time_out_assert, time_out_assert_custom_interval

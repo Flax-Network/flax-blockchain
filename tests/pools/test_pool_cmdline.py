@@ -4,8 +4,8 @@ import click
 import pytest
 from click.testing import CliRunner, Result
 
-from chia.cmds.plotnft import validate_fee
-from chia.cmds.plotnft import create_cmd, show_cmd
+from flax.cmds.plotnft import validate_fee
+from flax.cmds.plotnft import create_cmd, show_cmd
 
 pytestmark = pytest.mark.skip("TODO: Works locally but fails on CI, needs to be fixed!")
 

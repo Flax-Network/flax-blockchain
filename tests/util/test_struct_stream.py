@@ -15,8 +15,8 @@ from _pytest.mark.structures import ParameterSet
 from _pytest.fixtures import SubRequest
 from typing_extensions import final
 
-from chia.util.ints import int8, uint8, int16, uint16, int32, uint32, int64, uint64, uint128, int512
-from chia.util.struct_stream import StructStream, parse_metadata_from_name
+from flax.util.ints import int8, uint8, int16, uint16, int32, uint32, int64, uint64, uint128, int512
+from flax.util.struct_stream import StructStream, parse_metadata_from_name
 
 
 def dataclass_parameter(instance: object) -> ParameterSet:

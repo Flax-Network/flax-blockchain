@@ -8,4 +8,4 @@ extraction:
   javascript:
     index:
       include:
-        - chia-blockchain-gui
+        - flax-blockchain-gui

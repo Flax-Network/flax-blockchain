@@ -10,15 +10,15 @@ import tempfile
 from tests.setup_nodes import setup_node_and_wallet, setup_n_nodes, setup_two_nodes
 from pathlib import Path
 from typing import AsyncIterator, List, Tuple
-from chia.server.start_service import Service
+from flax.server.start_service import Service
 
 # Set spawn after stdlib imports, but before other imports
-from chia.clvm.spend_sim import SimClient, SpendSim
-from chia.protocols import full_node_protocol
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16
+from flax.clvm.spend_sim import SimClient, SpendSim
+from flax.protocols import full_node_protocol
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.peer_info import PeerInfo
+from flax.util.ints import uint16
 from tests.core.node_height import node_height_at_least
 from tests.pools.test_pool_rpc import wallet_is_synced
 from tests.setup_nodes import (
@@ -38,7 +38,7 @@ from tests.wallet_tools import WalletTool
 multiprocessing.set_start_method("spawn")
 
 from pathlib import Path
-from chia.util.keyring_wrapper import KeyringWrapper
+from flax.util.keyring_wrapper import KeyringWrapper
 from tests.block_tools import BlockTools, test_constants, create_block_tools, create_block_tools_async
 from tests.util.keyring import TempKeyring
 from tests.setup_nodes import setup_farmer_multi_harvester
@@ -66,7 +66,7 @@ def self_hostname():
 
 
 # NOTE:
-#       Instantiating the bt fixture results in an attempt to create the chia root directory
+#       Instantiating the bt fixture results in an attempt to create the flax root directory
 #       which the build scripts symlink to a sometimes-not-there directory.
 #       When not there, Python complains since, well, the symlink is not a directory nor points to a directory.
 #

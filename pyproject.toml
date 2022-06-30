@@ -12,7 +12,7 @@ target-version =  ['py37', 'py38', 'py39']
 include = '''
 ^/(
     [^/]*.py
-    | (benchmarks|build_scripts|chia|tests|tools)/.*\.pyi?
+    | (benchmarks|build_scripts|flax|tests|tools)/.*\.pyi?
 )$
 '''
 exclude = ''

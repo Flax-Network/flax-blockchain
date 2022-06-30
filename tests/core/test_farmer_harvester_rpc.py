@@ -10,12 +10,12 @@ from typing import Any, Awaitable, Callable, Dict, List, Union, cast
 import pytest
 import pytest_asyncio
 
-from chia.consensus.coinbase import create_puzzlehash_for_pk
-from chia.plot_sync.receiver import Receiver
-from chia.plotting.util import add_plot_directory
-from chia.protocols import farmer_protocol
-from chia.protocols.harvester_protocol import Plot
-from chia.rpc.farmer_rpc_api import (
+from flax.consensus.coinbase import create_puzzlehash_for_pk
+from flax.plot_sync.receiver import Receiver
+from flax.plotting.util import add_plot_directory
+from flax.protocols import farmer_protocol
+from flax.protocols.harvester_protocol import Plot
+from flax.rpc.farmer_rpc_api import (
     FarmerRpcApi,
     FilterItem,
     PaginatedRequestData,
@@ -23,19 +23,19 @@ from chia.rpc.farmer_rpc_api import (
     PlotPathRequestData,
     plot_matches_filter,
 )
-from chia.rpc.farmer_rpc_client import FarmerRpcClient
-from chia.rpc.harvester_rpc_api import HarvesterRpcApi
-from chia.rpc.harvester_rpc_client import HarvesterRpcClient
-from chia.rpc.rpc_server import start_rpc_server
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
-from chia.util.byte_types import hexstr_to_bytes
-from chia.util.config import load_config, lock_and_load_config, save_config
-from chia.util.hash import std_hash
-from chia.util.ints import uint8, uint16, uint32, uint64
-from chia.util.misc import get_list_or_len
-from chia.util.streamable import dataclass_from_dict
-from chia.wallet.derive_keys import master_sk_to_wallet_sk, master_sk_to_wallet_sk_unhardened
+from flax.rpc.farmer_rpc_client import FarmerRpcClient
+from flax.rpc.harvester_rpc_api import HarvesterRpcApi
+from flax.rpc.harvester_rpc_client import HarvesterRpcClient
+from flax.rpc.rpc_server import start_rpc_server
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
+from flax.util.byte_types import hexstr_to_bytes
+from flax.util.config import load_config, lock_and_load_config, save_config
+from flax.util.hash import std_hash
+from flax.util.ints import uint8, uint16, uint32, uint64
+from flax.util.misc import get_list_or_len
+from flax.util.streamable import dataclass_from_dict
+from flax.wallet.derive_keys import master_sk_to_wallet_sk, master_sk_to_wallet_sk_unhardened
 from tests.block_tools import get_plot_dir
 from tests.plot_sync.test_delta import dummy_plot
 from tests.setup_nodes import setup_harvester_farmer, test_constants
@@ -228,7 +228,7 @@ async def test_farmer_reward_target_endpoints(bt, harvester_farmer_environment):
     new_ph: bytes32 = create_puzzlehash_for_pk(master_sk_to_wallet_sk(bt.farmer_master_sk, uint32(2)).get_g1())
     new_ph_2: bytes32 = create_puzzlehash_for_pk(master_sk_to_wallet_sk(bt.pool_master_sk, uint32(7)).get_g1())
 
-    await farmer_rpc_client.set_reward_targets(encode_puzzle_hash(new_ph, "xch"), encode_puzzle_hash(new_ph_2, "xch"))
+    await farmer_rpc_client.set_reward_targets(encode_puzzle_hash(new_ph, "xfx"), encode_puzzle_hash(new_ph_2, "xfx"))
     targets_3 = await farmer_rpc_client.get_reward_targets(True, 10)
     assert decode_puzzle_hash(targets_3["farmer_target"]) == new_ph
     assert decode_puzzle_hash(targets_3["pool_target"]) == new_ph_2
@@ -246,7 +246,7 @@ async def test_farmer_reward_target_endpoints(bt, harvester_farmer_environment):
         master_sk_to_wallet_sk_unhardened(bt.pool_master_sk, uint32(7)).get_g1()
     )
     await farmer_rpc_client.set_reward_targets(
-        encode_puzzle_hash(observer_farmer, "xch"), encode_puzzle_hash(observer_pool, "xch")
+        encode_puzzle_hash(observer_farmer, "xfx"), encode_puzzle_hash(observer_pool, "xfx")
     )
     targets = await farmer_rpc_client.get_reward_targets(True, 10)
     assert decode_puzzle_hash(targets["farmer_target"]) == observer_farmer
@@ -255,10 +255,10 @@ async def test_farmer_reward_target_endpoints(bt, harvester_farmer_environment):
 
     root_path = farmer_api.farmer._root_path
     config = load_config(root_path, "config.yaml")
-    assert config["farmer"]["xch_target_address"] == encode_puzzle_hash(observer_farmer, "xch")
-    assert config["pool"]["xch_target_address"] == encode_puzzle_hash(observer_pool, "xch")
+    assert config["farmer"]["xfx_target_address"] == encode_puzzle_hash(observer_farmer, "xfx")
+    assert config["pool"]["xfx_target_address"] == encode_puzzle_hash(observer_pool, "xfx")
 
-    new_ph_2_encoded = encode_puzzle_hash(new_ph_2, "xch")
+    new_ph_2_encoded = encode_puzzle_hash(new_ph_2, "xfx")
     added_char = new_ph_2_encoded + "a"
     with pytest.raises(ValueError):
         await farmer_rpc_client.set_reward_targets(None, added_char)

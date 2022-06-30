@@ -4,14 +4,14 @@ from pathlib import Path
 import aiosqlite
 import pytest
 
-from chia.consensus.blockchain import ReceiveBlockResult
-from chia.protocols import full_node_protocol
-from chia.types.blockchain_format.vdf import VDFProof
-from chia.types.weight_proof import WeightProof
-from chia.util.db_wrapper import DBWrapper
-from chia.util.generator_tools import get_block_header
-from chia.wallet.key_val_store import KeyValStore
-from chia.wallet.wallet_blockchain import WalletBlockchain
+from flax.consensus.blockchain import ReceiveBlockResult
+from flax.protocols import full_node_protocol
+from flax.types.blockchain_format.vdf import VDFProof
+from flax.types.weight_proof import WeightProof
+from flax.util.db_wrapper import DBWrapper
+from flax.util.generator_tools import get_block_header
+from flax.wallet.key_val_store import KeyValStore
+from flax.wallet.wallet_blockchain import WalletBlockchain
 from tests.setup_nodes import test_constants
 
 

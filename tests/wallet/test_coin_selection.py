@@ -4,14 +4,14 @@ from typing import List, Set
 
 import pytest
 
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.hash import std_hash
-from chia.util.ints import uint32, uint64, uint128
-from chia.wallet.coin_selection import check_for_exact_match, knapsack_coin_algorithm, select_coins
-from chia.wallet.util.wallet_types import WalletType
-from chia.wallet.wallet_coin_record import WalletCoinRecord
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.types.blockchain_format.coin import Coin
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.util.hash import std_hash
+from flax.util.ints import uint32, uint64, uint128
+from flax.wallet.coin_selection import check_for_exact_match, knapsack_coin_algorithm, select_coins
+from flax.wallet.util.wallet_types import WalletType
+from flax.wallet.wallet_coin_record import WalletCoinRecord
 
 
 class TestCoinSelection:

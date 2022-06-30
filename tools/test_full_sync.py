@@ -14,17 +14,17 @@ import aiosqlite
 import click
 import zstd
 
-import chia.server.ws_connection as ws
-from chia.cmds.init_funcs import chia_init
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.full_node import FullNode
-from chia.protocols import full_node_protocol
-from chia.server.outbound_message import Message, NodeType
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.full_block import FullBlock
-from chia.types.peer_info import PeerInfo
-from chia.util.config import load_config
-from chia.util.ints import uint16
+import flax.server.ws_connection as ws
+from flax.cmds.init_funcs import flax_init
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.full_node.full_node import FullNode
+from flax.protocols import full_node_protocol
+from flax.server.outbound_message import Message, NodeType
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.full_block import FullBlock
+from flax.types.peer_info import PeerInfo
+from flax.util.config import load_config
+from flax.util.ints import uint16
 from tests.block_tools import make_unfinished_block
 from tools.test_constants import test_constants as TEST_CONSTANTS
 
@@ -91,7 +91,7 @@ async def run_sync_test(
     with tempfile.TemporaryDirectory() as root_dir:
 
         root_path = Path(root_dir)
-        chia_init(root_path, should_check_keys=False, v1_db=(db_version == 1))
+        flax_init(root_path, should_check_keys=False, v1_db=(db_version == 1))
         config = load_config(root_path, "config.yaml")
 
         if test_constants:
@@ -112,7 +112,7 @@ async def run_sync_test(
             await full_node._start()
             full_node.set_server(FakeServer())  # type: ignore[arg-type]
 
-            peer: ws.WSChiaConnection = FakePeer()  # type: ignore[assignment]
+            peer: ws.WSFlaxConnection = FakePeer()  # type: ignore[assignment]
 
             print()
             counter = 0

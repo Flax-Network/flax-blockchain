@@ -7,17 +7,17 @@ from typing import List
 import aiosqlite
 import pytest
 
-from chia.cmds.db_validate_func import validate_v2
-from chia.consensus.blockchain import Blockchain
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.consensus.multiprocess_validation import PreValidationResult
-from chia.full_node.block_store import BlockStore
-from chia.full_node.coin_store import CoinStore
-from chia.full_node.hint_store import HintStore
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.full_block import FullBlock
-from chia.util.db_wrapper import DBWrapper2
-from chia.util.ints import uint64
+from flax.cmds.db_validate_func import validate_v2
+from flax.consensus.blockchain import Blockchain
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.consensus.multiprocess_validation import PreValidationResult
+from flax.full_node.block_store import BlockStore
+from flax.full_node.coin_store import CoinStore
+from flax.full_node.hint_store import HintStore
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.full_block import FullBlock
+from flax.util.db_wrapper import DBWrapper2
+from flax.util.ints import uint64
 from tests.setup_nodes import test_constants
 from tests.util.temp_file import TempFile
 
@@ -134,7 +134,7 @@ async def make_db(db_file: Path, blocks: List[FullBlock]) -> None:
         await db_wrapper.add_connection(await aiosqlite.connect(db_file))
 
         async with db_wrapper.write_db() as conn:
-            # this is done by chia init normally
+            # this is done by flax init normally
             await conn.execute("CREATE TABLE database_version(version int)")
             await conn.execute("INSERT INTO database_version VALUES (2)")
 
