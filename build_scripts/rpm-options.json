@@ -1,7 +1,7 @@
 {
   "dest": "final_installer/",
-  "bin": "chia-blockchain",
-  "name": "chia-blockchain",
+  "bin": "flax-blockchain",
+  "name": "flax-blockchain",
   "license": "../LICENSE",
   "scripts": {
     "post": "assets/rpm/postinst.sh",

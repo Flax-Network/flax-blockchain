@@ -5,7 +5,7 @@ from typing import List
 import aiosqlite
 import pytest
 
-from chia.util.db_wrapper import DBWrapper2
+from flax.util.db_wrapper import DBWrapper2
 from tests.util.db_connection import DBConnection
 
 

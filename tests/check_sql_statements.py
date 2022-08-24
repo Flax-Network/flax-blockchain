@@ -41,10 +41,10 @@ def check_create(sql_type: str, cwd: str, exemptions: Set[Tuple[str, str]] = set
 
 ret = 0
 
-ret += check_create("INDEX", "chia/wallet")
+ret += check_create("INDEX", "flax/wallet")
 ret += check_create(
     "INDEX",
-    "chia/full_node",
+    "flax/full_node",
     set(
         [
             ("block_store.py", "is_fully_compactified"),
@@ -52,10 +52,10 @@ ret += check_create(
         ]
     ),
 )
-ret += check_create("TABLE", "chia/wallet")
+ret += check_create("TABLE", "flax/wallet")
 ret += check_create(
     "TABLE",
-    "chia/full_node",
+    "flax/full_node",
     set(
         [
             ("block_store.py", "sub_epoch_segments_v3"),

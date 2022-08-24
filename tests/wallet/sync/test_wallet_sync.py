@@ -3,24 +3,24 @@ from typing import List, Optional
 import pytest
 from colorlog import getLogger
 
-from chia.consensus.block_record import BlockRecord
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.full_node.weight_proof import WeightProofHandler
-from chia.protocols import full_node_protocol, wallet_protocol
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.protocols.shared_protocol import Capability
-from chia.protocols.wallet_protocol import RequestAdditions, RespondAdditions, RespondBlockHeaders, SendTransaction
-from chia.server.outbound_message import Message
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.peer_info import PeerInfo
-from chia.util.block_cache import BlockCache
-from chia.util.hash import std_hash
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.transaction_record import TransactionRecord
-from chia.wallet.util.wallet_types import AmountWithPuzzlehash
-from chia.wallet.wallet_weight_proof_handler import get_wp_fork_point
+from flax.consensus.block_record import BlockRecord
+from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.full_node.weight_proof import WeightProofHandler
+from flax.protocols import full_node_protocol, wallet_protocol
+from flax.protocols.protocol_message_types import ProtocolMessageTypes
+from flax.protocols.shared_protocol import Capability
+from flax.protocols.wallet_protocol import RequestAdditions, RespondAdditions, RespondBlockHeaders, SendTransaction
+from flax.server.outbound_message import Message
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.simulator.time_out_assert import time_out_assert
+from flax.types.peer_info import PeerInfo
+from flax.util.block_cache import BlockCache
+from flax.util.hash import std_hash
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.transaction_record import TransactionRecord
+from flax.wallet.util.wallet_types import AmountWithPuzzlehash
+from flax.wallet.wallet_weight_proof_handler import get_wp_fork_point
 from tests.connection_utils import disconnect_all, disconnect_all_and_reconnect
 from tests.setup_nodes import test_constants
 from tests.util.wallet_is_synced import wallet_is_synced

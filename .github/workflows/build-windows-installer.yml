@@ -12,11 +12,6 @@ on:
     branches:
       - '**'
 
-concurrency:
-  # SHA is added to the end if on `main` to let all main workflows run
-  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/heads/long_lived/')) && github.sha || '' }}
-  cancel-in-progress: true
-
 jobs:
   build:
     name: Windows 10 Installer
@@ -74,29 +69,6 @@ jobs:
       with:
         node-version: '16.x'
 
-    - name: Test for secrets access
-      id: check_secrets
-      shell: bash
-      run: |
-        unset HAS_SIGNING_SECRET
-        unset HAS_AWS_SECRET
-
-        if [ -n "$SIGNING_SECRET" ]; then HAS_SIGNING_SECRET='true' ; fi
-        echo "::set-output name=HAS_SIGNING_SECRET::${HAS_SIGNING_SECRET}"
-
-        if [ -n "$AWS_SECRET" ]; then HAS_AWS_SECRET='true' ; fi
-        echo ::set-output name=HAS_AWS_SECRET::${HAS_AWS_SECRET}
-      env:
-        SIGNING_SECRET: "${{ secrets.WIN_CODE_SIGN_CERT }}"
-        AWS_SECRET: "${{ secrets.INSTALLER_UPLOAD_KEY }}"
-
-    - name: Decode code signing cert into an encrypted file
-      if: steps.check_secrets.outputs.HAS_SIGNING_SECRET
-      uses: kitek/decode-base64-into-file-action@1.0
-      with:
-        encoded-value: ${{ secrets.WIN_CODE_SIGN_CERT }}
-        destination-file: .\win_code_sign_cert.p12
-
     # Create our own venv outside of the git directory JUST for getting the ACTUAL version so that install can't break it
     - name: Get version number
       id: version_number
@@ -104,9 +76,9 @@ jobs:
         python -m venv ..\venv
         . ..\venv\Scripts\Activate.ps1
         pip3 install setuptools_scm
-        $env:CHIA_INSTALLER_VERSION = python .\build_scripts\installer-version.py -win
-        echo "$env:CHIA_INSTALLER_VERSION"
-        echo "::set-output name=CHIA_INSTALLER_VERSION::$env:CHIA_INSTALLER_VERSION"
+        $env:FLAX_INSTALLER_VERSION = python .\build_scripts\installer-version.py -win
+        echo "$env:FLAX_INSTALLER_VERSION"
+        echo "::set-output name=FLAX_INSTALLER_VERSION::$env:FLAX_INSTALLER_VERSION"
         deactivate
 
       # Get the most recent release from chia-plotter-madmax
@@ -125,8 +97,8 @@ jobs:
     - name: Get latest madmax plotter
       run: |
         mkdir "$env:GITHUB_WORKSPACE\madmax"
-        Invoke-WebRequest https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\chia_plot.exe"
-        Invoke-WebRequest https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\chia_plot_k34.exe"
+        Invoke-WebRequest https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\flax_plot.exe"
+        Invoke-WebRequest https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\flax_plot_k34.exe"
 
       # Get the most recent release from bladebit
     - uses: actions/github-script@v6
@@ -157,19 +129,19 @@ jobs:
     - name: Prepare GUI cache
       id: gui-ref
       run: |
-        $gui_ref = git submodule status chia-blockchain-gui
-        $gui_ref = $gui_ref -replace "^ | chia-blockchain-gui.*$",""
+        $gui_ref = git submodule status flax-blockchain-gui
+        $gui_ref = $gui_ref -replace "^ | flax-blockchain-gui.*$",""
         echo $gui_ref
         echo "::set-output name=GUI_REF::$gui_ref"
-        echo "Remove-Item -Recurse -Force .\chia-blockchain-gui"
-        Remove-Item -Recurse -Force .\chia-blockchain-gui
+        echo "Remove-Item -Recurse -Force .\flax-blockchain-gui"
+        Remove-Item -Recurse -Force .\flax-blockchain-gui
 
     - name: Cache GUI
       uses: actions/cache@v3
       id: cache-gui
       with:
-        path: .\chia-blockchain-gui
-        key: ${{ runner.os }}-chia-blockchain-gui-${{ steps.gui-ref.outputs.GUI_REF }}
+        path: .\flax-blockchain-gui
+        key: ${{ runner.os }}-flax-blockchain-gui-${{ steps.gui-ref.outputs.GUI_REF }}
 
     - if: steps.cache-gui.outputs.cache-hit != 'true'
       name: Build GUI
@@ -180,7 +152,7 @@ jobs:
 
     - name: Build Windows installer
       env:
-        CHIA_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}
+        FLAX_INSTALLER_VERSION: ${{ steps.version_number.outputs.FLAX_INSTALLER_VERSION }}
         WIN_CODE_SIGN_PASS: ${{ secrets.WIN_CODE_SIGN_PASS }}
         HAS_SECRET: ${{ steps.check_secrets.outputs.HAS_SIGNING_SECRET }}
       run: |
@@ -194,102 +166,10 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Windows-Exe
-        path: ${{ github.workspace }}\chia-blockchain-gui\Chia-win32-x64\
+        path: ${{ github.workspace }}\flax-blockchain-gui\Flax-win32-x64\
 
     - name: Upload Installer to artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: chia-installers-windows-exe-intel
-        path: ${{ github.workspace }}\chia-blockchain-gui\release-builds\
-
-    - name: Install AWS CLI
-      if: steps.check_secrets.outputs.HAS_AWS_SECRET
-      run: |
-          msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi
-
-    - name: Configure AWS Credentials
-      if: steps.check_secrets.outputs.HAS_AWS_SECRET
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.INSTALLER_UPLOAD_KEY }}
-        aws-secret-access-key: ${{ secrets.INSTALLER_UPLOAD_SECRET }}
-        aws-region: us-west-2
-
-    - name: Upload to s3
-      if: steps.check_secrets.outputs.HAS_AWS_SECRET
-      env:
-        CHIA_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}
-      shell: bash
-      run: |
-        GIT_SHORT_HASH=$(echo "${GITHUB_SHA}" | cut -c1-8)
-        CHIA_DEV_BUILD=${CHIA_INSTALLER_VERSION}-$GIT_SHORT_HASH
-        echo ::set-output name=CHIA_DEV_BUILD::${CHIA_DEV_BUILD}
-        echo ${CHIA_DEV_BUILD}
-        pwd
-        aws s3 cp chia-blockchain-gui/release-builds/windows-installer/ChiaSetup-${CHIA_INSTALLER_VERSION}.exe s3://download.chia.net/dev/ChiaSetup-${CHIA_DEV_BUILD}.exe
-
-    - name: Create Checksums
-      env:
-        CHIA_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}
-      run: |
-         certutil.exe -hashfile ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe SHA256 > ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe.sha256
-         ls ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\
-
-    - name: Install py3createtorrent
-      if: startsWith(github.ref, 'refs/tags/')
-      run: |
-        pip3 install py3createtorrent
-
-    - name: Create torrent
-      if: startsWith(github.ref, 'refs/tags/')
-      run: |
-        py3createtorrent -f -t udp://tracker.opentrackr.org:1337/announce ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe -o ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe.torrent --webseed https://download.chia.net/install/ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe
-        ls
-
-    - name: Upload Dev Installer
-      if: steps.check_secrets.outputs.HAS_AWS_SECRET && github.ref == 'refs/heads/main'
-      env:
-        CHIA_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}
-      run: |
-        aws s3 cp ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe s3://download.chia.net/latest-dev/ChiaSetup-latest-dev.exe
-        aws s3 cp ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe.sha256 s3://download.chia.net/latest-dev/ChiaSetup-latest-dev.exe.sha256
-
-    - name: Upload Release Files
-      if: steps.check_secrets.outputs.HAS_AWS_SECRET && startsWith(github.ref, 'refs/tags/')
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.INSTALLER_UPLOAD_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.INSTALLER_UPLOAD_SECRET }}
-      run: |
-        aws s3 cp ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe s3://download.chia.net/install/
-        aws s3 cp ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe.sha256 s3://download.chia.net/install/
-        aws s3 cp ${{ github.workspace }}\chia-blockchain-gui\release-builds\windows-installer\ChiaSetup-${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}.exe.torrent s3://download.chia.net/torrents/
-
-    - name: Get tag name
-      if: startsWith(github.ref, 'refs/tags/')
-      id: tag-name
-      run: |
-        echo "::set-output name=TAG_NAME::$(echo ${{ github.ref }} | cut -d'/' -f 3)"
-        echo "::set-output name=REPO_NAME::$(echo ${{ github.repository }} | cut -d'/' -f 2)"
-
-    - name: Mark installer complete
-      if: startsWith(github.ref, 'refs/tags/')
-      run: |
-        $headers = @{
-            Authorization="Bearer ${{ secrets.GLUE_ACCESS_TOKEN }}"
-        }
-        $data = @{
-            chia_ref='${{ steps.tag-name.outputs.TAG_NAME }}'
-        }
-        $json = $data | ConvertTo-Json
-        $response = Invoke-RestMethod '${{ secrets.GLUE_API_URL }}/api/v1/${{ steps.tag-name.outputs.REPO_NAME }}/${{ steps.tag-name.outputs.TAG_NAME }}/success/build-windows' -Method Post -Body $json -ContentType 'application/json' -Headers $headers
-
-    - name: Remove Windows exe and installer to exclude from cache
-      run: |
-        Remove-Item .\chia-blockchain-gui\packages\gui\Chia-win32-x64 -Recurse -Force
-        Remove-Item .\chia-blockchain-gui\packages\gui\release-builds -Recurse -Force
-        Remove-Item .\chia-blockchain-gui\packages\gui\daemon -Recurse -Force
-        If (Test-Path .\chia-blockchain-gui\packages\gui\win_code_sign_cert.p12) {
-          Remove-Item .\chia-blockchain-gui\packages\gui\win_code_sign_cert.p12 -Force
-        }
-        Remove-Item .\chia-blockchain-gui\Chia-win32-x64 -Recurse -Force
-        Remove-Item .\chia-blockchain-gui\release-builds -Recurse -Force
+        name: flax-installers-windows-exe-intel
+        path: ${{ github.workspace }}\flax-blockchain-gui\release-builds\

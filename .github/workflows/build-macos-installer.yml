@@ -1,0 +1,155 @@
+name: 📦🚀 Build Installers - MacOS
+
+on:
+  push:
+    branches:
+      - 'long_lived/**'
+      - main
+      - 'release/**'
+    tags:
+        - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    name: MacOS ${{ matrix.os.name }} Installer
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        python-version: [3.9]
+        os: [macos-10.15]
+
+    steps:
+      - uses: Chia-Network/actions/clean-workspace@main
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Cleanup any leftovers that exist from previous runs
+        run: bash build_scripts/clean-runner.sh || true
+
+      - name: Test for secrets access
+        id: check_secrets
+        shell: bash
+        run: |
+          unset HAS_APPLE_SECRET
+          unset HAS_AWS_SECRET
+
+          if [ -n "$APPLE_SECRET" ]; then HAS_APPLE_SECRET='true' ; fi
+          echo ::set-output name=HAS_APPLE_SECRET::${HAS_APPLE_SECRET}
+
+          if [ -n "$AWS_SECRET" ]; then HAS_AWS_SECRET='true' ; fi
+          echo ::set-output name=HAS_AWS_SECRET::${HAS_AWS_SECRET}
+        env:
+          APPLE_SECRET: "${{ secrets.APPLE_DEV_ID_APP }}"
+          AWS_SECRET: "${{ secrets.INSTALLER_UPLOAD_KEY }}"
+
+      - name: Create installer version number
+        id: version_number
+        run: |
+          python3 -m venv ../venv
+          . ../venv/bin/activate
+          pip install setuptools_scm
+          echo "::set-output name=FLAX_INSTALLER_VERSION::$(python3 ./build_scripts/installer-version.py)"
+          deactivate
+
+      - name: Setup Python environment
+        uses: Chia-Network/actions/setup-python@main
+        with:
+          python-version: ${{ matrix.python-version }}
+          force-pyenv: 'true'
+
+      # This will be recreated in the next step
+      # Done now and at the end of the workflow in case the last workflow fails, and this is still around
+      - name: Delete keychain if it already exists
+        run:
+          security delete-keychain signing_temp.keychain || true
+
+      - name: Import Apple app signing certificate
+        if: steps.check_secrets.outputs.HAS_APPLE_SECRET
+        uses: Apple-Actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.APPLE_DEV_ID_APP }}
+          p12-password: ${{ secrets.APPLE_DEV_ID_APP_PASS }}
+
+      # Get the most recent release from chia-plotter-madmax
+      - uses: actions/github-script@v6
+        id: 'latest-madmax'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const release = await github.rest.repos.getLatestRelease({
+              owner: 'Chia-Network',
+              repo: 'chia-plotter-madmax',
+            });
+            return release.data.tag_name;
+
+      - name: Get latest madmax plotter
+        run: |
+          mkdir "$GITHUB_WORKSPACE/madmax"
+          wget -O "$GITHUB_WORKSPACE/madmax/flax_plot" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}-macos-intel
+          wget -O "$GITHUB_WORKSPACE/madmax/flax_plot_k34" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}-macos-intel
+          chmod +x "$GITHUB_WORKSPACE/madmax/flax_plot"
+          chmod +x "$GITHUB_WORKSPACE/madmax/flax_plot_k34"
+
+      - uses: ./.github/actions/install
+        with:
+          python-version: ${{ matrix.python-version }}
+          development: true
+
+      - uses: chia-network/actions/activate-venv@main
+
+      - name: Setup Node 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - name: Prepare GUI cache
+        id: gui-ref
+        run: |
+          gui_ref=$(git submodule status flax-blockchain-gui | sed -e 's/^ //g' -e 's/ flax-blockchain-gui.*$//g')
+          echo "${gui_ref}"
+          echo "::set-output name=GUI_REF::${gui_ref}"
+          echo "rm -rf ./flax-blockchain-gui"
+          rm -rf ./flax-blockchain-gui
+
+      - name: Cache GUI
+        uses: actions/cache@v3
+        id: cache-gui
+        with:
+          path: ./flax-blockchain-gui
+          key: ${{ runner.os }}-intel-flax-blockchain-gui-${{ steps.gui-ref.outputs.GUI_REF }}
+
+      - if: steps.cache-gui.outputs.cache-hit != 'true'
+        name: Build GUI
+        continue-on-error: false
+        run: |
+          cd ./build_scripts
+          sh build_macos-1-gui.sh
+
+      - name: Build MacOS DMG
+        env:
+          FLAX_INSTALLER_VERSION: ${{ steps.version_number.outputs.FLAX_INSTALLER_VERSION }}
+          NOTARIZE: ${{ steps.check_secrets.outputs.HAS_APPLE_SECRET }}
+          APPLE_NOTARIZE_USERNAME: "${{ secrets.APPLE_NOTARIZE_USERNAME }}"
+          APPLE_NOTARIZE_PASSWORD: "${{ secrets.APPLE_NOTARIZE_PASSWORD }}"
+          MAC_PACKAGE_NAME: "Flax-darwin-x64"
+          MAC_FILE_SUFFIX: ""
+        run: |
+          cd ./build_scripts
+          sh build_macos-2-installer.sh
+
+      - name: Upload MacOS artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: flax-installers-macos-dmg-intel
+          path: ${{ github.workspace }}/build_scripts/final_installer/

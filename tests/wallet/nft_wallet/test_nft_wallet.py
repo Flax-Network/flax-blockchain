@@ -5,25 +5,25 @@ from typing import Any, Awaitable, Callable, Dict, List
 import pytest
 from clvm_tools.binutils import disassemble
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.full_node.mempool_manager import MempoolManager
-from chia.rpc.wallet_rpc_api import WalletRpcApi
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
-from chia.simulator.time_out_assert import time_out_assert, time_out_assert_not_none
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.util.bech32m import encode_puzzle_hash
-from chia.util.byte_types import hexstr_to_bytes
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.did_wallet.did_wallet import DIDWallet
-from chia.wallet.nft_wallet.nft_wallet import NFTWallet
-from chia.wallet.util.address_type import AddressType
-from chia.wallet.util.compute_memos import compute_memos
-from chia.wallet.util.wallet_types import WalletType
-from chia.wallet.wallet_state_manager import WalletStateManager
+from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from flax.full_node.mempool_manager import MempoolManager
+from flax.rpc.wallet_rpc_api import WalletRpcApi
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
+from flax.simulator.time_out_assert import time_out_assert, time_out_assert_not_none
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.peer_info import PeerInfo
+from flax.types.spend_bundle import SpendBundle
+from flax.util.bech32m import encode_puzzle_hash
+from flax.util.byte_types import hexstr_to_bytes
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.did_wallet.did_wallet import DIDWallet
+from flax.wallet.nft_wallet.nft_wallet import NFTWallet
+from flax.wallet.util.address_type import AddressType
+from flax.wallet.util.compute_memos import compute_memos
+from flax.wallet.util.wallet_types import WalletType
+from flax.wallet.wallet_state_manager import WalletStateManager
 
 
 async def tx_in_pool(mempool: MempoolManager, tx_id: bytes32) -> bool:
@@ -122,7 +122,7 @@ async def test_nft_wallet_creation_automatically(two_wallet_nodes: Any, trusted:
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+            ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -218,7 +218,7 @@ async def test_nft_wallet_creation_and_transfer(two_wallet_nodes: Any, trusted: 
     )
     metadata = Program.to(
         [
-            ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+            ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -373,7 +373,7 @@ async def test_nft_wallet_rpc_creation_and_list(two_wallet_nodes: Any, trusted: 
             "wallet_id": nft_wallet_0_id,
             "artist_address": ph,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chia.net/img/branding/chia-logo.svg"],
+            "uris": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
         }
     )
 
@@ -391,7 +391,7 @@ async def test_nft_wallet_rpc_creation_and_list(two_wallet_nodes: Any, trusted: 
             "wallet_id": nft_wallet_0_id,
             "artist_address": ph,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F184",
-            "uris": ["https://chialisp.com/img/logo.svg"],
+            "uris": ["https://flaxlisp.com/img/logo.svg"],
         }
     )
     assert isinstance(tr2, dict)
@@ -410,7 +410,7 @@ async def test_nft_wallet_rpc_creation_and_list(two_wallet_nodes: Any, trusted: 
         uris.append(coin.data_uris[0])
         assert coin.mint_height > 0
     assert len(uris) == 2
-    assert "https://chialisp.com/img/logo.svg" in uris
+    assert "https://flaxlisp.com/img/logo.svg" in uris
     assert bytes32.fromhex(coins[1].to_json_dict()["nft_coin_id"][2:]) in [x.name() for x in sb.additions()]
 
 
@@ -420,7 +420,7 @@ async def test_nft_wallet_rpc_creation_and_list(two_wallet_nodes: Any, trusted: 
 )
 @pytest.mark.asyncio
 async def test_nft_wallet_rpc_update_metadata(two_wallet_nodes: Any, trusted: Any) -> None:
-    from chia.types.blockchain_format.sized_bytes import bytes32
+    from flax.types.blockchain_format.sized_bytes import bytes32
 
     num_blocks = 3
     full_nodes, wallets, _ = two_wallet_nodes
@@ -472,7 +472,7 @@ async def test_nft_wallet_rpc_update_metadata(two_wallet_nodes: Any, trusted: An
             "wallet_id": nft_wallet_0_id,
             "artist_address": ph,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chia.net/img/branding/chia-logo.svg"],
+            "uris": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
         }
     )
 
@@ -494,7 +494,7 @@ async def test_nft_wallet_rpc_update_metadata(two_wallet_nodes: Any, trusted: An
     assert coin["chain_info"] == disassemble(
         Program.to(
             [
-                ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+                ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
                 ("h", hexstr_to_bytes("0xD4584AD463139FA8C0D9F68F4B59F185")),
                 ("mu", []),
                 ("lu", []),
@@ -533,7 +533,7 @@ async def test_nft_wallet_rpc_update_metadata(two_wallet_nodes: Any, trusted: An
     assert coin["mint_height"] > 0
     uris = coin["data_uris"]
     assert len(uris) == 1
-    assert "https://www.chia.net/img/branding/chia-logo.svg" in uris
+    assert "https://www.flaxnetwork.org/img/branding/flax-logo.svg" in uris
     assert len(coin["metadata_uris"]) == 1
     assert "http://metadata" == coin["metadata_uris"][0]
     assert len(coin["license_uris"]) == 0
@@ -659,8 +659,8 @@ async def test_nft_with_did_wallet_creation(two_wallet_nodes: Any, trusted: Any)
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chia.net/img/branding/chia-logo.svg"],
-            "target_address": encode_puzzle_hash(nft_ph, "txch"),
+            "uris": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
+            "target_address": encode_puzzle_hash(nft_ph, "txfx"),
         }
     )
     assert resp.get("success")
@@ -712,7 +712,7 @@ async def test_nft_with_did_wallet_creation(two_wallet_nodes: Any, trusted: Any)
     did_nft = coins[0].to_json_dict()
     assert did_nft["mint_height"] > 0
     assert did_nft["supports_did"]
-    assert did_nft["data_uris"][0] == "https://www.chia.net/img/branding/chia-logo.svg"
+    assert did_nft["data_uris"][0] == "https://www.flaxnetwork.org/img/branding/flax-logo.svg"
     assert did_nft["data_hash"] == "0xD4584AD463139FA8C0D9F68F4B59F185".lower()
     assert did_nft["owner_did"][2:] == hex_did_id
     # Check unassigned NFT
@@ -808,7 +808,7 @@ async def test_nft_rpc_mint(two_wallet_nodes: Any, trusted: Any) -> None:
         {
             "wallet_id": nft_wallet_0_id,
             "hash": data_hash_param,
-            "uris": ["https://www.chia.net/img/branding/chia-logo.svg"],
+            "uris": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
             "license_uris": license_uris,
             "license_hash": license_hash,
             "meta_hash": meta_hash,
@@ -918,7 +918,7 @@ async def test_nft_transfer_nft_with_did(two_wallet_nodes: Any, trusted: Any) ->
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chia.net/img/branding/chia-logo.svg"],
+            "uris": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
             "fee": fee,
         }
     )
@@ -938,7 +938,7 @@ async def test_nft_transfer_nft_with_did(two_wallet_nodes: Any, trusted: Any) ->
     resp = await api_0.nft_transfer_nft(
         dict(
             wallet_id=nft_wallet_0_id,
-            target_address=encode_puzzle_hash(ph1, "xch"),
+            target_address=encode_puzzle_hash(ph1, "xfx"),
             nft_coin_id=coins[0].nft_coin_id.hex(),
             fee=fee,
         )
@@ -1068,8 +1068,8 @@ async def test_update_metadata_for_nft_did(two_wallet_nodes: Any, trusted: Any) 
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chia.net/img/branding/chia-logo.svg"],
-            "mu": ["https://www.chia.net/img/branding/chia-logo.svg"],
+            "uris": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
+            "mu": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
         }
     )
     assert resp.get("success")
@@ -1123,7 +1123,7 @@ async def test_update_metadata_for_nft_did(two_wallet_nodes: Any, trusted: Any) 
     assert coin["mint_height"] > 0
     uris = coin["data_uris"]
     assert len(uris) == 1
-    assert "https://www.chia.net/img/branding/chia-logo.svg" in uris
+    assert "https://www.flaxnetwork.org/img/branding/flax-logo.svg" in uris
     assert len(coin["metadata_uris"]) == 1
     assert "http://metadata" == coin["metadata_uris"][0]
     assert len(coin["license_uris"]) == 0
@@ -1193,8 +1193,8 @@ async def test_nft_set_did(two_wallet_nodes: Any, trusted: Any) -> None:
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chia.net/img/branding/chia-logo.svg"],
-            "mu": ["https://www.chia.net/img/branding/chia-logo.svg"],
+            "uris": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
+            "mu": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
             "did_id": "",
         }
     )
@@ -1344,8 +1344,8 @@ async def test_set_nft_status(two_wallet_nodes: Any, trusted: Any) -> None:
         {
             "wallet_id": nft_wallet_0_id,
             "hash": "0xD4584AD463139FA8C0D9F68F4B59F185",
-            "uris": ["https://www.chia.net/img/branding/chia-logo.svg"],
-            "mu": ["https://www.chia.net/img/branding/chia-logo.svg"],
+            "uris": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
+            "mu": ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
         }
     )
     assert resp.get("success")

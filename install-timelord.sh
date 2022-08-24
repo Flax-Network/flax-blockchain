@@ -26,7 +26,7 @@ do
 done
 
 if [ -z "$VIRTUAL_ENV" ]; then
-  echo "This requires the chia python virtual environment."
+  echo "This requires the flax python virtual environment."
   echo "Execute '. ./activate' before running."
 	exit 1
 fi
@@ -44,7 +44,7 @@ fi
 
 export BUILD_VDF_BENCH=Y # Installs the useful vdf_bench test of CPU squaring speed
 THE_PATH=$(python -c 'import pkg_resources; print( pkg_resources.get_distribution("chiavdf").location)' 2>/dev/null)/vdf_client
-CHIAVDF_VERSION=$(python -c 'from setup import dependencies; t = [_ for _ in dependencies if _.startswith("chiavdf")][0]; print(t)')
+FLAXVDF_VERSION=$(python -c 'from setup import dependencies; t = [_ for _ in dependencies if _.startswith("chiavdf")][0]; print(t)')
 
 ubuntu_cmake_install() {
 	UBUNTU_PRE_2004=$(python -c 'import subprocess; process = subprocess.run(["lsb_release", "-rs"], stdout=subprocess.PIPE); print(float(process.stdout) < float(20.04))')
@@ -95,8 +95,8 @@ else
 		echo "apt-get install libgmp-dev libboost-python-dev $PYTHON_DEV_DEPENDENCY libboost-system-dev build-essential -y"
 		sudo apt-get install libgmp-dev libboost-python-dev "$PYTHON_DEV_DEPENDENCY" libboost-system-dev build-essential -y
 		echo "Installing chiavdf from source on Ubuntu/Debian"
-		echo venv/bin/python -m pip install --force --no-binary chiavdf "$CHIAVDF_VERSION"
-		venv/bin/python -m pip install --force --no-binary chiavdf "$CHIAVDF_VERSION"
+		echo venv/bin/python -m pip install --force --no-binary chiavdf "$FLAXVDF_VERSION"
+		venv/bin/python -m pip install --force --no-binary chiavdf "$FLAXVDF_VERSION"
 		symlink_vdf_bench "$PYTHON_VERSION"
 	elif [ -e venv/bin/python ] && test $RHEL_BASED; then
 		echo "Installing chiavdf dependencies on RedHat/CentOS/Fedora"
@@ -104,22 +104,22 @@ else
 		echo "yum install gcc gcc-c++ gmp-devel $PYTHON_DEV_DEPENDENCY libtool make autoconf automake openssl-devel libevent-devel boost-devel python3 cmake -y"
 		sudo yum install gcc gcc-c++ gmp-devel "$PYTHON_DEV_DEPENDENCY" libtool make autoconf automake openssl-devel libevent-devel boost-devel python3 cmake -y
 		echo "Installing chiavdf from source on RedHat/CentOS/Fedora"
-		echo venv/bin/python -m pip install --force --no-binary chiavdf "$CHIAVDF_VERSION"
-		venv/bin/python -m pip install --force --no-binary chiavdf "$CHIAVDF_VERSION"
+		echo venv/bin/python -m pip install --force --no-binary chiavdf "$FLAXVDF_VERSION"
+		venv/bin/python -m pip install --force --no-binary chiavdf "$FLAXVDF_VERSION"
 		symlink_vdf_bench "$PYTHON_VERSION"
 	elif [ -e venv/bin/python ] && test $MACOS; then
 		echo "Installing chiavdf dependencies for MacOS."
 		brew install boost cmake gmp
 		echo "Installing chiavdf from source."
 		# User needs to provide required packages
-		echo venv/bin/python -m pip install --force --no-binary chiavdf "$CHIAVDF_VERSION"
-		venv/bin/python -m pip install --force --no-binary chiavdf "$CHIAVDF_VERSION"
+		echo venv/bin/python -m pip install --force --no-binary chiavdf "$FLAXVDF_VERSION"
+		venv/bin/python -m pip install --force --no-binary chiavdf "$FLAXVDF_VERSION"
 		symlink_vdf_bench "$PYTHON_VERSION"
 	elif [ -e venv/bin/python ]; then
 		echo "Installing chiavdf from source."
 		# User needs to provide required packages
-		echo venv/bin/python -m pip install --force --no-binary chiavdf "$CHIAVDF_VERSION"
-		venv/bin/python -m pip install --force --no-binary chiavdf "$CHIAVDF_VERSION"
+		echo venv/bin/python -m pip install --force --no-binary chiavdf "$FLAXVDF_VERSION"
+		venv/bin/python -m pip install --force --no-binary chiavdf "$FLAXVDF_VERSION"
 		symlink_vdf_bench "$PYTHON_VERSION"
 	else
 		echo "No venv created yet, please run install.sh."

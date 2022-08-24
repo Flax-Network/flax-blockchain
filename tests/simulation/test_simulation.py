@@ -3,17 +3,17 @@ from typing import Tuple, List
 import pytest
 import pytest_asyncio
 
-from chia.consensus.block_rewards import calculate_pool_reward, calculate_base_farmer_reward
-from chia.server.server import ChiaServer
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol, GetAllCoinsProtocol, ReorgProtocol
-from chia.types.peer_info import PeerInfo
-from chia.wallet.wallet_node import WalletNode
-from chia.simulator.block_tools import create_block_tools_async, BlockTools
-from chia.util.ints import uint16, uint32, uint64
+from flax.consensus.block_rewards import calculate_pool_reward, calculate_base_farmer_reward
+from flax.server.server import FlaxServer
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol, GetAllCoinsProtocol, ReorgProtocol
+from flax.types.peer_info import PeerInfo
+from flax.wallet.wallet_node import WalletNode
+from flax.simulator.block_tools import create_block_tools_async, BlockTools
+from flax.util.ints import uint16, uint32, uint64
 from tests.core.node_height import node_height_at_least
 from tests.setup_nodes import setup_full_node, setup_full_system, test_constants
-from chia.simulator.time_out_assert import time_out_assert
+from flax.simulator.time_out_assert import time_out_assert
 from tests.util.keyring import TempKeyring
 
 test_constants_modified = test_constants.replace(
@@ -118,7 +118,7 @@ class TestSimulation:
     @pytest.mark.asyncio
     async def test_simulator_auto_farm_and_get_coins(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         self_hostname: str,
     ) -> None:
         num_blocks = 2

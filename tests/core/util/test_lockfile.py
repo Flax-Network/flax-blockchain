@@ -8,7 +8,7 @@ from typing import Any, Callable
 
 import pytest
 
-from chia.util.lock import Lockfile, LockfileError
+from flax.util.lock import Lockfile, LockfileError
 
 log = logging.getLogger(__name__)
 

@@ -3,5 +3,5 @@
 
 set -e
 
-ln -s /usr/lib/chia-blockchain/resources/app.asar.unpacked/daemon/chia /usr/bin/chia || true
-ln -s /usr/lib/chia-blockchain/resources/app.asar.unpacked/daemon /opt/chia || true
+ln -s /usr/lib/flax-blockchain/resources/app.asar.unpacked/daemon/flax /usr/bin/flax || true
+ln -s /usr/lib/flax-blockchain/resources/app.asar.unpacked/daemon /opt/flax || true

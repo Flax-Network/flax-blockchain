@@ -7,32 +7,32 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 
-from chia.protocols.shared_protocol import capabilities, protocol_version
-from chia.server.outbound_message import NodeType
-from chia.server.server import ChiaServer, ssl_context_for_client
-from chia.server.ws_connection import WSChiaConnection
-from chia.simulator.time_out_assert import time_out_assert
-from chia.ssl.create_ssl import generate_ca_signed_cert
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16
+from flax.protocols.shared_protocol import capabilities, protocol_version
+from flax.server.outbound_message import NodeType
+from flax.server.server import FlaxServer, ssl_context_for_client
+from flax.server.ws_connection import WSFlaxConnection
+from flax.simulator.time_out_assert import time_out_assert
+from flax.ssl.create_ssl import generate_ca_signed_cert
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.peer_info import PeerInfo
+from flax.util.ints import uint16
 
 log = logging.getLogger(__name__)
 
 
-async def disconnect_all(server: ChiaServer) -> None:
+async def disconnect_all(server: FlaxServer) -> None:
     cons = list(server.all_connections.values())[:]
     for con in cons:
         await con.close()
 
 
-async def disconnect_all_and_reconnect(server: ChiaServer, reconnect_to: ChiaServer, self_hostname: str) -> bool:
+async def disconnect_all_and_reconnect(server: FlaxServer, reconnect_to: FlaxServer, self_hostname: str) -> bool:
     await disconnect_all(server)
     return await server.start_client(PeerInfo(self_hostname, uint16(reconnect_to._port)), None)
 
 
 async def add_dummy_connection(
-    server: ChiaServer, self_hostname: str, dummy_port: int, type: NodeType = NodeType.FULL_NODE
+    server: FlaxServer, self_hostname: str, dummy_port: int, type: NodeType = NodeType.FULL_NODE
 ) -> Tuple[asyncio.Queue, bytes32]:
     timeout = aiohttp.ClientTimeout(total=10)
     session = aiohttp.ClientSession(timeout=timeout)
@@ -40,17 +40,17 @@ async def add_dummy_connection(
     dummy_crt_path = server._private_key_path.parent / "dummy.crt"
     dummy_key_path = server._private_key_path.parent / "dummy.key"
     generate_ca_signed_cert(
-        server.chia_ca_crt_path.read_bytes(), server.chia_ca_key_path.read_bytes(), dummy_crt_path, dummy_key_path
+        server.flax_ca_crt_path.read_bytes(), server.flax_ca_key_path.read_bytes(), dummy_crt_path, dummy_key_path
     )
     ssl_context = ssl_context_for_client(
-        server.chia_ca_crt_path, server.chia_ca_key_path, dummy_crt_path, dummy_key_path
+        server.flax_ca_crt_path, server.flax_ca_key_path, dummy_crt_path, dummy_key_path
     )
     pem_cert = x509.load_pem_x509_certificate(dummy_crt_path.read_bytes(), default_backend())
     der_cert = x509.load_der_x509_certificate(pem_cert.public_bytes(serialization.Encoding.DER), default_backend())
     peer_id = bytes32(der_cert.fingerprint(hashes.SHA256()))
     url = f"wss://{self_hostname}:{server._port}/ws"
     ws = await session.ws_connect(url, autoclose=True, autoping=True, ssl=ssl_context)
-    wsc = WSChiaConnection(
+    wsc = WSFlaxConnection(
         type,
         ws,
         server._port,
@@ -69,7 +69,7 @@ async def add_dummy_connection(
     return incoming_queue, peer_id
 
 
-async def connect_and_get_peer(server_1: ChiaServer, server_2: ChiaServer, self_hostname: str) -> WSChiaConnection:
+async def connect_and_get_peer(server_1: FlaxServer, server_2: FlaxServer, self_hostname: str) -> WSFlaxConnection:
     """
     Connect server_2 to server_1, and get return the connection in server_1.
     """

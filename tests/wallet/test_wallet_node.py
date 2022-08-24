@@ -5,9 +5,9 @@ from typing import Any, Dict, Optional
 import pytest
 from blspy import PrivateKey
 
-from chia.util.config import load_config
-from chia.util.keychain import Keychain, generate_mnemonic
-from chia.wallet.wallet_node import WalletNode
+from flax.util.config import load_config
+from flax.util.keychain import Keychain, generate_mnemonic
+from flax.wallet.wallet_node import WalletNode
 from tests.setup_nodes import test_constants
 
 

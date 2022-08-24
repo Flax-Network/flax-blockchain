@@ -1,6 +1,6 @@
 from pathlib import Path
-from chia.util.db_wrapper import DBWrapper2
-from chia.util.db_wrapper import DBWrapper
+from flax.util.db_wrapper import DBWrapper2
+from flax.util.db_wrapper import DBWrapper
 import tempfile
 import aiosqlite
 

@@ -4,17 +4,17 @@ set -o errexit
 
 echo "Installing global npm packages"
 cd npm_linux_deb || exit
-npm ci
+npm install
 PATH=$(npm bin):$PATH
 
 cd ../../ || exit
-git submodule update --init chia-blockchain-gui
+git submodule update --init flax-blockchain-gui
 
-cd ./chia-blockchain-gui || exit
+cd ./flax-blockchain-gui || exit
 
 echo "npm build"
 lerna clean -y
-npm ci
+npm install
 # Audit fix does not currently work with Lerna. See https://github.com/lerna/lerna/issues/1663
 # npm audit fix
 npm run build
@@ -27,9 +27,9 @@ fi
 # Remove unused packages
 rm -rf node_modules
 
-# Other than `chia-blockchain-gui/package/gui`, all other packages are no longer necessary after build.
+# Other than `flax-blockchain-gui/package/gui`, all other packages are no longer necessary after build.
 # Since these unused packages make cache unnecessarily fat, here unused packages are removed.
-echo "Remove unused @chia packages to make cache slim"
+echo "Remove unused @flax packages to make cache slim"
 ls -l packages
 rm -rf packages/api
 rm -rf packages/api-react
@@ -44,5 +44,5 @@ rm -rf electron/dist # ~186MB
 rm -rf "@mui" # ~71MB
 rm -rf typescript # ~63MB
 
-# Remove `packages/gui/node_modules/@chia` because it causes an error on later `electron-packager` command
-rm -rf "@chia"
+# Remove `packages/gui/node_modules/@flax` because it causes an error on later `electron-packager` command
+rm -rf "@flax"

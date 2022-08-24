@@ -4,15 +4,15 @@ import json
 import logging
 import pytest
 
-from chia.daemon.server import WebSocketServer
-from chia.server.outbound_message import NodeType
-from chia.types.peer_info import PeerInfo
-from chia.simulator.block_tools import BlockTools
-from chia.util.ints import uint16
-from chia.util.keyring_wrapper import DEFAULT_PASSPHRASE_IF_NO_MASTER_PASSPHRASE
-from chia.util.ws_message import create_payload
+from flax.daemon.server import WebSocketServer
+from flax.server.outbound_message import NodeType
+from flax.types.peer_info import PeerInfo
+from flax.simulator.block_tools import BlockTools
+from flax.util.ints import uint16
+from flax.util.keyring_wrapper import DEFAULT_PASSPHRASE_IF_NO_MASTER_PASSPHRASE
+from flax.util.ws_message import create_payload
 from tests.core.node_height import node_height_at_least
-from chia.simulator.time_out_assert import time_out_assert_custom_interval, time_out_assert
+from flax.simulator.time_out_assert import time_out_assert_custom_interval, time_out_assert
 
 
 class TestDaemon:
@@ -68,7 +68,7 @@ class TestDaemon:
 
         read_handler = asyncio.create_task(reader(ws, message_queue))
         data = {}
-        payload = create_payload("get_blockchain_state", data, service_name, "chia_full_node")
+        payload = create_payload("get_blockchain_state", data, service_name, "flax_full_node")
         await ws.send_str(payload)
 
         await asyncio.sleep(5)
