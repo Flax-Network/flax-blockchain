@@ -17,15 +17,15 @@ fi
 # If the env variable NOTARIZE and the username and password variables are
 # set, this will attempt to Notarize the signed DMG
 
-if [ ! "$CHIA_INSTALLER_VERSION" ]; then
-	echo "WARNING: No environment variable CHIA_INSTALLER_VERSION set. Using 0.0.0."
-	CHIA_INSTALLER_VERSION="0.0.0"
+if [ ! "$FLAX_INSTALLER_VERSION" ]; then
+	echo "WARNING: No environment variable FLAX_INSTALLER_VERSION set. Using 0.0.0."
+	FLAX_INSTALLER_VERSION="0.0.0"
 fi
-echo "Chia Installer Version is: $CHIA_INSTALLER_VERSION"
+echo "Flax Installer Version is: $FLAX_INSTALLER_VERSION"
 
 echo "Installing npm and electron packagers"
 cd npm_linux || exit 1
-npm ci
+npm install
 PATH=$(npm bin):$PATH
 cd .. || exit 1
 
@@ -34,7 +34,7 @@ rm -rf dist
 mkdir dist
 
 echo "Create executables with pyinstaller"
-SPEC_FILE=$(python -c 'import chia; print(chia.PYINSTALLER_SPEC_PATH)')
+SPEC_FILE=$(python -c 'import flax; print(flax.PYINSTALLER_SPEC_PATH)')
 pyinstaller --log-level=INFO "$SPEC_FILE"
 LAST_EXIT_CODE=$?
 if [ "$LAST_EXIT_CODE" -ne 0 ]; then
@@ -43,11 +43,11 @@ if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 fi
 
 # Builds CLI only rpm
-CLI_RPM_BASE="chia-blockchain-cli-$CHIA_INSTALLER_VERSION-1.$REDHAT_PLATFORM"
-mkdir -p "dist/$CLI_RPM_BASE/opt/chia"
+CLI_RPM_BASE="flax-blockchain-cli-$FLAX_INSTALLER_VERSION-1.$REDHAT_PLATFORM"
+mkdir -p "dist/$CLI_RPM_BASE/opt/flax"
 mkdir -p "dist/$CLI_RPM_BASE/usr/bin"
-cp -r dist/daemon/* "dist/$CLI_RPM_BASE/opt/chia/"
-ln -s ../../opt/chia/chia "dist/$CLI_RPM_BASE/usr/bin/chia"
+cp -r dist/daemon/* "dist/$CLI_RPM_BASE/opt/flax/"
+ln -s ../../opt/flax/flax "dist/$CLI_RPM_BASE/usr/bin/flax"
 # This is built into the base build image
 # shellcheck disable=SC1091
 . /etc/profile.d/rvm.sh
@@ -58,36 +58,36 @@ rvm use ruby-3
 fpm -s dir -t rpm \
   -C "dist/$CLI_RPM_BASE" \
   -p "dist/$CLI_RPM_BASE.rpm" \
-  --name chia-blockchain-cli \
+  --name flax-blockchain-cli \
   --license Apache-2.0 \
-  --version "$CHIA_INSTALLER_VERSION" \
+  --version "$FLAX_INSTALLER_VERSION" \
   --architecture "$REDHAT_PLATFORM" \
-  --description "Chia is a modern cryptocurrency built from scratch, designed to be efficient, decentralized, and secure." \
+  --description "Flax is a modern cryptocurrency built from scratch, designed to be efficient, decentralized, and secure." \
   --depends /usr/lib64/libcrypt.so.1 \
   .
 # CLI only rpm done
 
-cp -r dist/daemon ../chia-blockchain-gui/packages/gui
+cp -r dist/daemon ../flax-blockchain-gui/packages/gui
 
 # Change to the gui package
-cd ../chia-blockchain-gui/packages/gui || exit 1
+cd ../flax-blockchain-gui/packages/gui || exit 1
 
-# sets the version for chia-blockchain in package.json
+# sets the version for flax-blockchain in package.json
 cp package.json package.json.orig
-jq --arg VER "$CHIA_INSTALLER_VERSION" '.version=$VER' package.json > temp.json && mv temp.json package.json
+jq --arg VER "$FLAX_INSTALLER_VERSION" '.version=$VER' package.json > temp.json && mv temp.json package.json
 
 echo "Building Linux(rpm) Electron app"
 OPT_ARCH="--x64"
 if [ "$REDHAT_PLATFORM" = "arm64" ]; then
   OPT_ARCH="--arm64"
 fi
-PRODUCT_NAME="chia"
+PRODUCT_NAME="flax"
 echo electron-builder build --linux rpm "${OPT_ARCH}" \
-  --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Chia Blockchain" \
-  --config.rpm.packageName="chia-blockchain"
+  --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Flax Blockchain" \
+  --config.rpm.packageName="flax-blockchain"
 electron-builder build --linux rpm "${OPT_ARCH}" \
-  --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Chia Blockchain" \
-  --config.rpm.packageName="chia-blockchain"
+  --config.productName="${PRODUCT_NAME}" --config.linux.desktop.Name="Flax Blockchain" \
+  --config.rpm.packageName="flax-blockchain"
 LAST_EXIT_CODE=$?
 ls -l dist/linux*-unpacked/resources
 
@@ -99,8 +99,8 @@ if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 	exit $LAST_EXIT_CODE
 fi
 
-GUI_RPM_NAME="chia-blockchain-${CHIA_INSTALLER_VERSION}-1.${REDHAT_PLATFORM}.rpm"
-mv "dist/${PRODUCT_NAME}-${CHIA_INSTALLER_VERSION}.rpm" "../../../build_scripts/dist/${GUI_RPM_NAME}"
+GUI_RPM_NAME="flax-blockchain-${FLAX_INSTALLER_VERSION}-1.${REDHAT_PLATFORM}.rpm"
+mv "dist/${PRODUCT_NAME}-${FLAX_INSTALLER_VERSION}.rpm" "../../../build_scripts/dist/${GUI_RPM_NAME}"
 cd ../../../build_scripts || exit 1
 
 echo "Create final installer"

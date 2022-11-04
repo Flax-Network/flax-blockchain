@@ -10,7 +10,7 @@ import pytest
 # TODO: update after resolution in https://github.com/pytest-dev/pytest/issues/7469
 from _pytest.fixtures import SubRequest
 
-from chia.util.db_wrapper import DBWrapper2
+from flax.util.db_wrapper import DBWrapper2
 from tests.util.db_connection import DBConnection
 
 if TYPE_CHECKING:

@@ -8,7 +8,7 @@ import pytest
 from blspy import AugSchemeMPL, G1Element, PrivateKey
 
 from tests.util.keyring import using_temp_file_keyring
-from chia.util.errors import (
+from flax.util.errors import (
     KeychainFingerprintExists,
     KeychainKeyDataMismatch,
     KeychainSecretsMissing,
@@ -16,8 +16,8 @@ from chia.util.errors import (
     KeychainLabelExists,
     KeychainLabelInvalid,
 )
-from chia.util.ints import uint32
-from chia.util.keychain import (
+from flax.util.ints import uint32
+from flax.util.keychain import (
     Keychain,
     KeyData,
     KeyDataSecrets,
@@ -42,7 +42,7 @@ public_key = G1Element.from_bytes(
 class TestKeychain(unittest.TestCase):
     @using_temp_file_keyring()
     def test_basic_add_delete(self):
-        kc: Keychain = Keychain(user="testing-1.8.0", service="chia-testing-1.8.0")
+        kc: Keychain = Keychain(user="testing-1.8.0", service="flax-testing-1.8.0")
         kc.delete_all_keys()
 
         assert kc._get_free_private_key_index() == 0
@@ -110,7 +110,7 @@ class TestKeychain(unittest.TestCase):
 
     @using_temp_file_keyring()
     def test_add_private_key_label(self):
-        keychain: Keychain = Keychain(user="testing-1.8.0", service="chia-testing-1.8.0")
+        keychain: Keychain = Keychain(user="testing-1.8.0", service="flax-testing-1.8.0")
 
         key_data_0 = KeyData.generate(label="key_0")
         key_data_1 = KeyData.generate(label="key_1")
@@ -145,7 +145,7 @@ class TestKeychain(unittest.TestCase):
 
     @using_temp_file_keyring()
     def test_bip39_eip2333_test_vector(self):
-        kc: Keychain = Keychain(user="testing-1.8.0", service="chia-testing-1.8.0")
+        kc: Keychain = Keychain(user="testing-1.8.0", service="flax-testing-1.8.0")
         kc.delete_all_keys()
 
         mnemonic = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"

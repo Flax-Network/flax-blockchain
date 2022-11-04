@@ -2,10 +2,10 @@ from typing import List
 
 from blspy import AugSchemeMPL, G2Element, PrivateKey
 
-from chia.types.coin_spend import CoinSpend
-from chia.util.condition_tools import conditions_by_opcode, conditions_for_solution, pkm_pairs_for_conditions_dict
+from flax.types.coin_spend import CoinSpend
+from flax.util.condition_tools import conditions_by_opcode, conditions_for_solution, pkm_pairs_for_conditions_dict
 from tests.core.make_block_generator import GROUP_ORDER, int_to_public_key
-from chia.simulator.block_tools import test_constants
+from flax.simulator.block_tools import test_constants
 
 
 class KeyTool(dict):

@@ -4,8 +4,8 @@ from typing import Any, Dict, Union
 
 import pytest
 
-from chia.types.blockchain_format.program import Program
-from chia.wallet.puzzle_drivers import PuzzleInfo, Solver
+from flax.types.blockchain_format.program import Program
+from flax.wallet.puzzle_drivers import PuzzleInfo, Solver
 
 
 def test_puzzle_info() -> None:

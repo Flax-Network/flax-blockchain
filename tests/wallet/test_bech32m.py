@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from chia.util.bech32m import bech32_decode
+from flax.util.bech32m import bech32_decode
 
 
 def test_valid_imports():

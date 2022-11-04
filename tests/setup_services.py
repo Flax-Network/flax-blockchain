@@ -8,25 +8,25 @@ from pathlib import Path
 from secrets import token_bytes
 from typing import AsyncGenerator, List, Optional, Tuple
 
-from chia.cmds.init_funcs import init
-from chia.consensus.constants import ConsensusConstants
-from chia.daemon.server import WebSocketServer, daemon_launch_lock_path
-from chia.protocols.shared_protocol import Capability, capabilities
-from chia.server.start_farmer import create_farmer_service
-from chia.server.start_full_node import create_full_node_service
-from chia.server.start_harvester import create_harvester_service
-from chia.server.start_introducer import create_introducer_service
-from chia.server.start_timelord import create_timelord_service
-from chia.server.start_wallet import create_wallet_service
-from chia.simulator.block_tools import BlockTools
-from chia.simulator.start_simulator import create_full_node_simulator_service
-from chia.timelord.timelord_launcher import kill_processes, spawn_process
-from chia.types.peer_info import PeerInfo
-from chia.util.bech32m import encode_puzzle_hash
-from chia.util.config import lock_and_load_config, save_config
-from chia.util.ints import uint16
-from chia.util.keychain import bytes_to_mnemonic
-from chia.util.lock import Lockfile
+from flax.cmds.init_funcs import init
+from flax.consensus.constants import ConsensusConstants
+from flax.daemon.server import WebSocketServer, daemon_launch_lock_path
+from flax.protocols.shared_protocol import Capability, capabilities
+from flax.server.start_farmer import create_farmer_service
+from flax.server.start_full_node import create_full_node_service
+from flax.server.start_harvester import create_harvester_service
+from flax.server.start_introducer import create_introducer_service
+from flax.server.start_timelord import create_timelord_service
+from flax.server.start_wallet import create_wallet_service
+from flax.simulator.block_tools import BlockTools
+from flax.simulator.start_simulator import create_full_node_simulator_service
+from flax.timelord.timelord_launcher import kill_processes, spawn_process
+from flax.types.peer_info import PeerInfo
+from flax.util.bech32m import encode_puzzle_hash
+from flax.util.config import lock_and_load_config, save_config
+from flax.util.ints import uint16
+from flax.util.keychain import bytes_to_mnemonic
+from flax.util.lock import Lockfile
 from tests.util.keyring import TempKeyring
 
 log = logging.getLogger(__name__)
@@ -154,7 +154,7 @@ async def setup_wallet_node(
     consensus_constants: ConsensusConstants,
     local_bt: BlockTools,
     spam_filter_after_n_txs=200,
-    xch_spam_amount=1000000,
+    xfx_spam_amount=1000000,
     full_node_port=None,
     introducer_port=None,
     key_seed=None,
@@ -168,7 +168,7 @@ async def setup_wallet_node(
         service_config["rpc_port"] = 0
         service_config["initial_num_public_keys"] = initial_num_public_keys
         service_config["spam_filter_after_n_txs"] = spam_filter_after_n_txs
-        service_config["xch_spam_amount"] = xch_spam_amount
+        service_config["xfx_spam_amount"] = xfx_spam_amount
 
         entropy = token_bytes(32)
         if key_seed is None:
@@ -276,11 +276,11 @@ async def setup_farmer(
     service_config = root_config["farmer"]
     config_pool = root_config["pool"]
 
-    service_config["xch_target_address"] = encode_puzzle_hash(b_tools.farmer_ph, "xch")
+    service_config["xfx_target_address"] = encode_puzzle_hash(b_tools.farmer_ph, "xfx")
     service_config["pool_public_keys"] = [bytes(pk).hex() for pk in b_tools.pool_pubkeys]
     service_config["port"] = port
     service_config["rpc_port"] = uint16(0)
-    config_pool["xch_target_address"] = encode_puzzle_hash(b_tools.pool_ph, "xch")
+    config_pool["xfx_target_address"] = encode_puzzle_hash(b_tools.pool_ph, "xfx")
 
     if full_node_port:
         service_config["full_node_peer"]["host"] = self_hostname

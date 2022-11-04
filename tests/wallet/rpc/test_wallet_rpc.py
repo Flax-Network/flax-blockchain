@@ -10,42 +10,42 @@ import pytest
 import pytest_asyncio
 from blspy import G2Element
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.consensus.coinbase import create_puzzlehash_for_pk
-from chia.rpc.full_node_rpc_client import FullNodeRpcClient
-from chia.rpc.wallet_rpc_client import WalletRpcClient
-from chia.server.server import ChiaServer
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.announcement import Announcement
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_record import CoinRecord
-from chia.types.coin_spend import CoinSpend
-from chia.types.peer_info import PeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
-from chia.util.config import lock_and_load_config, save_config
-from chia.util.hash import std_hash
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.cat_wallet.cat_constants import DEFAULT_CATS
-from chia.wallet.cat_wallet.cat_wallet import CATWallet
-from chia.wallet.derive_keys import master_sk_to_wallet_sk, master_sk_to_wallet_sk_unhardened
-from chia.wallet.did_wallet.did_wallet import DIDWallet
-from chia.wallet.nft_wallet.nft_wallet import NFTWallet
-from chia.wallet.puzzles.cat_loader import CAT_MOD
-from chia.wallet.trading.trade_status import TradeStatus
-from chia.wallet.transaction_record import TransactionRecord
-from chia.wallet.transaction_sorting import SortKey
-from chia.wallet.uncurried_puzzle import uncurry_puzzle
-from chia.wallet.util.address_type import AddressType
-from chia.wallet.util.compute_memos import compute_memos
-from chia.wallet.util.wallet_types import WalletType
-from chia.wallet.wallet import Wallet
-from chia.wallet.wallet_node import WalletNode
-from chia.wallet.wallet_protocol import WalletProtocol
+from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from flax.consensus.coinbase import create_puzzlehash_for_pk
+from flax.rpc.full_node_rpc_client import FullNodeRpcClient
+from flax.rpc.wallet_rpc_client import WalletRpcClient
+from flax.server.server import FlaxServer
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.simulator.time_out_assert import time_out_assert
+from flax.types.announcement import Announcement
+from flax.types.blockchain_format.coin import Coin
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.coin_record import CoinRecord
+from flax.types.coin_spend import CoinSpend
+from flax.types.peer_info import PeerInfo
+from flax.types.spend_bundle import SpendBundle
+from flax.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
+from flax.util.config import lock_and_load_config, save_config
+from flax.util.hash import std_hash
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.cat_wallet.cat_constants import DEFAULT_CATS
+from flax.wallet.cat_wallet.cat_wallet import CATWallet
+from flax.wallet.derive_keys import master_sk_to_wallet_sk, master_sk_to_wallet_sk_unhardened
+from flax.wallet.did_wallet.did_wallet import DIDWallet
+from flax.wallet.nft_wallet.nft_wallet import NFTWallet
+from flax.wallet.puzzles.cat_loader import CAT_MOD
+from flax.wallet.trading.trade_status import TradeStatus
+from flax.wallet.transaction_record import TransactionRecord
+from flax.wallet.transaction_sorting import SortKey
+from flax.wallet.uncurried_puzzle import uncurry_puzzle
+from flax.wallet.util.address_type import AddressType
+from flax.wallet.util.compute_memos import compute_memos
+from flax.wallet.util.wallet_types import WalletType
+from flax.wallet.wallet import Wallet
+from flax.wallet.wallet_node import WalletNode
+from flax.wallet.wallet_protocol import WalletProtocol
 from tests.util.wallet_is_synced import wallet_is_synced
 
 log = logging.getLogger(__name__)
@@ -60,7 +60,7 @@ class WalletBundle:
 
 @dataclasses.dataclass
 class FullNodeBundle:
-    server: ChiaServer
+    server: FlaxServer
     api: FullNodeSimulator
     rpc_client: FullNodeRpcClient
 
@@ -241,7 +241,7 @@ async def test_send_transaction(wallet_rpc_environment: WalletRpcTestEnvironment
 
     generated_funds = await generate_funds(full_node_api, env.wallet_1)
 
-    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txch")
+    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txfx")
     tx_amount = uint64(15600000)
     with pytest.raises(ValueError):
         await client.send_transaction("1", uint64(100000000000000001), addr)
@@ -554,7 +554,7 @@ async def test_get_transactions(wallet_rpc_environment: WalletRpcTestEnvironment
 
     # Test RELEVANCE
     await client.send_transaction(
-        "1", uint64(1), encode_puzzle_hash(await wallet.get_new_puzzlehash(), "txch")
+        "1", uint64(1), encode_puzzle_hash(await wallet.get_new_puzzlehash(), "txfx")
     )  # Create a pending tx
 
     all_transactions = await client.get_transactions("1", sort_key=SortKey.RELEVANCE)
@@ -571,10 +571,10 @@ async def test_get_transactions(wallet_rpc_environment: WalletRpcTestEnvironment
 
     # Test get_transactions to address
     ph_by_addr = await wallet.get_new_puzzlehash()
-    await client.send_transaction("1", uint64(1), encode_puzzle_hash(ph_by_addr, "txch"))
-    await client.farm_block(encode_puzzle_hash(ph_by_addr, "txch"))
+    await client.send_transaction("1", uint64(1), encode_puzzle_hash(ph_by_addr, "txfx"))
+    await client.farm_block(encode_puzzle_hash(ph_by_addr, "txfx"))
     await time_out_assert(20, wallet_is_synced, True, wallet_node, full_node_api)
-    tx_for_address = await client.get_transactions("1", to_address=encode_puzzle_hash(ph_by_addr, "txch"))
+    tx_for_address = await client.get_transactions("1", to_address=encode_puzzle_hash(ph_by_addr, "txfx"))
     assert len(tx_for_address) == 1
     assert tx_for_address[0].to_puzzle_hash == ph_by_addr
 
@@ -742,7 +742,7 @@ async def test_offer_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment)
     await farm_transaction(full_node_api, wallet_node, spend_bundle)
     await time_out_assert(5, get_confirmed_balance, 4, wallet_2_rpc, cat_wallet_id)
 
-    # Create an offer of 5 chia for one CAT
+    # Create an offer of 5 flax for one CAT
     offer, trade_record = await wallet_1_rpc.create_offer_for_ids(
         {uint32(1): -5, cat_asset_id.hex(): 1}, validate_only=True
     )
@@ -761,7 +761,7 @@ async def test_offer_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment)
 
     summary = await wallet_1_rpc.get_offer_summary(offer)
     advanced_summary = await wallet_1_rpc.get_offer_summary(offer, advanced=True)
-    assert summary == {"offered": {"xch": 5}, "requested": {cat_asset_id.hex(): 1}, "infos": driver_dict, "fees": 1}
+    assert summary == {"offered": {"xfx": 5}, "requested": {cat_asset_id.hex(): 1}, "infos": driver_dict, "fees": 1}
     assert advanced_summary == summary
 
     assert await wallet_1_rpc.check_offer_validity(offer)
@@ -920,7 +920,7 @@ async def test_did_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment):
     await farm_transaction_block(full_node_api, wallet_1_node)
 
     # Transfer DID
-    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txch")
+    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txfx")
     res = await wallet_1_rpc.did_transfer_did(did_wallet_id_0, addr, 0, True)
     assert res["success"]
 
@@ -967,7 +967,7 @@ async def test_nft_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment):
         None,
         None,
         "0xD4584AD463139FA8C0D9F68F4B59F185",
-        ["https://www.chia.net/img/branding/chia-logo.svg"],
+        ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"],
     )
     assert res["success"]
 
@@ -995,7 +995,7 @@ async def test_nft_endpoints(wallet_rpc_environment: WalletRpcTestEnvironment):
     nft_info = (await wallet_1_rpc.get_nft_info(hmr_nft_id))["nft_info"]
     assert nft_info["nft_coin_id"][2:] == (await nft_wallet.get_current_nfts())[0].coin.name().hex()
 
-    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txch")
+    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txfx")
     res = await wallet_1_rpc.transfer_nft(nft_wallet_id, nft_id, addr, 0)
     assert res["success"]
     await time_out_assert(5, check_mempool_spend_count, True, full_node_api, 1)
@@ -1055,7 +1055,7 @@ async def test_key_and_address_endpoints(wallet_rpc_environment: WalletRpcTestEn
     assert (await client.get_height_info()) > 0
 
     ph = await wallet.get_new_puzzlehash()
-    addr = encode_puzzle_hash(ph, "txch")
+    addr = encode_puzzle_hash(ph, "txfx")
     tx_amount = uint64(15600000)
 
     created_tx = await client.send_transaction("1", tx_amount, addr)
@@ -1088,11 +1088,11 @@ async def test_key_and_address_endpoints(wallet_rpc_environment: WalletRpcTestEn
     sk = await wallet_node.get_key_for_fingerprint(pks[0])
     test_ph = create_puzzlehash_for_pk(master_sk_to_wallet_sk(sk, uint32(0)).get_g1())
     with lock_and_load_config(wallet_node.root_path, "config.yaml") as test_config:
-        test_config["farmer"]["xch_target_address"] = encode_puzzle_hash(test_ph, "txch")
+        test_config["farmer"]["xfx_target_address"] = encode_puzzle_hash(test_ph, "txfx")
         # set pool to second private key
         sk = await wallet_node.get_key_for_fingerprint(pks[1])
         test_ph = create_puzzlehash_for_pk(master_sk_to_wallet_sk(sk, uint32(0)).get_g1())
-        test_config["pool"]["xch_target_address"] = encode_puzzle_hash(test_ph, "txch")
+        test_config["pool"]["xfx_target_address"] = encode_puzzle_hash(test_ph, "txfx")
         save_config(wallet_node.root_path, "config.yaml", test_config)
 
     # Check first key
@@ -1118,11 +1118,11 @@ async def test_key_and_address_endpoints(wallet_rpc_environment: WalletRpcTestEn
     sk = await wallet_node.get_key_for_fingerprint(pks[0])
     test_ph = create_puzzlehash_for_pk(master_sk_to_wallet_sk_unhardened(sk, uint32(0)).get_g1())
     with lock_and_load_config(wallet_node.root_path, "config.yaml") as test_config:
-        test_config["farmer"]["xch_target_address"] = encode_puzzle_hash(test_ph, "txch")
+        test_config["farmer"]["xfx_target_address"] = encode_puzzle_hash(test_ph, "txfx")
         # set pool to second private key
         sk = await wallet_node.get_key_for_fingerprint(pks[1])
         test_ph = create_puzzlehash_for_pk(master_sk_to_wallet_sk_unhardened(sk, uint32(0)).get_g1())
-        test_config["pool"]["xch_target_address"] = encode_puzzle_hash(test_ph, "txch")
+        test_config["pool"]["xfx_target_address"] = encode_puzzle_hash(test_ph, "txfx")
         save_config(wallet_node.root_path, "config.yaml", test_config)
 
     # Check first key
@@ -1173,7 +1173,7 @@ async def test_select_coins_rpc(wallet_rpc_environment: WalletRpcTestEnvironment
 
     funds = await generate_funds(full_node_api, env.wallet_1)
 
-    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txch")
+    addr = encode_puzzle_hash(await wallet_2.get_new_puzzlehash(), "txfx")
     coin_300: List[Coin]
     for tx_amount in [uint64(1000), uint64(300), uint64(1000), uint64(1000), uint64(10000)]:
         funds -= tx_amount

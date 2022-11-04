@@ -8,10 +8,10 @@ import subprocess
 from dataclasses import dataclass
 from typing import IO, TYPE_CHECKING, Any, Dict, Iterator, List, Optional, Union
 
-from chia.data_layer.data_layer_util import NodeType, Side, Status
-from chia.data_layer.data_store import DataStore
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.tree_hash import bytes32
+from flax.data_layer.data_layer_util import NodeType, Side, Status
+from flax.data_layer.data_store import DataStore
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.tree_hash import bytes32
 
 # from subprocess.pyi
 _FILE = Union[None, int, IO[Any]]
@@ -117,7 +117,7 @@ async def add_01234567_example(data_store: DataStore, tree_id: bytes32) -> Examp
 
 
 @dataclass
-class ChiaRoot:
+class FlaxRoot:
     path: pathlib.Path
     scripts_path: pathlib.Path
 
@@ -133,15 +133,15 @@ class ChiaRoot:
     ) -> subprocess_CompletedProcess_str:
         # TODO: --root-path doesn't seem to work here...
         kwargs.setdefault("env", {})
-        kwargs["env"]["CHIA_ROOT"] = os.fspath(self.path)
-        kwargs["env"]["CHIA_KEYS_ROOT"] = os.fspath(self.path)
+        kwargs["env"]["FLAX_ROOT"] = os.fspath(self.path)
+        kwargs["env"]["FLAX_KEYS_ROOT"] = os.fspath(self.path)
 
         # This is for windows
         if "SYSTEMROOT" in os.environ:
             kwargs["env"]["SYSTEMROOT"] = os.environ["SYSTEMROOT"]
 
         modified_args: List[Union[str, os_PathLike_str]] = [
-            self.scripts_path.joinpath("chia"),
+            self.scripts_path.joinpath("flax"),
             "--root-path",
             self.path,
             *args,

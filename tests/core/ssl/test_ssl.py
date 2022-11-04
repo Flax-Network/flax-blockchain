@@ -3,24 +3,24 @@ import asyncio
 import aiohttp
 import pytest
 
-from chia.protocols.shared_protocol import protocol_version, capabilities
-from chia.server.outbound_message import NodeType
-from chia.server.server import ChiaServer, ssl_context_for_client
-from chia.server.ssl_context import chia_ssl_ca_paths, private_ssl_ca_paths
-from chia.server.ws_connection import WSChiaConnection
-from chia.ssl.create_ssl import generate_ca_signed_cert
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16
+from flax.protocols.shared_protocol import protocol_version, capabilities
+from flax.server.outbound_message import NodeType
+from flax.server.server import FlaxServer, ssl_context_for_client
+from flax.server.ssl_context import flax_ssl_ca_paths, private_ssl_ca_paths
+from flax.server.ws_connection import WSFlaxConnection
+from flax.ssl.create_ssl import generate_ca_signed_cert
+from flax.types.peer_info import PeerInfo
+from flax.util.ints import uint16
 
 
-async def establish_connection(server: ChiaServer, self_hostname: str, ssl_context) -> None:
+async def establish_connection(server: FlaxServer, self_hostname: str, ssl_context) -> None:
     timeout = aiohttp.ClientTimeout(total=10)
     dummy_port = 5  # this does not matter
     async with aiohttp.ClientSession(timeout=timeout) as session:
         incoming_queue: asyncio.Queue = asyncio.Queue()
         url = f"wss://{self_hostname}:{server._port}/ws"
         ws = await session.ws_connect(url, autoclose=False, autoping=True, ssl=ssl_context)
-        wsc = WSChiaConnection(
+        wsc = WSFlaxConnection(
             NodeType.FULL_NODE,
             ws,
             server._port,
@@ -43,7 +43,7 @@ class TestSSL:
     async def test_public_connections(self, wallet_node_sim_and_wallet, self_hostname):
         full_nodes, wallets, _ = wallet_node_sim_and_wallet
         full_node_api = full_nodes[0]
-        server_1: ChiaServer = full_node_api.full_node.server
+        server_1: FlaxServer = full_node_api.full_node.server
         wallet_node, server_2 = wallets[0]
 
         success = await server_2.start_client(PeerInfo(self_hostname, uint16(server_1._port)), None)
@@ -56,7 +56,7 @@ class TestSSL:
 
         farmer_server = farmer_api.farmer.server
         ca_private_crt_path, ca_private_key_path = private_ssl_ca_paths(bt.root_path, bt.config)
-        chia_ca_crt_path, chia_ca_key_path = chia_ssl_ca_paths(bt.root_path, bt.config)
+        flax_ca_crt_path, flax_ca_key_path = flax_ssl_ca_paths(bt.root_path, bt.config)
         # Create valid cert (valid meaning signed with private CA)
         priv_crt = farmer_server.root_path / "valid.crt"
         priv_key = farmer_server.root_path / "valid.key"
@@ -72,8 +72,8 @@ class TestSSL:
         # Create not authenticated cert
         pub_crt = farmer_server.root_path / "non_valid.crt"
         pub_key = farmer_server.root_path / "non_valid.key"
-        generate_ca_signed_cert(chia_ca_crt_path.read_bytes(), chia_ca_key_path.read_bytes(), pub_crt, pub_key)
-        ssl_context = ssl_context_for_client(chia_ca_crt_path, chia_ca_key_path, pub_crt, pub_key)
+        generate_ca_signed_cert(flax_ca_crt_path.read_bytes(), flax_ca_key_path.read_bytes(), pub_crt, pub_key)
+        ssl_context = ssl_context_for_client(flax_ca_crt_path, flax_ca_key_path, pub_crt, pub_key)
         with pytest.raises(aiohttp.ClientConnectorCertificateError):
             await establish_connection(farmer_server, self_hostname, ssl_context)
         ssl_context = ssl_context_for_client(ca_private_crt_path, ca_private_key_path, pub_crt, pub_key)
@@ -85,18 +85,18 @@ class TestSSL:
         full_nodes, wallets, bt = wallet_node_sim_and_wallet
         full_node_api = full_nodes[0]
         full_node_server = full_node_api.full_node.server
-        chia_ca_crt_path, chia_ca_key_path = chia_ssl_ca_paths(bt.root_path, bt.config)
+        flax_ca_crt_path, flax_ca_key_path = flax_ssl_ca_paths(bt.root_path, bt.config)
 
         # Create not authenticated cert
         pub_crt = full_node_server.root_path / "p2p.crt"
         pub_key = full_node_server.root_path / "p2p.key"
         generate_ca_signed_cert(
-            chia_ca_crt_path.read_bytes(),
-            chia_ca_key_path.read_bytes(),
+            flax_ca_crt_path.read_bytes(),
+            flax_ca_key_path.read_bytes(),
             pub_crt,
             pub_key,
         )
-        ssl_context = ssl_context_for_client(chia_ca_crt_path, chia_ca_key_path, pub_crt, pub_key)
+        ssl_context = ssl_context_for_client(flax_ca_crt_path, flax_ca_key_path, pub_crt, pub_key)
         await establish_connection(full_node_server, self_hostname, ssl_context)
 
     @pytest.mark.asyncio
@@ -104,13 +104,13 @@ class TestSSL:
         full_nodes, wallets, bt = wallet_node_sim_and_wallet
         wallet_node, wallet_server = wallets[0]
         ca_private_crt_path, ca_private_key_path = private_ssl_ca_paths(bt.root_path, bt.config)
-        chia_ca_crt_path, chia_ca_key_path = chia_ssl_ca_paths(bt.root_path, bt.config)
+        flax_ca_crt_path, flax_ca_key_path = flax_ssl_ca_paths(bt.root_path, bt.config)
 
         # Wallet should not accept incoming connections
         pub_crt = wallet_server.root_path / "p2p.crt"
         pub_key = wallet_server.root_path / "p2p.key"
-        generate_ca_signed_cert(chia_ca_crt_path.read_bytes(), chia_ca_key_path.read_bytes(), pub_crt, pub_key)
-        ssl_context = ssl_context_for_client(chia_ca_crt_path, chia_ca_key_path, pub_crt, pub_key)
+        generate_ca_signed_cert(flax_ca_crt_path.read_bytes(), flax_ca_key_path.read_bytes(), pub_crt, pub_key)
+        ssl_context = ssl_context_for_client(flax_ca_crt_path, flax_ca_key_path, pub_crt, pub_key)
         with pytest.raises(aiohttp.ClientConnectorError):
             await establish_connection(wallet_server, self_hostname, ssl_context)
 
@@ -132,18 +132,18 @@ class TestSSL:
         harvesters, _, bt = farmer_one_harvester
         harvester_server = harvesters[0]._server
         ca_private_crt_path, ca_private_key_path = private_ssl_ca_paths(bt.root_path, bt.config)
-        chia_ca_crt_path, chia_ca_key_path = chia_ssl_ca_paths(bt.root_path, bt.config)
+        flax_ca_crt_path, flax_ca_key_path = flax_ssl_ca_paths(bt.root_path, bt.config)
 
         # harvester should not accept incoming connections
         pub_crt = harvester_server.root_path / "p2p.crt"
         pub_key = harvester_server.root_path / "p2p.key"
         generate_ca_signed_cert(
-            chia_ca_crt_path.read_bytes(),
-            chia_ca_key_path.read_bytes(),
+            flax_ca_crt_path.read_bytes(),
+            flax_ca_key_path.read_bytes(),
             pub_crt,
             pub_key,
         )
-        ssl_context = ssl_context_for_client(chia_ca_crt_path, chia_ca_key_path, pub_crt, pub_key)
+        ssl_context = ssl_context_for_client(flax_ca_crt_path, flax_ca_key_path, pub_crt, pub_key)
         with pytest.raises(aiohttp.ClientConnectorError):
             await establish_connection(harvester_server, self_hostname, ssl_context)
 
@@ -163,18 +163,18 @@ class TestSSL:
     @pytest.mark.asyncio
     async def test_introducer(self, introducer_service, self_hostname):
         introducer_server = introducer_service._node.server
-        chia_ca_crt_path, chia_ca_key_path = chia_ssl_ca_paths(introducer_service.root_path, introducer_service.config)
+        flax_ca_crt_path, flax_ca_key_path = flax_ssl_ca_paths(introducer_service.root_path, introducer_service.config)
 
         # Create not authenticated cert
         pub_crt = introducer_server.root_path / "p2p.crt"
         pub_key = introducer_server.root_path / "p2p.key"
         generate_ca_signed_cert(
-            chia_ca_crt_path.read_bytes(),
-            chia_ca_key_path.read_bytes(),
+            flax_ca_crt_path.read_bytes(),
+            flax_ca_key_path.read_bytes(),
             pub_crt,
             pub_key,
         )
-        ssl_context = ssl_context_for_client(chia_ca_crt_path, chia_ca_key_path, pub_crt, pub_key)
+        ssl_context = ssl_context_for_client(flax_ca_crt_path, flax_ca_key_path, pub_crt, pub_key)
         await establish_connection(introducer_server, self_hostname, ssl_context)
 
     @pytest.mark.asyncio
@@ -183,18 +183,18 @@ class TestSSL:
         ca_private_crt_path, ca_private_key_path = private_ssl_ca_paths(
             timelord_service.root_path, timelord_service.config
         )
-        chia_ca_crt_path, chia_ca_key_path = chia_ssl_ca_paths(timelord_service.root_path, timelord_service.config)
+        flax_ca_crt_path, flax_ca_key_path = flax_ssl_ca_paths(timelord_service.root_path, timelord_service.config)
 
         # timelord should not accept incoming connections
         pub_crt = timelord_server.root_path / "p2p.crt"
         pub_key = timelord_server.root_path / "p2p.key"
         generate_ca_signed_cert(
-            chia_ca_crt_path.read_bytes(),
-            chia_ca_key_path.read_bytes(),
+            flax_ca_crt_path.read_bytes(),
+            flax_ca_key_path.read_bytes(),
             pub_crt,
             pub_key,
         )
-        ssl_context = ssl_context_for_client(chia_ca_crt_path, chia_ca_key_path, pub_crt, pub_key)
+        ssl_context = ssl_context_for_client(flax_ca_crt_path, flax_ca_key_path, pub_crt, pub_key)
         with pytest.raises(aiohttp.ClientConnectorError):
             await establish_connection(timelord_server, self_hostname, ssl_context)
 

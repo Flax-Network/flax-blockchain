@@ -206,7 +206,7 @@ class _AssertRuntime:
     Produces output of the following form.
 
         Asserting maximum duration: full block
-        /home/altendky/repos/chia-blockchain/tests/core/full_node/test_performance.py:187
+        /home/altendky/repos/flax-blockchain/tests/core/full_node/test_performance.py:187
             run time: 0.027789528900002837
             allowed: 0.1
             percent: 28 %

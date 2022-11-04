@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from chia.full_node.sync_store import SyncStore
-from chia.util.hash import std_hash
+from flax.full_node.sync_store import SyncStore
+from flax.util.hash import std_hash
 
 
 class TestStore:

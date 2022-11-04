@@ -3,16 +3,16 @@ from typing import AsyncIterator, List, Tuple
 import pytest
 import pytest_asyncio
 
-from chia.cmds.units import units
-from chia.consensus.block_rewards import calculate_pool_reward, calculate_base_farmer_reward
-from chia.server.server import ChiaServer
-from chia.simulator.block_tools import create_block_tools_async, BlockTools
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol, GetAllCoinsProtocol, ReorgProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.wallet_node import WalletNode
+from flax.cmds.units import units
+from flax.consensus.block_rewards import calculate_pool_reward, calculate_base_farmer_reward
+from flax.server.server import FlaxServer
+from flax.simulator.block_tools import create_block_tools_async, BlockTools
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol, GetAllCoinsProtocol, ReorgProtocol
+from flax.simulator.time_out_assert import time_out_assert
+from flax.types.peer_info import PeerInfo
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.wallet_node import WalletNode
 from tests.core.node_height import node_height_at_least
 from tests.setup_nodes import (
     SimulatorsAndWallets,
@@ -131,7 +131,7 @@ class TestSimulation:
     @pytest.mark.asyncio
     async def test_simulator_auto_farm_and_get_coins(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         self_hostname: str,
     ) -> None:
         num_blocks = 2
@@ -253,11 +253,11 @@ class TestSimulation:
         argvalues=[
             [0, 0],
             [1, 2],
-            [(2 * units["chia"]) - 1, 2],
-            [2 * units["chia"], 2],
-            [(2 * units["chia"]) + 1, 4],
-            [3 * units["chia"], 4],
-            [10 * units["chia"], 10],
+            [(2 * units["flax"]) - 1, 2],
+            [2 * units["flax"], 2],
+            [(2 * units["flax"]) + 1, 4],
+            [3 * units["flax"], 4],
+            [10 * units["flax"], 10],
         ],
     )
     async def test_simulation_farm_rewards(

@@ -6,24 +6,24 @@ from typing import Any, Dict
 
 import pytest
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.rpc.full_node_rpc_api import FullNodeRpcApi
-from chia.rpc.full_node_rpc_client import FullNodeRpcClient
-from chia.rpc.rpc_server import start_rpc_server
-from chia.rpc.wallet_rpc_api import WalletRpcApi
-from chia.rpc.wallet_rpc_client import WalletRpcClient
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert, time_out_assert_not_none
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.util.bech32m import encode_puzzle_hash
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.did_wallet.did_wallet import DIDWallet
-from chia.wallet.nft_wallet.nft_wallet import NFTWallet
-from chia.wallet.util.address_type import AddressType
+from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from flax.rpc.full_node_rpc_api import FullNodeRpcApi
+from flax.rpc.full_node_rpc_client import FullNodeRpcClient
+from flax.rpc.rpc_server import start_rpc_server
+from flax.rpc.wallet_rpc_api import WalletRpcApi
+from flax.rpc.wallet_rpc_client import WalletRpcClient
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.simulator.time_out_assert import time_out_assert, time_out_assert_not_none
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.peer_info import PeerInfo
+from flax.types.spend_bundle import SpendBundle
+from flax.util.bech32m import encode_puzzle_hash
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.did_wallet.did_wallet import DIDWallet
+from flax.wallet.nft_wallet.nft_wallet import NFTWallet
+from flax.wallet.util.address_type import AddressType
 
 
 async def nft_count(wallet: NFTWallet) -> int:
@@ -97,7 +97,7 @@ async def test_nft_mint_from_did(two_wallet_nodes: Any, trusted: Any) -> None:
     # construct sample metadata
     metadata = Program.to(
         [
-            ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+            ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -124,8 +124,8 @@ async def test_nft_mint_from_did(two_wallet_nodes: Any, trusted: Any) -> None:
     await time_out_assert(30, nft_count, mint_total, nft_wallet_taker)
     await time_out_assert(30, nft_count, 0, nft_wallet_maker)
 
-    expected_xch_bal = funds - fee - mint_total - 1
-    await time_out_assert(30, wallet_0.get_confirmed_balance, expected_xch_bal)
+    expected_xfx_bal = funds - fee - mint_total - 1
+    await time_out_assert(30, wallet_0.get_confirmed_balance, expected_xfx_bal)
     assert (await nft_wallet_taker.get_current_nfts())[0].minter_did == did_id
 
 
@@ -251,15 +251,15 @@ async def test_nft_mint_from_did_rpc(two_wallet_nodes: Any, trusted: Any, self_h
             }
             for i in range(n)
         ]
-        target_list = [encode_puzzle_hash((ph_taker), "xch") for x in range(n)]
-        royalty_address = encode_puzzle_hash(bytes32(token_bytes(32)), "xch")
+        target_list = [encode_puzzle_hash((ph_taker), "xfx") for x in range(n)]
+        royalty_address = encode_puzzle_hash(bytes32(token_bytes(32)), "xfx")
         royalty_percentage = 300
         fee = 100
         required_amount = n + (fee * n)
-        xch_coins = await client.select_coins(amount=required_amount, wallet_id=wallet_maker.id())
-        funding_coin = xch_coins[0]
+        xfx_coins = await client.select_coins(amount=required_amount, wallet_id=wallet_maker.id())
+        funding_coin = xfx_coins[0]
         assert funding_coin.amount >= required_amount
-        funding_coin_dict = xch_coins[0].to_json_dict()
+        funding_coin_dict = xfx_coins[0].to_json_dict()
         chunk = 5
         next_coin = funding_coin
         did_coin = (await client.select_coins(amount=1, wallet_id=2))[0]
@@ -275,8 +275,8 @@ async def test_nft_mint_from_did_rpc(two_wallet_nodes: Any, trusted: Any, self_h
                 royalty_address=royalty_address,
                 mint_number_start=i + 1,
                 mint_total=n,
-                xch_coins=[next_coin.to_json_dict()],
-                xch_change_target=funding_coin_dict["puzzle_hash"],
+                xfx_coins=[next_coin.to_json_dict()],
+                xfx_change_target=funding_coin_dict["puzzle_hash"],
                 did_coin=did_coin.to_json_dict(),
                 did_lineage_parent=did_lineage_parent,
                 mint_from_did=True,
@@ -287,9 +287,9 @@ async def test_nft_mint_from_did_rpc(two_wallet_nodes: Any, trusted: Any, self_h
             did_lineage_parent = [cn for cn in sb.removals() if cn.name() == did_coin.name()][0].parent_coin_info.hex()
             did_coin = [cn for cn in sb.additions() if (cn.parent_coin_info == did_coin.name()) and (cn.amount == 1)][0]
             spends.append(sb)
-            xch_adds = [c for c in sb.additions() if c.puzzle_hash == funding_coin.puzzle_hash]
-            assert len(xch_adds) == 1
-            next_coin = xch_adds[0]
+            xfx_adds = [c for c in sb.additions() if c.puzzle_hash == funding_coin.puzzle_hash]
+            assert len(xfx_adds) == 1
+            next_coin = xfx_adds[0]
 
         for sb in spends:
             resp = await client_node.push_tx(sb)
@@ -453,14 +453,14 @@ async def test_nft_mint_from_did_rpc_no_royalties(two_wallet_nodes: Any, trusted
             }
             for i in range(n)
         ]
-        target_list = [encode_puzzle_hash((ph_taker), "xch") for x in range(n)]
+        target_list = [encode_puzzle_hash((ph_taker), "xfx") for x in range(n)]
         royalty_address = None
         royalty_percentage = None
         required_amount = n
-        xch_coins = await client.select_coins(amount=required_amount, wallet_id=wallet_maker.id())
-        funding_coin = xch_coins[0]
+        xfx_coins = await client.select_coins(amount=required_amount, wallet_id=wallet_maker.id())
+        funding_coin = xfx_coins[0]
         assert funding_coin.amount >= required_amount
-        funding_coin_dict = xch_coins[0].to_json_dict()
+        funding_coin_dict = xfx_coins[0].to_json_dict()
         chunk = 5
         next_coin = funding_coin
         did_coin = (await client.select_coins(amount=1, wallet_id=2))[0]
@@ -476,8 +476,8 @@ async def test_nft_mint_from_did_rpc_no_royalties(two_wallet_nodes: Any, trusted
                 royalty_address=royalty_address,
                 mint_number_start=i + 1,
                 mint_total=n,
-                xch_coins=[next_coin.to_json_dict()],
-                xch_change_target=funding_coin_dict["puzzle_hash"],
+                xfx_coins=[next_coin.to_json_dict()],
+                xfx_change_target=funding_coin_dict["puzzle_hash"],
                 did_coin=did_coin.to_json_dict(),
                 did_lineage_parent=did_lineage_parent,
                 mint_from_did=True,
@@ -487,9 +487,9 @@ async def test_nft_mint_from_did_rpc_no_royalties(two_wallet_nodes: Any, trusted
             did_lineage_parent = [cn for cn in sb.removals() if cn.name() == did_coin.name()][0].parent_coin_info.hex()
             did_coin = [cn for cn in sb.additions() if (cn.parent_coin_info == did_coin.name()) and (cn.amount == 1)][0]
             spends.append(sb)
-            xch_adds = [c for c in sb.additions() if c.puzzle_hash == funding_coin.puzzle_hash]
-            assert len(xch_adds) == 1
-            next_coin = xch_adds[0]
+            xfx_adds = [c for c in sb.additions() if c.puzzle_hash == funding_coin.puzzle_hash]
+            assert len(xfx_adds) == 1
+            next_coin = xfx_adds[0]
 
         for sb in spends:
             resp = await client_node.push_tx(sb)
@@ -521,7 +521,7 @@ async def test_nft_mint_from_did_rpc_no_royalties(two_wallet_nodes: Any, trusted
     [True, False],
 )
 @pytest.mark.asyncio
-async def test_nft_mint_from_did_multiple_xch(two_wallet_nodes: Any, trusted: Any) -> None:
+async def test_nft_mint_from_did_multiple_xfx(two_wallet_nodes: Any, trusted: Any) -> None:
     full_nodes, wallets, _ = two_wallet_nodes
     full_node_api: FullNodeSimulator = full_nodes[0]
     full_node_server = full_node_api.server
@@ -582,7 +582,7 @@ async def test_nft_mint_from_did_multiple_xch(two_wallet_nodes: Any, trusted: An
     # construct sample metadata
     metadata = Program.to(
         [
-            ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+            ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -595,10 +595,10 @@ async def test_nft_mint_from_did_multiple_xch(two_wallet_nodes: Any, trusted: An
         {"program": metadata, "royalty_pc": royalty_pc, "royalty_ph": royalty_addr} for x in range(mint_total)
     ]
 
-    # Grab two coins for testing that we can create a bulk minting with more than 1 xch coin
-    xch_coins_1 = await wallet_maker.select_coins(amount=10000)
-    xch_coins_2 = await wallet_maker.select_coins(amount=10000, exclude=xch_coins_1)
-    xch_coins = xch_coins_1.union(xch_coins_2)
+    # Grab two coins for testing that we can create a bulk minting with more than 1 xfx coin
+    xfx_coins_1 = await wallet_maker.select_coins(amount=10000)
+    xfx_coins_2 = await wallet_maker.select_coins(amount=10000, exclude=xfx_coins_1)
+    xfx_coins = xfx_coins_1.union(xfx_coins_2)
 
     target_list = [ph_taker for x in range(mint_total)]
 
@@ -607,7 +607,7 @@ async def test_nft_mint_from_did_multiple_xch(two_wallet_nodes: Any, trusted: An
         target_list=target_list,
         mint_number_start=1,
         mint_total=mint_total,
-        xch_coins=xch_coins,
+        xfx_coins=xfx_coins,
         fee=fee,
     )
 
@@ -619,9 +619,9 @@ async def test_nft_mint_from_did_multiple_xch(two_wallet_nodes: Any, trusted: An
     await time_out_assert(30, nft_count, mint_total, nft_wallet_taker)
     await time_out_assert(30, nft_count, 0, nft_wallet_maker)
 
-    # confirm that the spend uses the right amount of xch
-    expected_xch_bal = funds - fee - mint_total - 1
-    await time_out_assert(30, wallet_maker.get_confirmed_balance, expected_xch_bal)
+    # confirm that the spend uses the right amount of xfx
+    expected_xfx_bal = funds - fee - mint_total - 1
+    await time_out_assert(30, wallet_maker.get_confirmed_balance, expected_xfx_bal)
 
 
 @pytest.mark.parametrize(
@@ -629,7 +629,7 @@ async def test_nft_mint_from_did_multiple_xch(two_wallet_nodes: Any, trusted: An
     [True, False],
 )
 @pytest.mark.asyncio
-async def test_nft_mint_from_xch(two_wallet_nodes: Any, trusted: Any) -> None:
+async def test_nft_mint_from_xfx(two_wallet_nodes: Any, trusted: Any) -> None:
     full_nodes, wallets, _ = two_wallet_nodes
     full_node_api: FullNodeSimulator = full_nodes[0]
     full_node_server = full_node_api.server
@@ -690,7 +690,7 @@ async def test_nft_mint_from_xch(two_wallet_nodes: Any, trusted: Any) -> None:
     # construct sample metadata
     metadata = Program.to(
         [
-            ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+            ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -705,7 +705,7 @@ async def test_nft_mint_from_xch(two_wallet_nodes: Any, trusted: Any) -> None:
 
     target_list = [ph_taker for x in range(mint_total)]
 
-    sb = await nft_wallet_maker.mint_from_xch(
+    sb = await nft_wallet_maker.mint_from_xfx(
         metadata_list, target_list=target_list, mint_number_start=1, mint_total=mint_total, fee=fee
     )
 
@@ -717,8 +717,8 @@ async def test_nft_mint_from_xch(two_wallet_nodes: Any, trusted: Any) -> None:
     await time_out_assert(30, nft_count, mint_total, nft_wallet_taker)
     await time_out_assert(30, nft_count, 0, nft_wallet_maker)
 
-    expected_xch_bal = funds - fee - mint_total - 1
-    await time_out_assert(30, wallet_0.get_confirmed_balance, expected_xch_bal)
+    expected_xfx_bal = funds - fee - mint_total - 1
+    await time_out_assert(30, wallet_0.get_confirmed_balance, expected_xfx_bal)
 
 
 @pytest.mark.parametrize(
@@ -726,7 +726,7 @@ async def test_nft_mint_from_xch(two_wallet_nodes: Any, trusted: Any) -> None:
     [True, False],
 )
 @pytest.mark.asyncio
-async def test_nft_mint_from_xch_rpc(two_wallet_nodes: Any, trusted: Any, self_hostname: str) -> None:
+async def test_nft_mint_from_xfx_rpc(two_wallet_nodes: Any, trusted: Any, self_hostname: str) -> None:
     full_nodes, wallets, _ = two_wallet_nodes
     full_node_api: FullNodeSimulator = full_nodes[0]
     bt = full_node_api.bt
@@ -843,15 +843,15 @@ async def test_nft_mint_from_xch_rpc(two_wallet_nodes: Any, trusted: Any, self_h
             }
             for i in range(n)
         ]
-        target_list = [encode_puzzle_hash((ph_taker), "xch") for x in range(n)]
-        royalty_address = encode_puzzle_hash(bytes32(token_bytes(32)), "xch")
+        target_list = [encode_puzzle_hash((ph_taker), "xfx") for x in range(n)]
+        royalty_address = encode_puzzle_hash(bytes32(token_bytes(32)), "xfx")
         royalty_percentage = 300
         fee = 100
         required_amount = n + (fee * n)
-        xch_coins = await client.select_coins(amount=required_amount, wallet_id=wallet_maker.id())
-        funding_coin = xch_coins[0]
+        xfx_coins = await client.select_coins(amount=required_amount, wallet_id=wallet_maker.id())
+        funding_coin = xfx_coins[0]
         assert funding_coin.amount >= required_amount
-        funding_coin_dict = xch_coins[0].to_json_dict()
+        funding_coin_dict = xfx_coins[0].to_json_dict()
         chunk = 5
         next_coin = funding_coin
         spends = []
@@ -865,17 +865,17 @@ async def test_nft_mint_from_xch_rpc(two_wallet_nodes: Any, trusted: Any, self_h
                 royalty_address=royalty_address,
                 mint_number_start=i + 1,
                 mint_total=n,
-                xch_coins=[next_coin.to_json_dict()],
-                xch_change_target=funding_coin_dict["puzzle_hash"],
+                xfx_coins=[next_coin.to_json_dict()],
+                xfx_change_target=funding_coin_dict["puzzle_hash"],
                 mint_from_did=False,
                 fee=fee,
             )
             assert resp["success"]
             sb: SpendBundle = SpendBundle.from_json_dict(resp["spend_bundle"])
             spends.append(sb)
-            xch_adds = [c for c in sb.additions() if c.puzzle_hash == funding_coin.puzzle_hash]
-            assert len(xch_adds) == 1
-            next_coin = xch_adds[0]
+            xfx_adds = [c for c in sb.additions() if c.puzzle_hash == funding_coin.puzzle_hash]
+            assert len(xfx_adds) == 1
+            next_coin = xfx_adds[0]
 
         for sb in spends:
             resp = await client_node.push_tx(sb)
@@ -923,7 +923,7 @@ async def test_nft_mint_from_xch_rpc(two_wallet_nodes: Any, trusted: Any, self_h
     [True, False],
 )
 @pytest.mark.asyncio
-async def test_nft_mint_from_xch_multiple_xch(two_wallet_nodes: Any, trusted: Any) -> None:
+async def test_nft_mint_from_xfx_multiple_xfx(two_wallet_nodes: Any, trusted: Any) -> None:
     full_nodes, wallets, _ = two_wallet_nodes
     full_node_api: FullNodeSimulator = full_nodes[0]
     full_node_server = full_node_api.server
@@ -984,7 +984,7 @@ async def test_nft_mint_from_xch_multiple_xch(two_wallet_nodes: Any, trusted: An
     # construct sample metadata
     metadata = Program.to(
         [
-            ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+            ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
             ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
         ]
     )
@@ -997,19 +997,19 @@ async def test_nft_mint_from_xch_multiple_xch(two_wallet_nodes: Any, trusted: An
         {"program": metadata, "royalty_pc": royalty_pc, "royalty_ph": royalty_addr} for x in range(mint_total)
     ]
 
-    # Grab two coins for testing that we can create a bulk minting with more than 1 xch coin
-    xch_coins_1 = await wallet_maker.select_coins(amount=10000)
-    xch_coins_2 = await wallet_maker.select_coins(amount=10000, exclude=xch_coins_1)
-    xch_coins = xch_coins_1.union(xch_coins_2)
+    # Grab two coins for testing that we can create a bulk minting with more than 1 xfx coin
+    xfx_coins_1 = await wallet_maker.select_coins(amount=10000)
+    xfx_coins_2 = await wallet_maker.select_coins(amount=10000, exclude=xfx_coins_1)
+    xfx_coins = xfx_coins_1.union(xfx_coins_2)
 
     target_list = [ph_taker for x in range(mint_total)]
 
-    sb = await nft_wallet_maker.mint_from_xch(
+    sb = await nft_wallet_maker.mint_from_xfx(
         metadata_list,
         target_list=target_list,
         mint_number_start=1,
         mint_total=mint_total,
-        xch_coins=xch_coins,
+        xfx_coins=xfx_coins,
         fee=fee,
     )
 
@@ -1021,6 +1021,6 @@ async def test_nft_mint_from_xch_multiple_xch(two_wallet_nodes: Any, trusted: An
     await time_out_assert(30, nft_count, mint_total, nft_wallet_taker)
     await time_out_assert(30, nft_count, 0, nft_wallet_maker)
 
-    # confirm that the spend uses the right amount of xch
-    expected_xch_bal = funds - fee - mint_total - 1
-    await time_out_assert(30, wallet_maker.get_confirmed_balance, expected_xch_bal)
+    # confirm that the spend uses the right amount of xfx
+    expected_xfx_bal = funds - fee - mint_total - 1
+    await time_out_assert(30, wallet_maker.get_confirmed_balance, expected_xfx_bal)

@@ -3,15 +3,15 @@ from typing import List
 
 import pytest
 
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.protocols.shared_protocol import Capability
-from chia.server.outbound_message import make_msg
-from chia.server.rate_limit_numbers import get_rate_limits_to_use, rate_limits as rl_numbers, compose_rate_limits
-from chia.server.rate_limits import RateLimiter
-from chia.server.server import ChiaServer
-from chia.server.ws_connection import WSChiaConnection
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16
+from flax.protocols.protocol_message_types import ProtocolMessageTypes
+from flax.protocols.shared_protocol import Capability
+from flax.server.outbound_message import make_msg
+from flax.server.rate_limit_numbers import get_rate_limits_to_use, rate_limits as rl_numbers, compose_rate_limits
+from flax.server.rate_limits import RateLimiter
+from flax.server.server import FlaxServer
+from flax.server.ws_connection import WSFlaxConnection
+from flax.types.peer_info import PeerInfo
+from flax.util.ints import uint16
 from tests.conftest import node_with_params
 from tests.setup_nodes import test_constants
 
@@ -304,16 +304,16 @@ class TestRateLimits:
         node_a = node_with_params
         node_b = node_with_params_b
 
-        full_node_server_a: ChiaServer = node_a.full_node.server
-        full_node_server_b: ChiaServer = node_b.full_node.server
+        full_node_server_a: FlaxServer = node_a.full_node.server
+        full_node_server_b: FlaxServer = node_b.full_node.server
 
         await full_node_server_b.start_client(PeerInfo(self_hostname, uint16(full_node_server_a._port)), None)
 
         assert len(full_node_server_b.get_connections()) == 1
         assert len(full_node_server_a.get_connections()) == 1
 
-        a_con: WSChiaConnection = full_node_server_a.get_connections()[0]
-        b_con: WSChiaConnection = full_node_server_b.get_connections()[0]
+        a_con: WSFlaxConnection = full_node_server_a.get_connections()[0]
+        b_con: WSFlaxConnection = full_node_server_b.get_connections()[0]
 
         print(a_con.local_capabilities, a_con.peer_capabilities)
         print(b_con.local_capabilities, b_con.peer_capabilities)

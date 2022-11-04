@@ -1,8 +1,8 @@
 # flake8: noqa: E501
 from blspy import AugSchemeMPL, PrivateKey
 
-from chia.pools.pool_config import PoolWalletConfig
-from chia.util.config import create_default_chia_config, load_config, lock_config, save_config
+from flax.pools.pool_config import PoolWalletConfig
+from flax.util.config import create_default_flax_config, load_config, lock_config, save_config
 
 
 def test_pool_config(tmp_path):
@@ -11,7 +11,7 @@ def test_pool_config(tmp_path):
     eg_config = test_path / "config.yaml"
     to_config = test_path / "test_pool_config.yaml"
 
-    create_default_chia_config(test_root, ["config.yaml"])
+    create_default_flax_config(test_root, ["config.yaml"])
     assert eg_config.exists()
     eg_config.rename(to_config)
     config = load_config(test_root, "test_pool_config.yaml")

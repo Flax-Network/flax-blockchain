@@ -3,4 +3,4 @@
 
 set -e
 
-unlink /usr/bin/chia || true
+unlink /usr/bin/flax || true

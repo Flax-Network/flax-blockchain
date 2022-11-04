@@ -9,8 +9,8 @@ import pytest
 from blspy import G1Element
 
 from benchmarks.utils import rand_g1, rand_hash
-from chia.pools.pool_wallet import PoolWallet
-from chia.types.blockchain_format.sized_bytes import bytes32
+from flax.pools.pool_wallet import PoolWallet
+from flax.types.blockchain_format.sized_bytes import bytes32
 
 
 @dataclass
@@ -78,7 +78,7 @@ async def test_update_pool_config_new_config(monkeypatch: Any) -> None:
     def mock_load_pool_config(root_path: Path) -> List[MockPoolWalletConfig]:
         return []
 
-    monkeypatch.setattr("chia.pools.pool_wallet.load_pool_config", mock_load_pool_config)
+    monkeypatch.setattr("flax.pools.pool_wallet.load_pool_config", mock_load_pool_config)
 
     # Mock pool_config.update_pool_config to capture the updated configs
     async def mock_pool_config_update_pool_config(
@@ -87,7 +87,7 @@ async def test_update_pool_config_new_config(monkeypatch: Any) -> None:
         nonlocal updated_configs
         updated_configs = pool_config_list
 
-    monkeypatch.setattr("chia.pools.pool_wallet.update_pool_config", mock_pool_config_update_pool_config)
+    monkeypatch.setattr("flax.pools.pool_wallet.update_pool_config", mock_pool_config_update_pool_config)
 
     # Mock PoolWallet.get_current_state to return our canned state
     async def mock_get_current_state(self: Any) -> Any:
@@ -161,7 +161,7 @@ async def test_update_pool_config_existing_payout_instructions(monkeypatch: Any)
         nonlocal existing_config
         return [existing_config]
 
-    monkeypatch.setattr("chia.pools.pool_wallet.load_pool_config", mock_load_pool_config)
+    monkeypatch.setattr("flax.pools.pool_wallet.load_pool_config", mock_load_pool_config)
 
     # Mock pool_config.update_pool_config to capture the updated configs
     async def mock_pool_config_update_pool_config(
@@ -170,7 +170,7 @@ async def test_update_pool_config_existing_payout_instructions(monkeypatch: Any)
         nonlocal updated_configs
         updated_configs = pool_config_list
 
-    monkeypatch.setattr("chia.pools.pool_wallet.update_pool_config", mock_pool_config_update_pool_config)
+    monkeypatch.setattr("flax.pools.pool_wallet.update_pool_config", mock_pool_config_update_pool_config)
 
     # Mock PoolWallet.get_current_state to return our canned state
     async def mock_get_current_state(self: Any) -> Any:

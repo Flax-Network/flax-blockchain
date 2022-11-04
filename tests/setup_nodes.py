@@ -3,19 +3,19 @@ import logging
 from typing import AsyncIterator, Dict, List, Tuple, Optional, Union
 from pathlib import Path
 
-from chia.consensus.constants import ConsensusConstants
-from chia.full_node.full_node import FullNode
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.protocols.shared_protocol import Capability
-from chia.server.server import ChiaServer
-from chia.server.start_data_layer import create_data_layer_service
-from chia.server.start_service import Service
-from chia.simulator.block_tools import BlockTools, create_block_tools_async, test_constants
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.types.peer_info import PeerInfo
-from chia.util.hash import std_hash
-from chia.util.ints import uint16, uint32
-from chia.wallet.wallet_node import WalletNode
+from flax.consensus.constants import ConsensusConstants
+from flax.full_node.full_node import FullNode
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.protocols.shared_protocol import Capability
+from flax.server.server import FlaxServer
+from flax.server.start_data_layer import create_data_layer_service
+from flax.server.start_service import Service
+from flax.simulator.block_tools import BlockTools, create_block_tools_async, test_constants
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.types.peer_info import PeerInfo
+from flax.util.hash import std_hash
+from flax.util.ints import uint16, uint32
+from flax.wallet.wallet_node import WalletNode
 from tests.setup_services import (
     setup_daemon,
     setup_farmer,
@@ -27,12 +27,12 @@ from tests.setup_services import (
     setup_vdf_clients,
     setup_wallet_node,
 )
-from chia.simulator.time_out_assert import time_out_assert_custom_interval
+from flax.simulator.time_out_assert import time_out_assert_custom_interval
 from tests.util.keyring import TempKeyring
-from chia.simulator.socket import find_available_listen_port
+from flax.simulator.socket import find_available_listen_port
 
 
-SimulatorsAndWallets = Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools]
+SimulatorsAndWallets = Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools]
 SimulatorsAndWalletsServices = Tuple[List[Service[FullNode]], List[Service[WalletNode]], BlockTools]
 
 
@@ -192,7 +192,7 @@ async def setup_simulators_and_wallets(
     wallet_count: int,
     dic: Dict,
     spam_filter_after_n_txs=200,
-    xch_spam_amount=1000000,
+    xfx_spam_amount=1000000,
     *,
     key_seed=None,
     initial_num_public_keys=5,
@@ -243,7 +243,7 @@ async def setup_simulators_and_wallets(
                 wallet_bt_tools.constants,
                 wallet_bt_tools,
                 spam_filter_after_n_txs,
-                xch_spam_amount,
+                xfx_spam_amount,
                 None,
                 key_seed=seed,
                 initial_num_public_keys=initial_num_public_keys,

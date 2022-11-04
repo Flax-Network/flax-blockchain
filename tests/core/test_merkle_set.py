@@ -9,8 +9,8 @@ from typing import List
 import pytest
 from chia_rs import compute_merkle_set_root
 
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.merkle_set import MerkleSet, confirm_included_already_hashed
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.util.merkle_set import MerkleSet, confirm_included_already_hashed
 
 
 class TestMerkleSet:

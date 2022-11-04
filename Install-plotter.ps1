@@ -56,10 +56,10 @@ function get_madmax_filename()
         [string]$arch
     )
 
-    $chia_plot = "chia_plot"
+    $flax_plot = "flax_plot"
     if ("${ksize}" -eq "k34")
     {
-        $chia_plot = "chia_plot_k34"
+        $flax_plot = "flax_plot_k34"
     }
     $suffix = ""
     if ("${os}" -eq "macos")
@@ -75,7 +75,7 @@ function get_madmax_filename()
         $suffix = "-${arch}"
     }
 
-    "${chia_plot}-${ver}${suffix}"
+    "${flax_plot}-${ver}${suffix}"
 }
 
 function get_madmax_url()
@@ -102,7 +102,7 @@ $ARCH = "x86-64"
 
 if ($null -eq (Get-ChildItem env:VIRTUAL_ENV -ErrorAction SilentlyContinue))
 {
-    Write-Output "This script requires that the Chia Python virtual environment is activated."
+    Write-Output "This script requires that the Flax Python virtual environment is activated."
     Write-Output "Execute '.\venv\Scripts\Activate.ps1' before running."
     Exit 1
 }
@@ -159,9 +159,9 @@ try {
         $URL = get_madmax_url -ksize k32 -ver "${VERSION}" -os "${OS}" -arch "${ARCH}"
         Write-Output "Fetching binary from: ${URL}"
         try {
-            Invoke-WebRequest -Uri "$URL" -Outfile "chia_plot.exe"
+            Invoke-WebRequest -Uri "$URL" -Outfile "flax_plot.exe"
             Write-Output "Successfully downloaded: $URL"
-            Write-Output "Successfully installed madmax to $(Get-Location)\chia_plot.exe"
+            Write-Output "Successfully installed madmax to $(Get-Location)\flax_plot.exe"
         }
         catch {
             Write-Output "ERROR: Download failed. Maybe specified version of the binary does not exist."
@@ -173,9 +173,9 @@ try {
         $URL = get_madmax_url -ksize k34 -ver "${VERSION}" -os "${OS}" -arch "${ARCH}"
         Write-Output "Fetching binary from: ${URL}"
         try {
-            Invoke-WebRequest -Uri "$URL" -Outfile "chia_plot_k34.exe"
+            Invoke-WebRequest -Uri "$URL" -Outfile "flax_plot_k34.exe"
             Write-Output "Successfully downloaded: $URL"
-            Write-Output "Successfully installed madmax for k34 to $(Get-Location)\chia_plot_k34.exe"
+            Write-Output "Successfully installed madmax for k34 to $(Get-Location)\flax_plot_k34.exe"
         }
         catch {
             Write-Output "madmax for k34 is not found"

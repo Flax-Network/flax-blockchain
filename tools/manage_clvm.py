@@ -24,14 +24,14 @@ sys.path = [path for path in sys.path if path != os.fspath(here)]
 
 from clvm_tools_rs import compile_clvm  # noqa: E402
 
-from chia.types.blockchain_format.program import SerializedProgram  # noqa: E402
+from flax.types.blockchain_format.program import SerializedProgram  # noqa: E402
 
 clvm_suffix = ".clvm"
 hex_suffix = ".clvm.hex"
 hash_suffix = ".clvm.hex.sha256tree"
 all_suffixes = {"clvm": clvm_suffix, "hex": hex_suffix, "hash": hash_suffix}
 # TODO: could be cli options
-top_levels = {"chia"}
+top_levels = {"flax"}
 
 
 def generate_hash_bytes(hex_bytes: bytes) -> bytes:

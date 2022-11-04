@@ -5,16 +5,16 @@ from typing import Optional
 import pytest
 from clvm_tools.binutils import disassemble
 
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.util.ints import uint64
-from chia.wallet.cat_wallet.cat_utils import construct_cat_puzzle
-from chia.wallet.outer_puzzles import construct_puzzle, get_inner_puzzle, get_inner_solution, match_puzzle, solve_puzzle
-from chia.wallet.puzzle_drivers import PuzzleInfo, Solver
-from chia.wallet.puzzles.cat_loader import CAT_MOD
-from chia.wallet.uncurried_puzzle import uncurry_puzzle
+from flax.types.blockchain_format.coin import Coin
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.coin_spend import CoinSpend
+from flax.util.ints import uint64
+from flax.wallet.cat_wallet.cat_utils import construct_cat_puzzle
+from flax.wallet.outer_puzzles import construct_puzzle, get_inner_puzzle, get_inner_solution, match_puzzle, solve_puzzle
+from flax.wallet.puzzle_drivers import PuzzleInfo, Solver
+from flax.wallet.puzzles.cat_loader import CAT_MOD
+from flax.wallet.uncurried_puzzle import uncurry_puzzle
 
 
 def test_cat_outer_puzzle() -> None:

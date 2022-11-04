@@ -8,9 +8,9 @@ import pytest
 import random
 import yaml
 
-from chia.util.config import (
+from flax.util.config import (
     config_path_for_filename,
-    create_default_chia_config,
+    create_default_flax_config,
     initial_config_file,
     load_config,
     lock_and_load_config,
@@ -154,7 +154,7 @@ def default_config_dict() -> Dict:
 class TestConfig:
     def test_create_config_new(self, tmpdir):
         """
-        Test create_default_chia_config() as in a first run scenario
+        Test create_default_flax_config() as in a first run scenario
         """
         # When: using a clean directory
         root_path: Path = Path(tmpdir)
@@ -162,7 +162,7 @@ class TestConfig:
         # Expect: config.yaml doesn't exist
         assert config_file_path.exists() is False
         # When: creating a new config
-        create_default_chia_config(root_path)
+        create_default_flax_config(root_path)
         # Expect: config.yaml exists
         assert config_file_path.exists() is True
 
@@ -176,7 +176,7 @@ class TestConfig:
 
     def test_create_config_overwrite(self, tmpdir):
         """
-        Test create_default_chia_config() when overwriting an existing config.yaml
+        Test create_default_flax_config() when overwriting an existing config.yaml
         """
         # When: using a clean directory
         root_path: Path = Path(tmpdir)
@@ -188,7 +188,7 @@ class TestConfig:
         # Expect: config.yaml exists
         assert config_file_path.exists() is True
         # When: creating a new config
-        create_default_chia_config(root_path)
+        create_default_flax_config(root_path)
         # Expect: config.yaml exists
         assert config_file_path.exists() is True
 
@@ -209,7 +209,7 @@ class TestConfig:
         config: Dict = load_config(root_path=root_path, filename="config.yaml")
         assert config is not None
         # Expect: config values should match the defaults (from a small sampling)
-        assert config["daemon_port"] == default_config_dict["daemon_port"] == 55400
+        assert config["daemon_port"] == default_config_dict["daemon_port"] == 56600
         assert config["self_hostname"] == default_config_dict["self_hostname"] == "localhost"
         assert (
             config["farmer"]["network_overrides"]["constants"]["mainnet"]["GENESIS_CHALLENGE"]
@@ -307,26 +307,26 @@ class TestConfig:
     @pytest.mark.parametrize("prefix", [None])
     def test_selected_network_address_prefix_default_config(self, config_with_address_prefix: Dict[str, Any]) -> None:
         """
-        Temp config.yaml created using a default config. address_prefix is defaulted to "xch"
+        Temp config.yaml created using a default config. address_prefix is defaulted to "xfx"
         """
         config = config_with_address_prefix
         prefix = selected_network_address_prefix(config)
-        assert prefix == "xch"
+        assert prefix == "xfx"
 
-    @pytest.mark.parametrize("prefix", ["txch"])
+    @pytest.mark.parametrize("prefix", ["txfx"])
     def test_selected_network_address_prefix_testnet_config(self, config_with_address_prefix: Dict[str, Any]) -> None:
         """
-        Temp config.yaml created using a modified config. address_prefix is set to "txch"
+        Temp config.yaml created using a modified config. address_prefix is set to "txfx"
         """
         config = config_with_address_prefix
         prefix = selected_network_address_prefix(config)
-        assert prefix == "txch"
+        assert prefix == "txfx"
 
     def test_selected_network_address_prefix_config_dict(self, default_config_dict: Dict[str, Any]) -> None:
         """
-        Modified config dictionary has address_prefix set to "customxch"
+        Modified config dictionary has address_prefix set to "customxfx"
         """
         config = default_config_dict
-        config["network_overrides"]["config"][config["selected_network"]]["address_prefix"] = "customxch"
+        config["network_overrides"]["config"][config["selected_network"]]["address_prefix"] = "customxfx"
         prefix = selected_network_address_prefix(config)
-        assert prefix == "customxch"
+        assert prefix == "customxfx"

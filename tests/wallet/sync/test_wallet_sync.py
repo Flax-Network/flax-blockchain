@@ -6,31 +6,31 @@ import pytest
 from aiosqlite import Error as AIOSqliteError
 from colorlog import getLogger
 
-from chia.consensus.block_record import BlockRecord
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.full_node.mempool_manager import MempoolManager
-from chia.full_node.weight_proof import WeightProofHandler
-from chia.protocols import full_node_protocol, wallet_protocol
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.protocols.shared_protocol import Capability
-from chia.protocols.wallet_protocol import RequestAdditions, RespondAdditions, RespondBlockHeaders, SendTransaction
-from chia.server.outbound_message import Message
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert, time_out_assert_not_none
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.util.block_cache import BlockCache
-from chia.util.hash import std_hash
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.nft_wallet.nft_wallet import NFTWallet
-from chia.wallet.transaction_record import TransactionRecord
-from chia.wallet.util.compute_memos import compute_memos
-from chia.wallet.util.wallet_sync_utils import PeerRequestException
-from chia.wallet.util.wallet_types import AmountWithPuzzlehash
-from chia.wallet.wallet_coin_record import WalletCoinRecord
-from chia.wallet.wallet_weight_proof_handler import get_wp_fork_point
+from flax.consensus.block_record import BlockRecord
+from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.full_node.mempool_manager import MempoolManager
+from flax.full_node.weight_proof import WeightProofHandler
+from flax.protocols import full_node_protocol, wallet_protocol
+from flax.protocols.protocol_message_types import ProtocolMessageTypes
+from flax.protocols.shared_protocol import Capability
+from flax.protocols.wallet_protocol import RequestAdditions, RespondAdditions, RespondBlockHeaders, SendTransaction
+from flax.server.outbound_message import Message
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.simulator.time_out_assert import time_out_assert, time_out_assert_not_none
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.peer_info import PeerInfo
+from flax.util.block_cache import BlockCache
+from flax.util.hash import std_hash
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.nft_wallet.nft_wallet import NFTWallet
+from flax.wallet.transaction_record import TransactionRecord
+from flax.wallet.util.compute_memos import compute_memos
+from flax.wallet.util.wallet_sync_utils import PeerRequestException
+from flax.wallet.util.wallet_types import AmountWithPuzzlehash
+from flax.wallet.wallet_coin_record import WalletCoinRecord
+from flax.wallet.wallet_weight_proof_handler import get_wp_fork_point
 from tests.connection_utils import disconnect_all, disconnect_all_and_reconnect
 from tests.setup_nodes import test_constants
 from tests.util.wallet_is_synced import wallet_is_synced
@@ -645,8 +645,8 @@ class TestWalletSync:
     5. Create 5 coins below the threshold and 5 at or above.
        Those below the threshold should get filtered, and those above should not.
     6. Clear all coins from the dust wallet.
-       Send to the dust wallet "spam_filter_after_n_txs" coins that are equal in value to "xch_spam_amount".
-       Send 1 mojo from the dust wallet. The dust wallet should receive a change coin valued at "xch_spam_amount-1".
+       Send to the dust wallet "spam_filter_after_n_txs" coins that are equal in value to "xfx_spam_amount".
+       Send 1 mojo from the dust wallet. The dust wallet should receive a change coin valued at "xfx_spam_amount-1".
     7: Create an NFT wallet for the farmer wallet, and generate an NFT in that wallet.
        Create an NFT wallet for the dust wallet.
        Send the NFT to the dust wallet. The NFT should not be filtered.
@@ -654,7 +654,7 @@ class TestWalletSync:
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
-        "spam_filter_after_n_txs, xch_spam_amount, dust_value",
+        "spam_filter_after_n_txs, xfx_spam_amount, dust_value",
         [
             # In the following tests, the filter is run right away:
             (0, 1, 1),  # nothing is filtered
@@ -670,7 +670,7 @@ class TestWalletSync:
         self_hostname,
         two_wallet_nodes_custom_spam_filtering,
         spam_filter_after_n_txs,
-        xch_spam_amount,
+        xfx_spam_amount,
         dust_value,
     ):
 
@@ -686,20 +686,20 @@ class TestWalletSync:
 
         full_node_api = full_nodes[0]
 
-        # It's also possible to obtain the current settings for spam_filter_after_n_txs and xch_spam_amount
+        # It's also possible to obtain the current settings for spam_filter_after_n_txs and xfx_spam_amount
         # spam_filter_after_n_txs = wallets[0][0].config["spam_filter_after_n_txs"]
-        # xch_spam_amount = wallets[0][0].config["xch_spam_amount"]
+        # xfx_spam_amount = wallets[0][0].config["xfx_spam_amount"]
         # dust_value=1
 
         # Verify legal values for the settings to be tested
         # If spam_filter_after_n_txs is greater than 250, this test will take a long time to run.
-        # Current max value for xch_spam_amount is 0.01 XCH.
+        # Current max value for xfx_spam_amount is 0.01 XFX.
         # If needed, this could be increased but we would need to farm more blocks.
         # The max dust_value could be increased, but would require farming more blocks.
         assert spam_filter_after_n_txs >= 0
         assert spam_filter_after_n_txs <= 250
-        assert xch_spam_amount >= 1
-        assert xch_spam_amount <= 10000000000
+        assert xfx_spam_amount >= 1
+        assert xfx_spam_amount <= 10000000000
         assert dust_value >= 1
         assert dust_value <= 10000000000
 
@@ -735,12 +735,12 @@ class TestWalletSync:
         await time_out_assert(20, wallet_is_synced, True, farm_wallet_node, full_node_api)
         await time_out_assert(20, wallet_is_synced, True, dust_wallet_node, full_node_api)
 
-        # The dust is only filtered at this point if spam_filter_after_n_txs is 0 and xch_spam_amount is > dust_value.
+        # The dust is only filtered at this point if spam_filter_after_n_txs is 0 and xfx_spam_amount is > dust_value.
         if spam_filter_after_n_txs > 0:
             dust_coins = 1
             large_dust_coins = 0
             large_dust_balance = 0
-        elif xch_spam_amount <= dust_value:
+        elif xfx_spam_amount <= dust_value:
             dust_coins = 0
             large_dust_coins = 1
             large_dust_balance = dust_value
@@ -754,7 +754,7 @@ class TestWalletSync:
             WalletCoinRecord
         ] = await dust_wallet_node.wallet_state_manager.coin_store.get_all_unspent_coins()
         log.info(f"all_unspent is {all_unspent}")
-        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xch_spam_amount])
+        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xfx_spam_amount])
         balance: Optional[Message] = await dust_wallet.get_confirmed_balance()
         num_coins: Optional[Message] = len(await dust_wallet.select_coins(balance))
 
@@ -763,7 +763,7 @@ class TestWalletSync:
         log.info(f"Number of coins is {num_coins}")
 
         log.info(f"spam_filter_after_n_txs {spam_filter_after_n_txs}")
-        log.info(f"xch_spam_amount {xch_spam_amount}")
+        log.info(f"xfx_spam_amount {xfx_spam_amount}")
         log.info(f"dust_value {dust_value}")
 
         # Verify balance and number of coins not filtered.
@@ -813,7 +813,7 @@ class TestWalletSync:
         all_unspent: Set[
             WalletCoinRecord
         ] = await dust_wallet_node.wallet_state_manager.coin_store.get_all_unspent_coins()
-        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xch_spam_amount])
+        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xfx_spam_amount])
         balance: Optional[Message] = await dust_wallet.get_confirmed_balance()
         # Selecting coins by using the wallet's coin selection algorithm won't work for large
         # numbers of coins, so we'll use the state manager for the rest of the test
@@ -844,7 +844,7 @@ class TestWalletSync:
 
         for i in range(large_coins):
             payee_ph = await dust_wallet.get_new_puzzlehash()
-            payees.append({"amount": uint64(xch_spam_amount), "puzzlehash": payee_ph, "memos": []})
+            payees.append({"amount": uint64(xfx_spam_amount), "puzzlehash": payee_ph, "memos": []})
 
         # construct and send tx
         tx: TransactionRecord = await farm_wallet.generate_signed_transaction(uint64(0), ph, primaries=payees)
@@ -861,7 +861,7 @@ class TestWalletSync:
         all_unspent: Set[
             WalletCoinRecord
         ] = await dust_wallet_node.wallet_state_manager.coin_store.get_all_unspent_coins()
-        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xch_spam_amount])
+        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xfx_spam_amount])
         balance: Optional[Message] = await dust_wallet.get_confirmed_balance()
         num_coins: Optional[Message] = len(
             list(await dust_wallet_node.wallet_state_manager.get_spendable_coins_for_wallet(1))
@@ -871,13 +871,13 @@ class TestWalletSync:
         log.info(f"Wallet balance is {balance}")
         log.info(f"Number of coins is {num_coins}")
 
-        large_coin_balance = large_coins * xch_spam_amount
+        large_coin_balance = large_coins * xfx_spam_amount
 
         # Determine whether the filter should have been activated.
         # Make sure the number of coins matches the expected number.
         # At this point, nothing should be getting filtered unless spam_filter_after_n_txs is 0.
         assert dust_coins == spam_filter_after_n_txs
-        assert balance == dust_coins * dust_value + large_coins * xch_spam_amount + large_dust_balance
+        assert balance == dust_coins * dust_value + large_coins * xfx_spam_amount + large_dust_balance
         assert num_coins == dust_coins + large_coins + large_dust_coins
 
         # Part 4: Create one more dust coin to test the threshold
@@ -901,7 +901,7 @@ class TestWalletSync:
         all_unspent: Set[
             WalletCoinRecord
         ] = await dust_wallet_node.wallet_state_manager.coin_store.get_all_unspent_coins()
-        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xch_spam_amount])
+        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xfx_spam_amount])
         balance: Optional[Message] = await dust_wallet.get_confirmed_balance()
         num_coins: Optional[Message] = len(
             list(await dust_wallet_node.wallet_state_manager.get_spendable_coins_for_wallet(1))
@@ -913,12 +913,12 @@ class TestWalletSync:
 
         # In the edge case where the new "dust" is larger than the threshold,
         # then it is actually a large dust coin that won't get filtered.
-        if dust_value >= xch_spam_amount:
+        if dust_value >= xfx_spam_amount:
             large_dust_coins += 1
             large_dust_balance += dust_value
 
         assert dust_coins == spam_filter_after_n_txs
-        assert balance == dust_coins * dust_value + large_coins * xch_spam_amount + large_dust_balance
+        assert balance == dust_coins * dust_value + large_coins * xfx_spam_amount + large_dust_balance
         assert num_coins == dust_coins + large_dust_coins + large_coins
 
         # Part 5: Create 5 coins below the threshold and 5 at or above.
@@ -929,20 +929,20 @@ class TestWalletSync:
             payee_ph = await dust_wallet.get_new_puzzlehash()
 
             # Create a large coin and add on the appropriate balance.
-            payees.append({"amount": uint64(xch_spam_amount + i), "puzzlehash": payee_ph, "memos": []})
+            payees.append({"amount": uint64(xfx_spam_amount + i), "puzzlehash": payee_ph, "memos": []})
             large_coins += 1
-            large_coin_balance += xch_spam_amount + i
+            large_coin_balance += xfx_spam_amount + i
 
             payee_ph = await dust_wallet.get_new_puzzlehash()
 
             # Make sure we are always creating coins with a positive value.
-            if xch_spam_amount - dust_value - i > 0:
-                payees.append({"amount": uint64(xch_spam_amount - dust_value - i), "puzzlehash": payee_ph, "memos": []})
+            if xfx_spam_amount - dust_value - i > 0:
+                payees.append({"amount": uint64(xfx_spam_amount - dust_value - i), "puzzlehash": payee_ph, "memos": []})
             else:
                 payees.append({"amount": uint64(dust_value), "puzzlehash": payee_ph, "memos": []})
-            # In cases where xch_spam_amount is sufficiently low,
+            # In cases where xfx_spam_amount is sufficiently low,
             # the new dust should be considered a large coina and not be filtered.
-            if xch_spam_amount <= dust_value:
+            if xfx_spam_amount <= dust_value:
                 large_dust_coins += 1
                 large_dust_balance += dust_value
 
@@ -961,7 +961,7 @@ class TestWalletSync:
         all_unspent: Set[
             WalletCoinRecord
         ] = await dust_wallet_node.wallet_state_manager.coin_store.get_all_unspent_coins()
-        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xch_spam_amount])
+        small_unspent_count = len([r for r in all_unspent if r.coin.amount < xfx_spam_amount])
         balance: Optional[Message] = await dust_wallet.get_confirmed_balance()
         num_coins: Optional[Message] = len(
             list(await dust_wallet_node.wallet_state_manager.get_spendable_coins_for_wallet(1))
@@ -977,8 +977,8 @@ class TestWalletSync:
         assert num_coins == dust_coins + large_dust_coins + large_coins
 
         # Part 6: Clear all coins from the dust wallet.
-        # Send to the dust wallet "spam_filter_after_n_txs" coins that are equal in value to "xch_spam_amount".
-        # Send 1 mojo from the dust wallet. The dust wallet should receive a change coin valued at "xch_spam_amount-1".
+        # Send to the dust wallet "spam_filter_after_n_txs" coins that are equal in value to "xfx_spam_amount".
+        # Send 1 mojo from the dust wallet. The dust wallet should receive a change coin valued at "xfx_spam_amount-1".
 
         payee_ph = await farm_wallet.get_new_puzzlehash()
         payees: List[AmountWithPuzzlehash] = [{"amount": uint64(balance), "puzzlehash": payee_ph, "memos": []}]
@@ -1012,9 +1012,9 @@ class TestWalletSync:
             # in the edge case, create one coin
             coins_remaining = 1
 
-        # The size of the coin to send the dust wallet is the same as xch_spam_amount
-        if xch_spam_amount > 1:
-            coin_value = xch_spam_amount
+        # The size of the coin to send the dust wallet is the same as xfx_spam_amount
+        if xfx_spam_amount > 1:
+            coin_value = xfx_spam_amount
         else:
             # Handle the edge case to make sure the coin is at least 2 mojos
             # This is needed to receive change
@@ -1114,7 +1114,7 @@ class TestWalletSync:
         # Create a new NFT and send it to the farmer's NFT wallet
         metadata = Program.to(
             [
-                ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+                ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
                 ("h", "0xD4584AD463139FA8C0D9F68F4B59F185"),
             ]
         )

@@ -7,15 +7,15 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from chia.protocols import full_node_protocol
-from chia.types.blockchain_format.sub_epoch_summary import SubEpochSummary
-from chia.types.full_block import FullBlock
-from chia.types.peer_info import PeerInfo
-from chia.util.hash import std_hash
-from chia.util.ints import uint16
+from flax.protocols import full_node_protocol
+from flax.types.blockchain_format.sub_epoch_summary import SubEpochSummary
+from flax.types.full_block import FullBlock
+from flax.types.peer_info import PeerInfo
+from flax.util.hash import std_hash
+from flax.util.ints import uint16
 from tests.core.node_height import node_height_exactly, node_height_between
 from tests.setup_nodes import test_constants
-from chia.simulator.time_out_assert import time_out_assert
+from flax.simulator.time_out_assert import time_out_assert
 
 log = logging.getLogger(__name__)
 

@@ -7,13 +7,13 @@ from typing import Any, AsyncGenerator, Dict, Optional, Tuple
 import pytest
 import pytest_asyncio
 
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.simulator_full_node_rpc_client import SimulatorFullNodeRpcClient
-from chia.simulator.simulator_test_tools import get_full_chia_simulator, get_puzzle_hash_from_key
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.hash import std_hash
-from chia.util.ints import uint16
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.simulator.simulator_full_node_rpc_client import SimulatorFullNodeRpcClient
+from flax.simulator.simulator_test_tools import get_full_flax_simulator, get_puzzle_hash_from_key
+from flax.simulator.time_out_assert import time_out_assert
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.util.hash import std_hash
+from flax.util.ints import uint16
 
 
 async def get_num_coins_for_ph(simulator_client: SimulatorFullNodeRpcClient, ph: bytes32) -> int:
@@ -26,17 +26,17 @@ class TestStartSimulator:
     """
 
     @pytest_asyncio.fixture(scope="function")
-    async def get_chia_simulator(
-        self, automated_testing: bool = False, chia_root: Optional[Path] = None, config: Optional[Dict[str, Any]] = None
+    async def get_flax_simulator(
+        self, automated_testing: bool = False, flax_root: Optional[Path] = None, config: Optional[Dict[str, Any]] = None
     ) -> AsyncGenerator[Tuple[FullNodeSimulator, Path, Dict[str, Any], str, int], None]:
-        async for simulator_args in get_full_chia_simulator(automated_testing, chia_root, config):
+        async for simulator_args in get_full_flax_simulator(automated_testing, flax_root, config):
             yield simulator_args
 
     @pytest.mark.asyncio
     async def test_start_simulator(
-        self, get_chia_simulator: Tuple[FullNodeSimulator, Path, Dict[str, Any], str, int]
+        self, get_flax_simulator: Tuple[FullNodeSimulator, Path, Dict[str, Any], str, int]
     ) -> None:
-        simulator, root_path, config, mnemonic, fingerprint = get_chia_simulator
+        simulator, root_path, config, mnemonic, fingerprint = get_flax_simulator
         ph_1 = get_puzzle_hash_from_key(fingerprint, key_id=1)
         ph_2 = get_puzzle_hash_from_key(fingerprint, key_id=2)
         dummy_hash = std_hash(b"test")

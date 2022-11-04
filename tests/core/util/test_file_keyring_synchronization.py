@@ -1,7 +1,7 @@
 import logging
 import os
 
-from chia.util.keyring_wrapper import KeyringWrapper
+from flax.util.keyring_wrapper import KeyringWrapper
 from multiprocessing import Pool
 from pathlib import Path
 from sys import platform

@@ -5,17 +5,17 @@ from random import Random
 
 import pytest
 
-from chia.consensus.cost_calculator import NPCResult
-from chia.full_node.bitcoin_fee_estimator import BitcoinFeeEstimator
-from chia.full_node.coin_store import CoinStore
-from chia.full_node.fee_estimate_store import FeeStore
-from chia.full_node.fee_estimator import SmartFeeEstimator
-from chia.full_node.fee_tracker import FeeTracker
-from chia.full_node.mempool_manager import MempoolManager
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.blockchain_format.coin import Coin
-from chia.types.mempool_item import MempoolItem
-from chia.util.ints import uint32, uint64
+from flax.consensus.cost_calculator import NPCResult
+from flax.full_node.bitcoin_fee_estimator import BitcoinFeeEstimator
+from flax.full_node.coin_store import CoinStore
+from flax.full_node.fee_estimate_store import FeeStore
+from flax.full_node.fee_estimator import SmartFeeEstimator
+from flax.full_node.fee_tracker import FeeTracker
+from flax.full_node.mempool_manager import MempoolManager
+from flax.simulator.wallet_tools import WalletTool
+from flax.types.blockchain_format.coin import Coin
+from flax.types.mempool_item import MempoolItem
+from flax.util.ints import uint32, uint64
 from tests.core.consensus.test_pot_iterations import test_constants
 from tests.util.db_connection import DBConnection
 

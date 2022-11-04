@@ -5,19 +5,19 @@ from typing import Tuple
 
 from clvm.casts import int_from_bytes
 
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.wallet.nft_wallet import uncurry_nft
-from chia.wallet.nft_wallet.nft_puzzles import (
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.wallet.nft_wallet import uncurry_nft
+from flax.wallet.nft_wallet.nft_puzzles import (
     construct_ownership_layer,
     create_full_puzzle,
     create_nft_layer_puzzle_with_curry_params,
     recurry_nft_puzzle,
 )
-from chia.wallet.outer_puzzles import match_puzzle
-from chia.wallet.puzzles.load_clvm import load_clvm
-from chia.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import puzzle_for_pk, solution_for_conditions
-from chia.wallet.uncurried_puzzle import uncurry_puzzle
+from flax.wallet.outer_puzzles import match_puzzle
+from flax.wallet.puzzles.load_clvm import load_clvm
+from flax.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import puzzle_for_pk, solution_for_conditions
+from flax.wallet.uncurried_puzzle import uncurry_puzzle
 from tests.core.make_block_generator import int_to_public_key
 
 SINGLETON_MOD = load_clvm("singleton_top_layer_v1_1.clvm")
@@ -42,7 +42,7 @@ def test_nft_transfer_puzzle_hashes():
     maker_did = Program.to("maker did").get_tree_hash()
     # maker_did_inner_hash = Program.to("maker did inner hash").get_tree_hash()
     metadata = [
-        ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+        ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
         ("h", 0xD4584AD463139FA8C0D9F68F4B59F185),
     ]
     metadata_updater_hash = NFT_METADATA_UPDATER_DEFAULT.get_tree_hash()
@@ -171,7 +171,7 @@ def get_updated_nft_puzzle(puzzle: Program, solution: Program) -> bytes32:
 
 def test_transfer_puzzle_builder() -> None:
     metadata = [
-        ("u", ["https://www.chia.net/img/branding/chia-logo.svg"]),
+        ("u", ["https://www.flaxnetwork.org/img/branding/flax-logo.svg"]),
         ("h", 0xD4584AD463139FA8C0D9F68F4B59F185),
     ]
     sp2_puzzle, solution = make_a_new_solution()

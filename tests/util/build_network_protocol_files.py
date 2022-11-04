@@ -4,7 +4,7 @@ import sysconfig
 from typing import Callable, Any
 from pathlib import Path
 from tests.util.network_protocol_data import *  # noqa: F403
-from chia.util.ints import uint32
+from flax.util.ints import uint32
 
 version = "1.0"
 
