@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from chia.full_node.subscriptions import PeerSubscriptions
-from chia.types.blockchain_format.sized_bytes import bytes32
+from flax.full_node.subscriptions import PeerSubscriptions
+from flax.types.blockchain_format.sized_bytes import bytes32
 
 peer1 = bytes32(b"1" * 32)
 peer2 = bytes32(b"2" * 32)

@@ -31,15 +31,15 @@ def test_legacy_keyring_format(tmp_dir: Path) -> None:
     keyring.file_path = tmp_dir / "keyring"
     keyring.filename = keyring.file_path.name
     keyring_data = """
-    [chia_2Duser_2Dchia_2D1_2E8]
-    wallet_2duser_2dchia_2d1_2e8_2d0 =
+    [flax_2Duser_2Dflax_2D1_2E8]
+    wallet_2duser_2dflax_2d1_2e8_2d0 =
             eyJzYWx0IjogIi9NY3J3UG9iQjdiclpQMGRHclZiU1E9PSIsICJkYXRhIjogIjBnMEROUzRDSGdJ
             NU4yVEFYUVVhaExFY2RzN0NFR05rNnpKSmNLcWY5VmdOb2h6SkdxcUlOZzNKaTBEa3NIOGh3aHlM
             cG1GeFZVYWRcbmRtMTVWMDlsU3I1b3dNZDZHY3JGQTJHckZtZGszUmFmY0ZicmhlMmlRMjMzRW1P
             c28zQUxNbG5CcGtWTlR0cHZYYjlzbEp4VE5yVVVcbm8xUE0wNytTa1lJTHVzcmlNUStkUjBIQkxZ
             WXF3VjBUVndETHVKZmdtNWdyd1hrUkdkUjdvU0VyVTJUcnRnPT0iLCAibWFjIjogInA4MWJFTXhJ
             ay83bm1iMDMxR0NpZnc9PSIsICJub25jZSI6ICJzcUhoTUhOMkZQeTQxR3U4em40MXhBPT0ifQ==
-    wallet_2duser_2dchia_2d1_2e8_2d1 =
+    wallet_2duser_2dflax_2d1_2e8_2d1 =
             eyJzYWx0IjogIjNhWkFCQXBCcXUxdzI5WHpJcXBzS3c9PSIsICJkYXRhIjogImZwU05ZYk5WMmJM
             Vms5MjB6cGYzdzYrK2ZMc2w4b3Y4OU9uTWdHNlo4OXhzenRoc0tFZjdieHVKVGRyT3JmYmtBUmgv
             TzhzY3R1R2ZcblR1REVIOHJHNVA3RGpOWWQ3dFhxd2xabkg1VTVnV2VCNzZPaXdmVDQxQytxWlVX

@@ -6,18 +6,18 @@ from typing import List
 import pytest
 from chia_rs import Coin
 
-from chia.consensus.cost_calculator import NPCResult
-from chia.full_node.bitcoin_fee_estimator import create_bitcoin_fee_estimator
-from chia.full_node.fee_estimation import FeeBlockInfo
-from chia.full_node.fee_estimator_constants import INFINITE_FEE_RATE, INITIAL_STEP
-from chia.full_node.fee_estimator_interface import FeeEstimatorInterface
-from chia.full_node.fee_tracker import get_bucket_index, init_buckets
-from chia.simulator.block_tools import test_constants
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.fee_rate import FeeRateV2
-from chia.types.mempool_item import MempoolItem
-from chia.util.ints import uint32, uint64
-from chia.util.math import make_monotonically_decreasing
+from flax.consensus.cost_calculator import NPCResult
+from flax.full_node.bitcoin_fee_estimator import create_bitcoin_fee_estimator
+from flax.full_node.fee_estimation import FeeBlockInfo
+from flax.full_node.fee_estimator_constants import INFINITE_FEE_RATE, INITIAL_STEP
+from flax.full_node.fee_estimator_interface import FeeEstimatorInterface
+from flax.full_node.fee_tracker import get_bucket_index, init_buckets
+from flax.simulator.block_tools import test_constants
+from flax.simulator.wallet_tools import WalletTool
+from flax.types.fee_rate import FeeRateV2
+from flax.types.mempool_item import MempoolItem
+from flax.util.ints import uint32, uint64
+from flax.util.math import make_monotonically_decreasing
 
 log = logging.getLogger(__name__)
 

@@ -15,7 +15,7 @@ import typing_extensions
 
 here = pathlib.Path(__file__).parent.resolve()
 root = here.parent
-cache_path = root.joinpath(".chia_cache", "manage_clvm.json")
+cache_path = root.joinpath(".flax_cache", "manage_clvm.json")
 
 # This is a work-around for fixing imports so they get the appropriate top level
 # packages instead of those of the same name in the same directory as this program.
@@ -27,14 +27,14 @@ sys.path = [path for path in sys.path if path != os.fspath(here)]
 
 from clvm_tools_rs import compile_clvm  # noqa: E402
 
-from chia.types.blockchain_format.program import SerializedProgram  # noqa: E402
+from flax.types.blockchain_format.program import SerializedProgram  # noqa: E402
 
 clvm_suffix = ".clvm"
 hex_suffix = ".clvm.hex"
 hash_suffix = ".clvm.hex.sha256tree"
 all_suffixes = {"clvm": clvm_suffix, "hex": hex_suffix, "hash": hash_suffix}
 # TODO: could be cli options
-top_levels = {"chia"}
+top_levels = {"flax"}
 
 
 class ManageClvmError(Exception):
@@ -347,4 +347,4 @@ def build() -> int:
     return 1 if overall_fail else 0
 
 
-sys.exit(main(auto_envvar_prefix="CHIA_MANAGE_CLVM"))
+sys.exit(main(auto_envvar_prefix="FLAX_MANAGE_CLVM"))

@@ -6,27 +6,27 @@ import threading
 
 import pytest
 
-from chia.server.chia_policy import ChiaSelectorEventLoop, PausableServer, _chia_create_server, set_chia_policy
+from flax.server.flax_policy import FlaxSelectorEventLoop, PausableServer, _flax_create_server, set_flax_policy
 
 
 @pytest.mark.asyncio
 async def test_base_event_loop_has_methods() -> None:
     """
-    `ChiaPolicy` overrides `create_server` to create and return the custom `PausableServer`
+    `FlaxPolicy` overrides `create_server` to create and return the custom `PausableServer`
     instead of its base class `asyncio.base_events.Server`.
 
     This method checks asyncio's `create_server` and the constructor of asyncio's `base_events.Server`
     keep the same constant signature.
 
-    Moreover, this checks our internal method `_chia_create_server` doesn't change signature and that our
+    Moreover, this checks our internal method `_flax_create_server` doesn't change signature and that our
     custom event loop's constructor uses it in the implementation (by enforcing a fixed implementation).
 
     Also, we check all methods needed by `PausableServer` are still present in the base classes and
     that their signature remains constant: `__init__`, `_attach`, `_detach`, `remove_reader` and `_start_serving`.
     """
 
-    selector_event_loop = ChiaSelectorEventLoop()
-    base_selector_event_loop = super(ChiaSelectorEventLoop, selector_event_loop)
+    selector_event_loop = FlaxSelectorEventLoop()
+    base_selector_event_loop = super(FlaxSelectorEventLoop, selector_event_loop)
 
     assert hasattr(base_selector_event_loop, "create_server")
     method = getattr(base_selector_event_loop, "create_server")
@@ -53,12 +53,12 @@ async def test_base_event_loop_has_methods() -> None:
     assert inspect.ismethod(method)
     assert (
         inspect.getsource(method)
-        == "    async def create_server(self, *args, **kwargs) -> PausableServer:  # type: ignore[no-untyped-def]\n        return await _chia_create_server(super(), *args, **kwargs)\n"  # noqa: E501
+        == "    async def create_server(self, *args, **kwargs) -> PausableServer:  # type: ignore[no-untyped-def]\n        return await _flax_create_server(super(), *args, **kwargs)\n"  # noqa: E501
     )
 
-    assert inspect.isfunction(_chia_create_server)
+    assert inspect.isfunction(_flax_create_server)
     expected_signature = "(cls: 'Any', protocol_factory: '_ProtocolFactory', host: 'Any', port: 'Any', *, family: 'socket.AddressFamily' = <AddressFamily.AF_UNSPEC: 0>, flags: 'socket.AddressInfo' = <AddressInfo.AI_PASSIVE: 1>, sock: 'Any' = None, backlog: 'int' = 100, ssl: '_SSLContext' = None, reuse_address: 'Optional[bool]' = None, reuse_port: 'Optional[bool]' = None, ssl_handshake_timeout: 'Optional[float]' = 30, start_serving: 'bool' = True) -> 'PausableServer'"  # noqa: E501
-    assert str(inspect.signature(_chia_create_server)) == expected_signature
+    assert str(inspect.signature(_flax_create_server)) == expected_signature
 
     class EchoProtocol(asyncio.Protocol):
         def connection_made(self, transport):  # type: ignore
@@ -77,7 +77,7 @@ async def test_base_event_loop_has_methods() -> None:
                 EchoProtocol, host="127.0.0.1", port=8000, ssl_handshake_timeout=None, start_serving=False
             )
 
-        set_chia_policy(connection_limit=0)
+        set_flax_policy(connection_limit=0)
         asyncio.run(main())
 
     thread = threading.Thread(target=in_thread)

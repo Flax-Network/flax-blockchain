@@ -14,14 +14,14 @@ import zstd
 from blspy import AugSchemeMPL, G1Element
 from chia_rs import MEMPOOL_MODE, run_generator
 
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.types.block_protocol import BlockInfo
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32, bytes48
-from chia.types.full_block import FullBlock
-from chia.util.condition_tools import pkm_pairs
-from chia.util.full_block_utils import block_info_from_block, generator_from_block
-from chia.wallet.puzzles.rom_bootstrap_generator import get_generator
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.types.block_protocol import BlockInfo
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32, bytes48
+from flax.types.full_block import FullBlock
+from flax.util.condition_tools import pkm_pairs
+from flax.util.full_block_utils import block_info_from_block, generator_from_block
+from flax.wallet.puzzles.rom_bootstrap_generator import get_generator
 
 GENERATOR_ROM = bytes(get_generator())
 

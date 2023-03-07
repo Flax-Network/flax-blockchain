@@ -16,13 +16,13 @@ import pytest_asyncio
 from _pytest.fixtures import SubRequest
 
 # Set spawn after stdlib imports, but before other imports
-from chia.clvm.spend_sim import SimClient, SpendSim
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.protocols import full_node_protocol
-from chia.server.server import ChiaServer
-from chia.server.start_service import Service
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.setup_nodes import (
+from flax.clvm.spend_sim import SimClient, SpendSim
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.protocols import full_node_protocol
+from flax.server.server import FlaxServer
+from flax.server.start_service import Service
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.simulator.setup_nodes import (
     setup_full_system_connect_to_deamon,
     setup_n_nodes,
     setup_node_and_wallet,
@@ -30,17 +30,17 @@ from chia.simulator.setup_nodes import (
     setup_simulators_and_wallets_service,
     setup_two_nodes,
 )
-from chia.simulator.setup_services import setup_daemon, setup_introducer, setup_timelord
-from chia.simulator.time_out_assert import time_out_assert
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.peer_info import PeerInfo
-from chia.util.config import create_default_chia_config, lock_and_load_config
-from chia.util.ints import uint16, uint64
-from chia.util.task_timing import main as task_instrumentation_main
-from chia.util.task_timing import start_task_instrumentation, stop_task_instrumentation
-from chia.wallet.wallet import Wallet
-from chia.wallet.wallet_node import WalletNode
-from tests.core.data_layer.util import ChiaRoot
+from flax.simulator.setup_services import setup_daemon, setup_introducer, setup_timelord
+from flax.simulator.time_out_assert import time_out_assert
+from flax.simulator.wallet_tools import WalletTool
+from flax.types.peer_info import PeerInfo
+from flax.util.config import create_default_flax_config, lock_and_load_config
+from flax.util.ints import uint16, uint64
+from flax.util.task_timing import main as task_instrumentation_main
+from flax.util.task_timing import start_task_instrumentation, stop_task_instrumentation
+from flax.wallet.wallet import Wallet
+from flax.wallet.wallet_node import WalletNode
+from tests.core.data_layer.util import FlaxRoot
 from tests.core.node_height import node_height_at_least
 from tests.simulation.test_simulation import test_constants_modified
 from tests.util.wallet_is_synced import wallet_is_synced
@@ -49,10 +49,10 @@ multiprocessing.set_start_method("spawn")
 
 from pathlib import Path
 
-from chia.simulator.block_tools import BlockTools, create_block_tools, create_block_tools_async, test_constants
-from chia.simulator.keyring import TempKeyring
-from chia.simulator.setup_nodes import setup_farmer_multi_harvester
-from chia.util.keyring_wrapper import KeyringWrapper
+from flax.simulator.block_tools import BlockTools, create_block_tools, create_block_tools_async, test_constants
+from flax.simulator.keyring import TempKeyring
+from flax.simulator.setup_nodes import setup_farmer_multi_harvester
+from flax.util.keyring_wrapper import KeyringWrapper
 
 
 @pytest.fixture(name="node_name_for_file")
@@ -98,7 +98,7 @@ def self_hostname():
 
 
 # NOTE:
-#       Instantiating the bt fixture results in an attempt to create the chia root directory
+#       Instantiating the bt fixture results in an attempt to create the flax root directory
 #       which the build scripts symlink to a sometimes-not-there directory.
 #       When not there, Python complains since, well, the symlink is not a directory nor points to a directory.
 #
@@ -111,7 +111,7 @@ async def empty_blockchain(request):
     """
     Provides a list of 10 valid blocks, as well as a blockchain with 9 blocks added to it.
     """
-    from chia.simulator.setup_nodes import test_constants
+    from flax.simulator.setup_nodes import test_constants
     from tests.util.blockchain import create_blockchain
 
     bc1, db_wrapper, db_path = await create_blockchain(test_constants, request.param)
@@ -336,7 +336,7 @@ async def two_nodes_sim_and_wallets_services():
 
 @pytest_asyncio.fixture(scope="function")
 async def wallet_node_sim_and_wallet() -> AsyncIterator[
-    Tuple[List[Union[FullNodeAPI, FullNodeSimulator]], List[Tuple[Wallet, ChiaServer]], BlockTools],
+    Tuple[List[Union[FullNodeAPI, FullNodeSimulator]], List[Tuple[Wallet, FlaxServer]], BlockTools],
 ]:
     async for _ in setup_simulators_and_wallets(1, 1, {}):
         yield _
@@ -356,7 +356,7 @@ async def wallet_node_100_pk():
 
 @pytest_asyncio.fixture(scope="function")
 async def simulator_and_wallet() -> AsyncIterator[
-    Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools]
+    Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools]
 ]:
     async for _ in setup_simulators_and_wallets(simulator_count=1, wallet_count=1, dic={}):
         yield _
@@ -378,8 +378,8 @@ async def two_wallet_nodes_services() -> AsyncIterator[Tuple[List[Service], List
 
 
 @pytest_asyncio.fixture(scope="function")
-async def two_wallet_nodes_custom_spam_filtering(spam_filter_after_n_txs, xch_spam_amount):
-    async for _ in setup_simulators_and_wallets(1, 2, {}, spam_filter_after_n_txs, xch_spam_amount):
+async def two_wallet_nodes_custom_spam_filtering(spam_filter_after_n_txs, xfx_spam_amount):
+    async for _ in setup_simulators_and_wallets(1, 2, {}, spam_filter_after_n_txs, xfx_spam_amount):
         yield _
 
 
@@ -483,7 +483,7 @@ async def one_node() -> AsyncIterator[Tuple[List[Service], List[FullNodeSimulato
 
 
 @pytest_asyncio.fixture(scope="function")
-async def one_node_one_block() -> AsyncIterator[Tuple[Union[FullNodeAPI, FullNodeSimulator], ChiaServer, BlockTools]]:
+async def one_node_one_block() -> AsyncIterator[Tuple[Union[FullNodeAPI, FullNodeSimulator], FlaxServer, BlockTools]]:
     async_gen = setup_simulators_and_wallets(1, 0, {})
     nodes, _, bt = await async_gen.__anext__()
     full_node_1 = nodes[0]
@@ -598,7 +598,7 @@ async def get_daemon(bt):
 
 @pytest.fixture(scope="function")
 def empty_keyring():
-    with TempKeyring(user="user-chia-1.8", service="chia-user-chia-1.8") as keychain:
+    with TempKeyring(user="user-flax-1.8", service="flax-user-flax-1.8") as keychain:
         yield keychain
         KeyringWrapper.cleanup_shared_instance()
 
@@ -710,23 +710,23 @@ async def setup_sim():
 
 
 @pytest.fixture(scope="function")
-def tmp_chia_root(tmp_path):
+def tmp_flax_root(tmp_path):
     """
-    Create a temp directory and populate it with an empty chia_root directory.
+    Create a temp directory and populate it with an empty flax_root directory.
     """
-    path: Path = tmp_path / "chia_root"
+    path: Path = tmp_path / "flax_root"
     path.mkdir(parents=True, exist_ok=True)
     return path
 
 
 @pytest.fixture(scope="function")
-def root_path_populated_with_config(tmp_chia_root) -> Path:
+def root_path_populated_with_config(tmp_flax_root) -> Path:
     """
-    Create a temp chia_root directory and populate it with a default config.yaml.
-    Returns the chia_root path.
+    Create a temp flax_root directory and populate it with a default config.yaml.
+    Returns the flax_root path.
     """
-    root_path: Path = tmp_chia_root
-    create_default_chia_config(root_path)
+    root_path: Path = tmp_flax_root
+    create_default_flax_config(root_path)
     return root_path
 
 
@@ -747,9 +747,9 @@ def scripts_path_fixture() -> Path:
     return Path(scripts_string)
 
 
-@pytest.fixture(name="chia_root", scope="function")
-def chia_root_fixture(tmp_path: Path, scripts_path: Path) -> ChiaRoot:
-    root = ChiaRoot(path=tmp_path.joinpath("chia_root"), scripts_path=scripts_path)
+@pytest.fixture(name="flax_root", scope="function")
+def flax_root_fixture(tmp_path: Path, scripts_path: Path) -> FlaxRoot:
+    root = FlaxRoot(path=tmp_path.joinpath("flax_root"), scripts_path=scripts_path)
     root.run(args=["init"])
     root.run(args=["configure", "--set-log-level", "INFO"])
 

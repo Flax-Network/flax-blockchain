@@ -5,9 +5,9 @@ from typing import Any, Dict
 
 import pytest
 
-from chia.data_layer.data_layer_util import NodeType, Side, Status
-from chia.data_layer.data_store import DataStore
-from chia.types.blockchain_format.tree_hash import bytes32
+from flax.data_layer.data_layer_util import NodeType, Side, Status
+from flax.data_layer.data_store import DataStore
+from flax.types.blockchain_format.tree_hash import bytes32
 from tests.core.data_layer.util import add_01234567_example, create_valid_node_values
 
 pytestmark = pytest.mark.data_layer

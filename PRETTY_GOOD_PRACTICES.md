@@ -149,8 +149,8 @@ def f(x, y, z):
 
 ### Examples
 
-- https://github.com/Chia-Network/chia-blockchain/pull/11467
-- https://github.com/Chia-Network/chia-blockchain/pull/10166
+- https://github.com/Flax-Network/flax-blockchain/pull/11467
+- https://github.com/Flax-Network/flax-blockchain/pull/10166
 
 
 ## Classes
@@ -607,7 +607,7 @@ if TYPE_CHECKING:
     # Note that the wallet state manager module imports the wallets.
     # This would create a problematic circular import condition at
     # runtime that `if TYPE_CHECKING:` avoids.
-    from chia.wallet.wallet_state_manager import WalletStateManager
+    from flax.wallet.wallet_state_manager import WalletStateManager
 
 
 @dataclass

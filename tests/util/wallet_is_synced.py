@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import List
 
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.wallet.wallet_node import WalletNode
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.wallet.wallet_node import WalletNode
 
 
 async def wallet_is_synced(wallet_node: WalletNode, full_node_api: FullNodeAPI) -> bool:

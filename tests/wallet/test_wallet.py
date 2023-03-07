@@ -8,26 +8,26 @@ from typing import Any, Dict, List, Tuple
 import pytest
 from blspy import AugSchemeMPL, G1Element, G2Element
 
-from chia.protocols.full_node_protocol import RespondBlock
-from chia.rpc.wallet_rpc_api import WalletRpcApi
-from chia.server.server import ChiaServer
-from chia.simulator.block_tools import BlockTools
-from chia.simulator.full_node_simulator import FullNodeSimulator, wait_for_coins_in_wallet
-from chia.simulator.simulator_protocol import ReorgProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.util.bech32m import encode_puzzle_hash
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.derive_keys import master_sk_to_wallet_sk
-from chia.wallet.transaction_record import TransactionRecord
-from chia.wallet.util.compute_memos import compute_memos
-from chia.wallet.util.transaction_type import TransactionType
-from chia.wallet.util.wallet_types import AmountWithPuzzlehash
-from chia.wallet.wallet import CHIP_0002_SIGN_MESSAGE_PREFIX
-from chia.wallet.wallet_node import WalletNode, get_wallet_db_path
-from chia.wallet.wallet_state_manager import WalletStateManager
+from flax.protocols.full_node_protocol import RespondBlock
+from flax.rpc.wallet_rpc_api import WalletRpcApi
+from flax.server.server import FlaxServer
+from flax.simulator.block_tools import BlockTools
+from flax.simulator.full_node_simulator import FullNodeSimulator, wait_for_coins_in_wallet
+from flax.simulator.simulator_protocol import ReorgProtocol
+from flax.simulator.time_out_assert import time_out_assert
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.peer_info import PeerInfo
+from flax.util.bech32m import encode_puzzle_hash
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.derive_keys import master_sk_to_wallet_sk
+from flax.wallet.transaction_record import TransactionRecord
+from flax.wallet.util.compute_memos import compute_memos
+from flax.wallet.util.transaction_type import TransactionType
+from flax.wallet.util.wallet_types import AmountWithPuzzlehash
+from flax.wallet.wallet import CHIP_0002_SIGN_MESSAGE_PREFIX
+from flax.wallet.wallet_node import WalletNode, get_wallet_db_path
+from flax.wallet.wallet_state_manager import WalletStateManager
 from tests.util.wallet_is_synced import wallet_is_synced, wallets_are_synced
 
 
@@ -39,14 +39,14 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_coinbase(
         self,
-        wallet_node_sim_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        wallet_node_sim_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
         num_blocks = 10
         full_nodes, wallets, _ = wallet_node_sim_and_wallet
         full_node_api = full_nodes[0]
-        server_1: ChiaServer = full_node_api.full_node.server
+        server_1: FlaxServer = full_node_api.full_node.server
         wallet_node, server_2 = wallets[0]
 
         wallet = wallet_node.wallet_state_manager.main_wallet
@@ -84,7 +84,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_make_transaction(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -132,7 +132,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_coinbase_reorg(
         self,
-        wallet_node_sim_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        wallet_node_sim_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -173,7 +173,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_send_to_three_peers(
         self,
-        three_sim_two_wallets: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        three_sim_two_wallets: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -239,7 +239,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_make_transaction_hop(
         self,
-        two_wallet_nodes_five_freeze: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes_five_freeze: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -333,7 +333,7 @@ class TestWalletSimulator:
     #     introducer, introducer_server = await node_iters[2].__anext__()
     #
     #     async def has_full_node():
-    #         outbound: List[WSChiaConnection] = wallet.server.get_outgoing_connections()
+    #         outbound: List[WSFlaxConnection] = wallet.server.get_outgoing_connections()
     #         for connection in outbound:
     #             if connection.connection_type is NodeType.FULL_NODE:
     #                 return True
@@ -352,7 +352,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_make_transaction_with_fee(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -417,7 +417,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_create_hit_max_send_amount(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -492,7 +492,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_prevent_fee_theft(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -577,7 +577,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_tx_reorg(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -687,13 +687,13 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_address_sliding_window(
         self,
-        wallet_node_100_pk: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        wallet_node_100_pk: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
         full_nodes, wallets, _ = wallet_node_100_pk
         full_node_api = full_nodes[0]
-        server_1: ChiaServer = full_node_api.full_node.server
+        server_1: FlaxServer = full_node_api.full_node.server
         wallet_node, server_2 = wallets[0]
         if trusted:
             wallet_node.config["trusted_peers"] = {server_1.node_id.hex(): server_1.node_id.hex()}
@@ -750,7 +750,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_sign_message(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -772,7 +772,7 @@ class TestWalletSimulator:
 
         await server_2.start_client(PeerInfo(self_hostname, uint16(server_1._port)), None)
         message = "Hello World"
-        response = await api_0.sign_message_by_address({"address": encode_puzzle_hash(ph, "xch"), "message": message})
+        response = await api_0.sign_message_by_address({"address": encode_puzzle_hash(ph, "xfx"), "message": message})
         puzzle: Program = Program.to((CHIP_0002_SIGN_MESSAGE_PREFIX, message))
 
         assert AugSchemeMPL.verify(
@@ -788,7 +788,7 @@ class TestWalletSimulator:
     @pytest.mark.asyncio
     async def test_wallet_transaction_options(
         self,
-        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+        two_wallet_nodes: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
         trusted: bool,
         self_hostname: str,
     ) -> None:
@@ -843,7 +843,7 @@ class TestWalletSimulator:
 
 
 def test_get_wallet_db_path_v2_r1() -> None:
-    root_path: Path = Path("/x/y/z/.chia/mainnet").resolve()
+    root_path: Path = Path("/x/y/z/.flax/mainnet").resolve()
     config: Dict[str, Any] = {
         "database_path": "wallet/db/blockchain_wallet_v2_r1_CHALLENGE_KEY.sqlite",
         "selected_network": "mainnet",
@@ -855,7 +855,7 @@ def test_get_wallet_db_path_v2_r1() -> None:
 
 
 def test_get_wallet_db_path_v2() -> None:
-    root_path: Path = Path("/x/y/z/.chia/mainnet").resolve()
+    root_path: Path = Path("/x/y/z/.flax/mainnet").resolve()
     config: Dict[str, Any] = {
         "database_path": "wallet/db/blockchain_wallet_v2_CHALLENGE_KEY.sqlite",
         "selected_network": "mainnet",
@@ -867,7 +867,7 @@ def test_get_wallet_db_path_v2() -> None:
 
 
 def test_get_wallet_db_path_v1() -> None:
-    root_path: Path = Path("/x/y/z/.chia/mainnet").resolve()
+    root_path: Path = Path("/x/y/z/.flax/mainnet").resolve()
     config: Dict[str, Any] = {
         "database_path": "wallet/db/blockchain_wallet_v1_CHALLENGE_KEY.sqlite",
         "selected_network": "mainnet",
@@ -879,7 +879,7 @@ def test_get_wallet_db_path_v1() -> None:
 
 
 def test_get_wallet_db_path_testnet() -> None:
-    root_path: Path = Path("/x/y/z/.chia/testnet").resolve()
+    root_path: Path = Path("/x/y/z/.flax/testnet").resolve()
     config: Dict[str, Any] = {
         "database_path": "wallet/db/blockchain_wallet_v2_CHALLENGE_KEY.sqlite",
         "selected_network": "testnet",

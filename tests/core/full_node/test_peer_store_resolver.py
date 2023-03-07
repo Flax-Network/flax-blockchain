@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import Dict
 
-from chia.server.peer_store_resolver import PeerStoreResolver
+from flax.server.peer_store_resolver import PeerStoreResolver
 
 
 class TestPeerStoreResolver:

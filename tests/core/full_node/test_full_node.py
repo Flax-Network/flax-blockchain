@@ -11,43 +11,43 @@ import pytest
 from blspy import AugSchemeMPL, G2Element, PrivateKey
 from clvm.casts import int_to_bytes
 
-from chia.consensus.pot_iterations import is_overflow_block
-from chia.full_node.bundle_tools import detect_potential_template_generator
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.full_node.signage_point import SignagePoint
-from chia.protocols import full_node_protocol
-from chia.protocols import full_node_protocol as fnp
-from chia.protocols import timelord_protocol, wallet_protocol
-from chia.protocols.full_node_protocol import RespondTransaction
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.protocols.shared_protocol import Capability, capabilities
-from chia.protocols.wallet_protocol import SendTransaction, TransactionAck
-from chia.server.address_manager import AddressManager
-from chia.server.outbound_message import Message, NodeType
-from chia.server.server import ChiaServer
-from chia.simulator.block_tools import BlockTools, get_signage_point, test_constants
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert, time_out_assert_custom_interval, time_out_messages
-from chia.types.blockchain_format.classgroup import ClassgroupElement
-from chia.types.blockchain_format.foliage import Foliage, FoliageTransactionBlock, TransactionsInfo
-from chia.types.blockchain_format.program import Program, SerializedProgram
-from chia.types.blockchain_format.proof_of_space import ProofOfSpace, calculate_plot_id_pk, calculate_pos_challenge
-from chia.types.blockchain_format.reward_chain_block import RewardChainBlockUnfinished
-from chia.types.blockchain_format.vdf import CompressibleVDFField, VDFProof
-from chia.types.coin_spend import CoinSpend
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.full_block import FullBlock
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.peer_info import PeerInfo, TimestampedPeerInfo
-from chia.types.spend_bundle import SpendBundle
-from chia.types.unfinished_block import UnfinishedBlock
-from chia.util.errors import ConsensusError, Err
-from chia.util.hash import std_hash
-from chia.util.ints import uint8, uint16, uint32, uint64
-from chia.util.recursive_replace import recursive_replace
-from chia.util.vdf_prover import get_vdf_info_and_proof
-from chia.wallet.transaction_record import TransactionRecord
+from flax.consensus.pot_iterations import is_overflow_block
+from flax.full_node.bundle_tools import detect_potential_template_generator
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.full_node.signage_point import SignagePoint
+from flax.protocols import full_node_protocol
+from flax.protocols import full_node_protocol as fnp
+from flax.protocols import timelord_protocol, wallet_protocol
+from flax.protocols.full_node_protocol import RespondTransaction
+from flax.protocols.protocol_message_types import ProtocolMessageTypes
+from flax.protocols.shared_protocol import Capability, capabilities
+from flax.protocols.wallet_protocol import SendTransaction, TransactionAck
+from flax.server.address_manager import AddressManager
+from flax.server.outbound_message import Message, NodeType
+from flax.server.server import FlaxServer
+from flax.simulator.block_tools import BlockTools, get_signage_point, test_constants
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.simulator.time_out_assert import time_out_assert, time_out_assert_custom_interval, time_out_messages
+from flax.types.blockchain_format.classgroup import ClassgroupElement
+from flax.types.blockchain_format.foliage import Foliage, FoliageTransactionBlock, TransactionsInfo
+from flax.types.blockchain_format.program import Program, SerializedProgram
+from flax.types.blockchain_format.proof_of_space import ProofOfSpace, calculate_plot_id_pk, calculate_pos_challenge
+from flax.types.blockchain_format.reward_chain_block import RewardChainBlockUnfinished
+from flax.types.blockchain_format.vdf import CompressibleVDFField, VDFProof
+from flax.types.coin_spend import CoinSpend
+from flax.types.condition_opcodes import ConditionOpcode
+from flax.types.condition_with_args import ConditionWithArgs
+from flax.types.full_block import FullBlock
+from flax.types.mempool_inclusion_status import MempoolInclusionStatus
+from flax.types.peer_info import PeerInfo, TimestampedPeerInfo
+from flax.types.spend_bundle import SpendBundle
+from flax.types.unfinished_block import UnfinishedBlock
+from flax.util.errors import ConsensusError, Err
+from flax.util.hash import std_hash
+from flax.util.ints import uint8, uint16, uint32, uint64
+from flax.util.recursive_replace import recursive_replace
+from flax.util.vdf_prover import get_vdf_info_and_proof
+from flax.wallet.transaction_record import TransactionRecord
 from tests.blockchain.blockchain_test_utils import _validate_and_add_block, _validate_and_add_block_no_error
 from tests.connection_utils import add_dummy_connection, connect_and_get_peer
 from tests.core.full_node.stores.test_coin_store import get_future_reward_coins
@@ -1961,7 +1961,7 @@ class TestFullNodeProtocol:
             [capabilities, True],
             # an additional enabled but unknown capability
             [[*capabilities, (uint16(max(Capability) + 1), "1")], True],
-            # no capability, not even Chia mainnet
+            # no capability, not even Flax mainnet
             # TODO: shouldn't we fail without Capability.BASE?
             [[], True],
             # only an unknown capability
@@ -1972,7 +1972,7 @@ class TestFullNodeProtocol:
     @pytest.mark.asyncio
     async def test_invalid_capability_can_connect(
         self,
-        two_nodes: Tuple[FullNodeAPI, FullNodeAPI, ChiaServer, ChiaServer, BlockTools],
+        two_nodes: Tuple[FullNodeAPI, FullNodeAPI, FlaxServer, FlaxServer, BlockTools],
         self_hostname: str,
         custom_capabilities: List[Tuple[uint16, str]],
         expect_success: bool,

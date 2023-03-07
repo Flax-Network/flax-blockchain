@@ -6,14 +6,14 @@ from secrets import token_bytes
 from blspy import AugSchemeMPL, PrivateKey
 from clvm_tools import binutils
 
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.blockchain_format.program import INFINITE_COST, Program
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.util.ints import uint32
-from chia.wallet.derive_keys import master_sk_to_wallet_sk
-from chia.wallet.puzzles.p2_delegated_puzzle import puzzle_for_pk
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.simulator.wallet_tools import WalletTool
+from flax.types.blockchain_format.program import INFINITE_COST, Program
+from flax.types.condition_opcodes import ConditionOpcode
+from flax.types.condition_with_args import ConditionWithArgs
+from flax.util.ints import uint32
+from flax.wallet.derive_keys import master_sk_to_wallet_sk
+from flax.wallet.puzzles.p2_delegated_puzzle import puzzle_for_pk
 
 
 def float_to_str(f):
@@ -31,7 +31,7 @@ def float_to_str(f):
     return float_string
 
 
-def run_and_return_cost_time(chialisp):
+def run_and_return_cost_time(flaxlisp):
 
     start = time.time()
     clvm_loop = "((c (q ((c (f (a)) (c (f (a)) (c (f (r (a))) (c (f (r (r (a))))"
@@ -39,7 +39,7 @@ def run_and_return_cost_time(chialisp):
     " (c (- (f (r (a))) (q 1)) (c (f (r (r (a)))) (q ()))))))"
     " ((c (f (r (r (a)))) (q ()))))) (q (q ()))) (a)))) (a))))"
     loop_program = Program.to(binutils.assemble(clvm_loop))
-    clvm_loop_solution = f"(1000 {chialisp})"
+    clvm_loop_solution = f"(1000 {flaxlisp})"
     solution_program = Program.to(binutils.assemble(clvm_loop_solution))
 
     cost, sexp = loop_program.run_with_cost(solution_program, INFINITE_COST)

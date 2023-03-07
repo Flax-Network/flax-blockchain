@@ -5,16 +5,16 @@ import logging
 
 import pytest
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.data_layer.data_layer_wallet import Mirror
-from chia.rpc.wallet_rpc_client import WalletRpcClient
-from chia.simulator.setup_nodes import SimulatorsAndWalletsServices
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.db_wallet.db_wallet_puzzles import create_mirror_puzzle
+from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from flax.data_layer.data_layer_wallet import Mirror
+from flax.rpc.wallet_rpc_client import WalletRpcClient
+from flax.simulator.setup_nodes import SimulatorsAndWalletsServices
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.simulator.time_out_assert import time_out_assert
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.peer_info import PeerInfo
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.db_wallet.db_wallet_puzzles import create_mirror_puzzle
 from tests.util.rpc import validate_get_routes
 
 log = logging.getLogger(__name__)

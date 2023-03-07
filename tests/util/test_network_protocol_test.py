@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, List, Set
 
-from chia.protocols import (
+from flax.protocols import (
     farmer_protocol,
     full_node_protocol,
     harvester_protocol,
@@ -32,7 +32,7 @@ def types_in_module(mod: Any) -> Set[str]:
 
 
 def test_missing_messages_state_machine() -> None:
-    from chia.protocols.protocol_state_machine import NO_REPLY_EXPECTED, VALID_REPLY_MESSAGE_MAP
+    from flax.protocols.protocol_state_machine import NO_REPLY_EXPECTED, VALID_REPLY_MESSAGE_MAP
 
     # if these asserts fail, make sure to add the new network protocol messages
     # to the visitor in build_network_protocol_files.py and rerun it. Then

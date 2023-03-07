@@ -7,9 +7,9 @@ from pathlib import Path
 from sys import platform
 from time import sleep
 
-from chia.simulator.keyring import TempKeyring, using_temp_file_keyring
-from chia.simulator.time_out_assert import adjusted_timeout
-from chia.util.keyring_wrapper import KeyringWrapper
+from flax.simulator.keyring import TempKeyring, using_temp_file_keyring
+from flax.simulator.time_out_assert import adjusted_timeout
+from flax.util.keyring_wrapper import KeyringWrapper
 from tests.core.util.test_lockfile import poll_directory
 
 log = logging.getLogger(__name__)

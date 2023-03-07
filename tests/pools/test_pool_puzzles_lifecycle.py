@@ -6,8 +6,8 @@ from unittest import TestCase
 
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
 
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.pools.pool_puzzles import (
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.pools.pool_puzzles import (
     SINGLETON_MOD_HASH,
     create_absorb_spend,
     create_p2_singleton_puzzle,
@@ -23,16 +23,16 @@ from chia.pools.pool_puzzles import (
     solution_to_pool_state,
     uncurry_pool_waitingroom_inner_puzzle,
 )
-from chia.pools.pool_wallet_info import PoolState
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import Program
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.coin_spend import CoinSpend
-from chia.types.spend_bundle import SpendBundle
-from chia.util.ints import uint32, uint64
-from chia.wallet.puzzles import singleton_top_layer
-from chia.wallet.puzzles.p2_conditions import puzzle_for_conditions
-from chia.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import (
+from flax.pools.pool_wallet_info import PoolState
+from flax.types.blockchain_format.coin import Coin
+from flax.types.blockchain_format.program import Program
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.coin_spend import CoinSpend
+from flax.types.spend_bundle import SpendBundle
+from flax.util.ints import uint32, uint64
+from flax.wallet.puzzles import singleton_top_layer
+from flax.wallet.puzzles.p2_conditions import puzzle_for_conditions
+from flax.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import (
     DEFAULT_HIDDEN_PUZZLE_HASH,
     calculate_synthetic_secret_key,
     puzzle_for_pk,
@@ -44,9 +44,9 @@ from tests.util.key_tool import KeyTool
 
 """
 This test suite aims to test:
-    - chia.pools.pool_puzzles.py
-    - chia.wallet.puzzles.pool_member_innerpuz.clvm
-    - chia.wallet.puzzles.pool_waiting_room_innerpuz.clvm
+    - flax.pools.pool_puzzles.py
+    - flax.wallet.puzzles.pool_member_innerpuz.clvm
+    - flax.wallet.puzzles.pool_waiting_room_innerpuz.clvm
 """
 
 

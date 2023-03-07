@@ -7,7 +7,7 @@ from typing import Type, Union
 
 import pytest
 
-from chia.util.network import IPAddress, get_host_addr
+from flax.util.network import IPAddress, get_host_addr
 
 
 class TestNetwork:

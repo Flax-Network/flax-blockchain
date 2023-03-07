@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from chia.util.errors import InvalidPathError
-from chia.util.misc import format_bytes, format_minutes, validate_directory_writable
+from flax.util.errors import InvalidPathError
+from flax.util.misc import format_bytes, format_minutes, validate_directory_writable
 
 
 class TestMisc:

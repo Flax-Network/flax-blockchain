@@ -9,16 +9,16 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.protocols import full_node_protocol
-from chia.protocols.shared_protocol import Capability
-from chia.simulator.block_tools import test_constants
-from chia.simulator.time_out_assert import time_out_assert
-from chia.types.blockchain_format.sub_epoch_summary import SubEpochSummary
-from chia.types.full_block import FullBlock
-from chia.types.peer_info import PeerInfo
-from chia.util.hash import std_hash
-from chia.util.ints import uint16
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.protocols import full_node_protocol
+from flax.protocols.shared_protocol import Capability
+from flax.simulator.block_tools import test_constants
+from flax.simulator.time_out_assert import time_out_assert
+from flax.types.blockchain_format.sub_epoch_summary import SubEpochSummary
+from flax.types.full_block import FullBlock
+from flax.types.peer_info import PeerInfo
+from flax.util.hash import std_hash
+from flax.util.ints import uint16
 from tests.core.node_height import node_height_between, node_height_exactly
 
 log = logging.getLogger(__name__)
@@ -373,7 +373,7 @@ class TestFullSync:
         assert node_height_between(full_node_2, summary_heights[0], summary_heights[1])
 
     @pytest.mark.asyncio
-    @pytest.mark.skip("skipping until we re-enable the capability in chia.protocols.shared_protocol")
+    @pytest.mark.skip("skipping until we re-enable the capability in flax.protocols.shared_protocol")
     async def test_sync_none_wp_response_backward_comp(self, three_nodes, default_1000_blocks, self_hostname):
         num_blocks_initial = len(default_1000_blocks) - 50
         blocks_950 = default_1000_blocks[:num_blocks_initial]

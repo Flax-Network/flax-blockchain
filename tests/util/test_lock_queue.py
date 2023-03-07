@@ -7,7 +7,7 @@ from asyncio import CancelledError
 
 import pytest
 
-from chia.full_node.lock_queue import LockClient, LockQueue
+from flax.full_node.lock_queue import LockClient, LockQueue
 
 log = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from chia.util.chunks import chunks
+from flax.util.chunks import chunks
 
 
 def test_chunks() -> None:

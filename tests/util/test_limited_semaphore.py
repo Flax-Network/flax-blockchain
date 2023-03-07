@@ -5,7 +5,7 @@ from typing import Optional
 
 import pytest
 
-from chia.util.limited_semaphore import LimitedSemaphore, LimitedSemaphoreFullError
+from flax.util.limited_semaphore import LimitedSemaphore, LimitedSemaphoreFullError
 
 
 @pytest.mark.asyncio

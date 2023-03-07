@@ -8,8 +8,8 @@ import sys
 import threading
 from typing import List, Optional
 
-from chia.server.chia_policy import ChiaPolicy
-from chia.server.start_service import async_run
+from flax.server.flax_policy import FlaxPolicy
+from flax.server.start_service import async_run
 
 if sys.platform == "win32":
     import _winapi
@@ -64,7 +64,7 @@ async def async_main(
 
 
 def main(connection_limit: int = 25) -> None:
-    asyncio.set_event_loop_policy(ChiaPolicy())
+    asyncio.set_event_loop_policy(FlaxPolicy())
     logger = logging.getLogger()
     logger.setLevel(level=logging.DEBUG)
     stream_handler = logging.StreamHandler(stream=sys.stdout)

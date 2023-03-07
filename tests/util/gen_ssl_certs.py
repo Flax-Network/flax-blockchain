@@ -6,7 +6,7 @@ from typing import Optional
 import click
 from pytest import MonkeyPatch
 
-from chia.ssl.create_ssl import generate_ca_signed_cert, get_chia_ca_crt_key, make_ca_cert
+from flax.ssl.create_ssl import generate_ca_signed_cert, get_flax_ca_crt_key, make_ca_cert
 
 # NOTE: This is a standalone tool that can be used to generate a CA cert/key as well as node certs/keys.
 
@@ -37,7 +37,7 @@ def gen_ssl(suffix: str = "") -> None:
         print()
 
     patch = MonkeyPatch()
-    patch.setattr("chia.ssl.create_ssl.write_ssl_cert_and_key", patched_write_ssl_cert_and_key)
+    patch.setattr("flax.ssl.create_ssl.write_ssl_cert_and_key", patched_write_ssl_cert_and_key)
 
     private_ca_crt: Optional[bytes] = None
     private_ca_key: Optional[bytes] = None
@@ -77,14 +77,14 @@ def gen_ssl(suffix: str = "") -> None:
         },
     }
 
-    chia_ca_crt, chia_ca_key = get_chia_ca_crt_key()
+    flax_ca_crt, flax_ca_key = get_flax_ca_crt_key()
 
     for node_name, cert_type_dict in node_certs_and_keys.items():
         for cert_type, cert_dict in cert_type_dict.items():
             crt = cert_dict["crt"]
             key = cert_dict["key"]
-            ca_crt = chia_ca_crt if cert_type == "public" else private_ca_crt
-            ca_key = chia_ca_key if cert_type == "public" else private_ca_key
+            ca_crt = flax_ca_crt if cert_type == "public" else private_ca_crt
+            ca_key = flax_ca_key if cert_type == "public" else private_ca_key
 
             generate_ca_signed_cert(ca_crt, ca_key, Path(crt), Path(key))
 

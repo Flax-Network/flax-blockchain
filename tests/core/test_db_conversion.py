@@ -6,16 +6,16 @@ from typing import List, Optional, Tuple
 
 import pytest
 
-from chia.cmds.db_upgrade_func import convert_v1_to_v2
-from chia.consensus.blockchain import Blockchain
-from chia.consensus.multiprocess_validation import PreValidationResult
-from chia.full_node.block_store import BlockStore
-from chia.full_node.coin_store import CoinStore
-from chia.full_node.hint_store import HintStore
-from chia.simulator.block_tools import test_constants
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.util.db_wrapper import DBWrapper2
-from chia.util.ints import uint64
+from flax.cmds.db_upgrade_func import convert_v1_to_v2
+from flax.consensus.blockchain import Blockchain
+from flax.consensus.multiprocess_validation import PreValidationResult
+from flax.full_node.block_store import BlockStore
+from flax.full_node.coin_store import CoinStore
+from flax.full_node.hint_store import HintStore
+from flax.simulator.block_tools import test_constants
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.util.db_wrapper import DBWrapper2
+from flax.util.ints import uint64
 from tests.util.temp_file import TempFile
 
 

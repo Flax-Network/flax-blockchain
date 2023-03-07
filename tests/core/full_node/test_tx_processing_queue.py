@@ -8,9 +8,9 @@ from typing import List, Optional, cast
 
 import pytest
 
-from chia.full_node.tx_processing_queue import TransactionQueue, TransactionQueueFull
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.transaction_queue_entry import TransactionQueueEntry
+from flax.full_node.tx_processing_queue import TransactionQueue, TransactionQueueFull
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.transaction_queue_entry import TransactionQueueEntry
 
 log = logging.getLogger(__name__)
 

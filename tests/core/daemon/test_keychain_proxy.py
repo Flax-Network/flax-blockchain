@@ -7,10 +7,10 @@ from typing import AsyncGenerator
 import pytest
 import pytest_asyncio
 
-from chia.daemon.keychain_proxy import KeychainProxy, connect_to_keychain_and_validate
-from chia.simulator.block_tools import BlockTools
-from chia.simulator.setup_services import setup_daemon
-from chia.util.keychain import KeyData
+from flax.daemon.keychain_proxy import KeychainProxy, connect_to_keychain_and_validate
+from flax.simulator.block_tools import BlockTools
+from flax.simulator.setup_services import setup_daemon
+from flax.util.keychain import KeyData
 
 TEST_KEY_1 = KeyData.generate(label="🚽🍯")
 TEST_KEY_2 = KeyData.generate(label="👨‍✈️🥦")

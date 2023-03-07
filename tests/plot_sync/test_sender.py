@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import pytest
 
-from chia.plot_sync.exceptions import AlreadyStartedError, InvalidConnectionTypeError
-from chia.plot_sync.sender import ExpectedResponse, Sender
-from chia.plot_sync.util import Constants
-from chia.protocols.harvester_protocol import PlotSyncIdentifier, PlotSyncResponse
-from chia.protocols.protocol_message_types import ProtocolMessageTypes
-from chia.server.outbound_message import NodeType
-from chia.simulator.block_tools import BlockTools
-from chia.util.ints import int16, uint64
+from flax.plot_sync.exceptions import AlreadyStartedError, InvalidConnectionTypeError
+from flax.plot_sync.sender import ExpectedResponse, Sender
+from flax.plot_sync.util import Constants
+from flax.protocols.harvester_protocol import PlotSyncIdentifier, PlotSyncResponse
+from flax.protocols.protocol_message_types import ProtocolMessageTypes
+from flax.server.outbound_message import NodeType
+from flax.simulator.block_tools import BlockTools
+from flax.util.ints import int16, uint64
 from tests.plot_sync.util import get_dummy_connection, plot_sync_identifier
 
 

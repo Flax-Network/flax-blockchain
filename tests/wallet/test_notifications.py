@@ -7,15 +7,15 @@ from typing import Any
 
 import pytest
 
-from chia.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from chia.simulator.full_node_simulator import FullNodeSimulator
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert, time_out_assert_not_none
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.peer_info import PeerInfo
-from chia.util.db_wrapper import DBWrapper2
-from chia.util.ints import uint16, uint32, uint64
-from chia.wallet.notification_store import NotificationStore
+from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from flax.simulator.full_node_simulator import FullNodeSimulator
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.simulator.time_out_assert import time_out_assert, time_out_assert_not_none
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.peer_info import PeerInfo
+from flax.util.db_wrapper import DBWrapper2
+from flax.util.ints import uint16, uint32, uint64
+from flax.wallet.notification_store import NotificationStore
 from tests.util.wallet_is_synced import wallets_are_synced
 
 

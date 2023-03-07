@@ -18,7 +18,7 @@ from typing import Any, Callable, Iterator, List, Optional, Type, Union
 import pytest
 from typing_extensions import final
 
-from tests.core.data_layer.util import ChiaRoot
+from tests.core.data_layer.util import FlaxRoot
 
 
 class GcMode(enum.Enum):
@@ -210,7 +210,7 @@ class _AssertRuntime:
     Produces output of the following form.
 
         Asserting maximum duration: full block
-        /home/altendky/repos/chia-blockchain/tests/core/full_node/test_performance.py:187
+        /home/altendky/repos/flax-blockchain/tests/core/full_node/test_performance.py:187
             run time: 0.027789528900002837
             allowed: 0.1
             percent: 28 %
@@ -291,8 +291,8 @@ def assert_rpc_error(error: str) -> Iterator[None]:
 
 
 @contextlib.contextmanager
-def closing_chia_root_popen(chia_root: ChiaRoot, args: List[str]) -> Iterator[subprocess.Popen[Any]]:
-    environment = {**os.environ, "CHIA_ROOT": os.fspath(chia_root.path)}
+def closing_flax_root_popen(flax_root: FlaxRoot, args: List[str]) -> Iterator[subprocess.Popen[Any]]:
+    environment = {**os.environ, "FLAX_ROOT": os.fspath(flax_root.path)}
 
     with subprocess.Popen(args=args, env=environment) as process:
         try:

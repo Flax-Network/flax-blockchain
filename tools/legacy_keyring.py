@@ -1,5 +1,5 @@
 """
-Provides a helper to access the legacy keyring which was supported up to version 1.6.1 of chia-blockchain. To use this
+Provides a helper to access the legacy keyring which was supported up to version 1.6.1 of flax-blockchain. To use this
 helper it's required to install the `legacy_keyring` extra dependency which can be done via the install-option `-l`.
 """
 
@@ -21,16 +21,16 @@ except ImportError:
     CryptFileKeyring = None
 
 
-from chia.util.errors import KeychainUserNotFound
-from chia.util.keychain import KeyData, KeyDataSecrets, get_private_key_user
-from chia.util.misc import prompt_yes_no
+from flax.util.errors import KeychainUserNotFound
+from flax.util.keychain import KeyData, KeyDataSecrets, get_private_key_user
+from flax.util.misc import prompt_yes_no
 
 LegacyKeyring = Union[MacKeyring, WinKeyring, CryptFileKeyring]
 
 
 CURRENT_KEY_VERSION = "1.8"
-DEFAULT_USER = f"user-chia-{CURRENT_KEY_VERSION}"  # e.g. user-chia-1.8
-DEFAULT_SERVICE = f"chia-{DEFAULT_USER}"  # e.g. chia-user-chia-1.8
+DEFAULT_USER = f"user-flax-{CURRENT_KEY_VERSION}"  # e.g. user-flax-1.8
+DEFAULT_SERVICE = f"flax-{DEFAULT_USER}"  # e.g. flax-user-flax-1.8
 MAX_KEYS = 100
 
 

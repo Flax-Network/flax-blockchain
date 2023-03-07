@@ -9,41 +9,41 @@ from blspy import G1Element, G2Element
 from clvm.casts import int_to_bytes
 from clvm_tools import binutils
 
-from chia.consensus.condition_costs import ConditionCost
-from chia.consensus.cost_calculator import NPCResult
-from chia.full_node.bitcoin_fee_estimator import create_bitcoin_fee_estimator
-from chia.full_node.fee_estimation import EmptyMempoolInfo, MempoolInfo
-from chia.full_node.full_node_api import FullNodeAPI
-from chia.full_node.mempool import Mempool
-from chia.full_node.mempool_check_conditions import get_name_puzzle_conditions
-from chia.full_node.pending_tx_cache import ConflictTxCache, PendingTxCache
-from chia.protocols import full_node_protocol, wallet_protocol
-from chia.protocols.wallet_protocol import TransactionAck
-from chia.server.outbound_message import Message
-from chia.server.ws_connection import WSChiaConnection
-from chia.simulator.simulator_protocol import FarmNewBlockProtocol
-from chia.simulator.time_out_assert import time_out_assert
-from chia.simulator.wallet_tools import WalletTool
-from chia.types.announcement import Announcement
-from chia.types.blockchain_format.coin import Coin
-from chia.types.blockchain_format.program import INFINITE_COST, Program, SerializedProgram
-from chia.types.blockchain_format.sized_bytes import bytes32, bytes48
-from chia.types.clvm_cost import CLVMCost
-from chia.types.coin_spend import CoinSpend
-from chia.types.condition_opcodes import ConditionOpcode
-from chia.types.condition_with_args import ConditionWithArgs
-from chia.types.fee_rate import FeeRate
-from chia.types.generator_types import BlockGenerator
-from chia.types.mempool_inclusion_status import MempoolInclusionStatus
-from chia.types.mempool_item import MempoolItem
-from chia.types.spend_bundle import SpendBundle
-from chia.types.spend_bundle_conditions import Spend, SpendBundleConditions
-from chia.util.api_decorators import api_request
-from chia.util.condition_tools import conditions_for_solution, pkm_pairs, pkm_pairs_for_conditions_dict
-from chia.util.errors import ConsensusError, Err
-from chia.util.hash import std_hash
-from chia.util.ints import uint32, uint64
-from chia.util.recursive_replace import recursive_replace
+from flax.consensus.condition_costs import ConditionCost
+from flax.consensus.cost_calculator import NPCResult
+from flax.full_node.bitcoin_fee_estimator import create_bitcoin_fee_estimator
+from flax.full_node.fee_estimation import EmptyMempoolInfo, MempoolInfo
+from flax.full_node.full_node_api import FullNodeAPI
+from flax.full_node.mempool import Mempool
+from flax.full_node.mempool_check_conditions import get_name_puzzle_conditions
+from flax.full_node.pending_tx_cache import ConflictTxCache, PendingTxCache
+from flax.protocols import full_node_protocol, wallet_protocol
+from flax.protocols.wallet_protocol import TransactionAck
+from flax.server.outbound_message import Message
+from flax.server.ws_connection import WSFlaxConnection
+from flax.simulator.simulator_protocol import FarmNewBlockProtocol
+from flax.simulator.time_out_assert import time_out_assert
+from flax.simulator.wallet_tools import WalletTool
+from flax.types.announcement import Announcement
+from flax.types.blockchain_format.coin import Coin
+from flax.types.blockchain_format.program import INFINITE_COST, Program, SerializedProgram
+from flax.types.blockchain_format.sized_bytes import bytes32, bytes48
+from flax.types.clvm_cost import CLVMCost
+from flax.types.coin_spend import CoinSpend
+from flax.types.condition_opcodes import ConditionOpcode
+from flax.types.condition_with_args import ConditionWithArgs
+from flax.types.fee_rate import FeeRate
+from flax.types.generator_types import BlockGenerator
+from flax.types.mempool_inclusion_status import MempoolInclusionStatus
+from flax.types.mempool_item import MempoolItem
+from flax.types.spend_bundle import SpendBundle
+from flax.types.spend_bundle_conditions import Spend, SpendBundleConditions
+from flax.util.api_decorators import api_request
+from flax.util.condition_tools import conditions_for_solution, pkm_pairs, pkm_pairs_for_conditions_dict
+from flax.util.errors import ConsensusError, Err
+from flax.util.hash import std_hash
+from flax.util.ints import uint32, uint64
+from flax.util.recursive_replace import recursive_replace
 from tests.blockchain.blockchain_test_utils import _validate_and_add_block
 from tests.connection_utils import add_dummy_connection, connect_and_get_peer
 from tests.core.node_height import node_height_at_least
@@ -299,7 +299,7 @@ class TestMempool:
 async def respond_transaction(
     self: FullNodeAPI,
     tx: full_node_protocol.RespondTransaction,
-    peer: WSChiaConnection,
+    peer: WSFlaxConnection,
     tx_bytes: bytes = b"",
     test: bool = False,
 ) -> Tuple[MempoolInclusionStatus, Optional[Err]]:

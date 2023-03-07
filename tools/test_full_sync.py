@@ -17,18 +17,18 @@ import aiosqlite
 import click
 import zstd
 
-from chia.cmds.init_funcs import chia_init
-from chia.consensus.default_constants import DEFAULT_CONSTANTS
-from chia.full_node.full_node import FullNode
-from chia.protocols import full_node_protocol
-from chia.server.outbound_message import Message, NodeType
-from chia.server.ws_connection import WSChiaConnection
-from chia.simulator.block_tools import make_unfinished_block
-from chia.types.blockchain_format.sized_bytes import bytes32
-from chia.types.full_block import FullBlock
-from chia.types.peer_info import PeerInfo
-from chia.util.config import load_config
-from chia.util.ints import uint16
+from flax.cmds.init_funcs import flax_init
+from flax.consensus.default_constants import DEFAULT_CONSTANTS
+from flax.full_node.full_node import FullNode
+from flax.protocols import full_node_protocol
+from flax.server.outbound_message import Message, NodeType
+from flax.server.ws_connection import WSFlaxConnection
+from flax.simulator.block_tools import make_unfinished_block
+from flax.types.blockchain_format.sized_bytes import bytes32
+from flax.types.full_block import FullBlock
+from flax.types.peer_info import PeerInfo
+from flax.util.config import load_config
+from flax.util.ints import uint16
 from tools.test_constants import test_constants as TEST_CONSTANTS
 
 
@@ -70,7 +70,7 @@ class FakeServer:
 
     def get_connections(
         self, node_type: Optional[NodeType] = None, *, outbound: Optional[bool] = False
-    ) -> List[WSChiaConnection]:
+    ) -> List[WSFlaxConnection]:
         return []
 
     def is_duplicate_or_self_connection(self, target_node: PeerInfo) -> bool:
@@ -128,7 +128,7 @@ async def run_sync_test(
         if start_at_checkpoint is not None:
             shutil.copytree(Path(start_at_checkpoint) / ".", root_path, dirs_exist_ok=True)
 
-        chia_init(root_path, should_check_keys=False, v1_db=(db_version == 1))
+        flax_init(root_path, should_check_keys=False, v1_db=(db_version == 1))
         config = load_config(root_path, "config.yaml")
 
         if test_constants:
@@ -156,7 +156,7 @@ async def run_sync_test(
             else:
                 height = 0
 
-            peer: WSChiaConnection = FakePeer()  # type: ignore[assignment]
+            peer: WSFlaxConnection = FakePeer()  # type: ignore[assignment]
 
             print()
             counter = 0
@@ -338,7 +338,7 @@ async def run_sync_checkpoint(
 
     root_path.mkdir(parents=True, exist_ok=True)
 
-    chia_init(root_path, should_check_keys=False, v1_db=False)
+    flax_init(root_path, should_check_keys=False, v1_db=False)
     config = load_config(root_path, "config.yaml")
 
     overrides = config["network_overrides"]["constants"][config["selected_network"]]
@@ -354,7 +354,7 @@ async def run_sync_checkpoint(
         full_node.set_server(FakeServer())  # type: ignore[arg-type]
         await full_node._start()
 
-        peer: WSChiaConnection = FakePeer()  # type: ignore[assignment]
+        peer: WSFlaxConnection = FakePeer()  # type: ignore[assignment]
 
         print()
         height = 0

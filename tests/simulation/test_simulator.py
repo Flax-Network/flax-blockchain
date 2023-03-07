@@ -4,13 +4,13 @@ from typing import Iterator, List, Tuple
 
 import pytest
 
-from chia.cmds.units import units
-from chia.server.server import ChiaServer
-from chia.simulator.block_tools import BlockTools
-from chia.simulator.full_node_simulator import FullNodeSimulator, backoff_times
-from chia.types.peer_info import PeerInfo
-from chia.util.ints import uint16, uint64
-from chia.wallet.wallet_node import WalletNode
+from flax.cmds.units import units
+from flax.server.server import FlaxServer
+from flax.simulator.block_tools import BlockTools
+from flax.simulator.full_node_simulator import FullNodeSimulator, backoff_times
+from flax.types.peer_info import PeerInfo
+from flax.util.ints import uint16, uint64
+from flax.wallet.wallet_node import WalletNode
 
 
 def test_backoff_yields_initial_first() -> None:
@@ -51,7 +51,7 @@ def test_backoff_saturates_at_final() -> None:
 async def test_simulation_farm_blocks_to_puzzlehash(
     count: int,
     guarantee_transaction_blocks: bool,
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
 ) -> None:
     [[full_node_api], _, _] = simulator_and_wallet
 
@@ -71,7 +71,7 @@ async def test_simulation_farm_blocks_to_puzzlehash(
 @pytest.mark.parametrize(argnames="count", argvalues=[0, 1, 2, 5, 10])
 async def test_simulation_farm_blocks_to_wallet(
     count: int,
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
 ) -> None:
     [[full_node_api], [[wallet_node, wallet_server]], _] = simulator_and_wallet
 
@@ -99,17 +99,17 @@ async def test_simulation_farm_blocks_to_wallet(
     argvalues=[
         [0, 0],
         [1, 2],
-        [(2 * units["chia"]) - 1, 2],
-        [2 * units["chia"], 2],
-        [(2 * units["chia"]) + 1, 4],
-        [3 * units["chia"], 4],
-        [10 * units["chia"], 10],
+        [(2 * units["flax"]) - 1, 2],
+        [2 * units["flax"], 2],
+        [(2 * units["flax"]) + 1, 4],
+        [3 * units["flax"], 4],
+        [10 * units["flax"], 10],
     ],
 )
 async def test_simulation_farm_rewards_to_wallet(
     amount: int,
     coin_count: int,
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
 ) -> None:
     [[full_node_api], [[wallet_node, wallet_server]], _] = simulator_and_wallet
 
@@ -137,7 +137,7 @@ async def test_simulation_farm_rewards_to_wallet(
 
 @pytest.mark.asyncio
 async def test_wait_transaction_records_entered_mempool(
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
 ) -> None:
     repeats = 50
     tx_amount = 1
@@ -171,7 +171,7 @@ async def test_wait_transaction_records_entered_mempool(
 
 @pytest.mark.asyncio
 async def test_process_transaction_records(
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
 ) -> None:
     repeats = 50
     tx_amount = 1
@@ -215,7 +215,7 @@ async def test_process_transaction_records(
 )
 async def test_create_coins_with_amounts(
     amounts: List[uint64],
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
 ) -> None:
     [[full_node_api], [[wallet_node, wallet_server]], _] = simulator_and_wallet
 
@@ -247,7 +247,7 @@ async def test_create_coins_with_amounts(
 )
 async def test_create_coins_with_invalid_amounts_raises(
     amounts: List[int],
-    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, ChiaServer]], BlockTools],
+    simulator_and_wallet: Tuple[List[FullNodeSimulator], List[Tuple[WalletNode, FlaxServer]], BlockTools],
 ) -> None:
     [[full_node_api], [[wallet_node, wallet_server]], _] = simulator_and_wallet
 

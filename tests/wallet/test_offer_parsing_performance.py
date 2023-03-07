@@ -6,7 +6,7 @@ from typing import Iterator
 
 import pytest
 
-from chia.wallet.trading.offer import Offer
+from flax.wallet.trading.offer import Offer
 from tests.util.misc import assert_runtime
 
 with_profile = False
